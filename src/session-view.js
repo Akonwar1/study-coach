@@ -13,12 +13,12 @@ export function stopTicking() {
 
 /**
  * Shows one step of a guided session and returns the screen's element.
+ * `steps` are the method's steps already tailored to the subject (see tailor.js).
  * onUpdate(session) is called with every change so the caller can save and redraw;
  * onNext() moves on (the caller decides when the session is finished); onLeave() goes home.
  */
-export function renderSession({ method, session, onUpdate, onNext, onLeave }) {
+export function renderSession({ method, steps, subjectLabel, session, onUpdate, onNext, onLeave }) {
   stopTicking();
-  const steps = method.session;
   const step = steps[session.stepIndex];
   const isLastStep = session.stepIndex === steps.length - 1;
 
@@ -57,12 +57,14 @@ export function renderSession({ method, session, onUpdate, onNext, onLeave }) {
   leave.addEventListener("click", onLeave);
 
   return el("section", { className: "session" }, [
-    el("p", { className: "progress", text: `${method.name} · step ${session.stepIndex + 1} of ${steps.length}` }),
+    el("p", { className: "progress", text: `${method.name}${subjectLabel ? ` for ${subjectLabel}` : ""} · step ${session.stepIndex + 1} of ${steps.length}` }),
     el("div", { className: "progress-bar" }, [
       el("span", { attrs: { style: `width:${((session.stepIndex + 1) / steps.length) * 100}%` } }),
     ]),
     el("h2", { text: step.title }),
     el("p", { className: "instruction", text: step.instruction }),
+    ...(step.example ? [el("p", { className: "step-note example", text: `Example: ${step.example}` })] : []),
+    ...(step.tip ? [el("p", { className: "step-note tip", text: `Tip: ${step.tip}` })] : []),
     ...timerBlock,
     el("div", { className: "nav-row" }, [back, next]),
     leave,

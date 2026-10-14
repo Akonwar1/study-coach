@@ -34,3 +34,21 @@ export const QUESTIONS = [
     ],
   },
 ];
+
+// Asked after the questions above. It does not change which method is recommended;
+// it only tailors the wording and examples inside a guided session (see tailor.js).
+export const SUBJECT_QUESTION = {
+  id: "subject",
+  prompt: "What kind of subject is it?",
+  options: [
+    { id: "quantitative", label: "Math, physics or engineering", hint: "Equations, derivations, problem sets" },
+    { id: "science", label: "Biology, chemistry or medicine", hint: "Processes, mechanisms, lots of terms" },
+    { id: "humanities", label: "History, literature or social science", hint: "Arguments, events, essays" },
+    { id: "language", label: "A foreign language", hint: "Vocabulary, grammar, phrases" },
+    { id: "programming", label: "Programming or computer science", hint: "Code, algorithms, systems" },
+    { id: "other", label: "Something else", hint: "Use general examples" },
+  ],
+};
+
+/** Every question the app asks, in order. */
+export const ALL_QUESTIONS = [...QUESTIONS, SUBJECT_QUESTION];

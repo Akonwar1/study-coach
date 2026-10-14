@@ -1,6 +1,6 @@
 // Guided study sessions: pure functions over plain objects, so they can be saved as JSON and tested.
 //
-// session = { methodId, startedAt, stepIndex, timer }
+// session = { methodId, subject, startedAt, stepIndex, timer }
 // timer   = null (step has no timer) or { remainingMs, endsAt }
 //           endsAt is null while paused, or the timestamp when the running timer reaches zero.
 // Storing endsAt (not a ticking counter) keeps the clock right when the tab is hidden or reopened.
@@ -15,8 +15,8 @@ function timerForStep(step) {
   return step.minutes > 0 ? { remainingMs: step.minutes * MINUTE_MS, endsAt: null } : null;
 }
 
-export function startSession(method, now) {
-  return { methodId: method.id, startedAt: now, stepIndex: 0, timer: timerForStep(method.session[0]) };
+export function startSession(method, now, subject = "other") {
+  return { methodId: method.id, subject, startedAt: now, stepIndex: 0, timer: timerForStep(method.session[0]) };
 }
 
 export function isComplete(method, session) {
@@ -74,6 +74,7 @@ export function isResumable(session, methods) {
   if (!session || typeof session !== "object") return false;
   const method = methods.find((m) => m.id === session.methodId);
   if (!method || !hasWalkthrough(method)) return false;
+  if (session.subject !== undefined && typeof session.subject !== "string") return false;
   if (!Number.isFinite(session.startedAt)) return false;
   if (!Number.isInteger(session.stepIndex) || session.stepIndex < 0 || session.stepIndex >= method.session.length) return false;
   const timer = session.timer;

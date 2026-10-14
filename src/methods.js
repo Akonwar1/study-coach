@@ -4,8 +4,8 @@
 // fit.struggle: problems the method helps with
 // fit.horizon:  time-until-deadline buckets where the method works well
 // requiresStruggle: only recommend when the student reports one of its struggles
-// session:      optional guided walkthrough, a list of { title, instruction, minutes } (0 = no timer);
-//               methods without it can be recommended but not started yet
+// session:      guided walkthrough, a list of { title, instruction, minutes (0 = no timer), example?, tip? };
+//               instruction, example and tip can vary by subject; see tailor.js
 
 export const METHODS = [
   {
@@ -23,13 +23,60 @@ export const METHODS = [
     ],
     evidence: "Rated “high utility” in Dunlosky et al.’s 2013 review of ten learning techniques.",
     session: [
-      { title: "Choose your material", instruction: "Pick one section of your notes or textbook, about a page or two. Get a blank sheet of paper and a pen ready.", minutes: 0 },
-      { title: "Study it once", instruction: "Read the section carefully, one time. Don’t highlight and don’t re-read; just try to understand it.", minutes: 5 },
-      { title: "Close it", instruction: "Close the book or turn your notes face down. Out of sight, out of reach.", minutes: 0 },
-      { title: "Blank-page recall", instruction: "On the blank paper, write everything you remember about the section: terms, ideas, examples. Keep going even when it gets hard; the struggle is what makes it stick.", minutes: 5 },
-      { title: "Check your answer", instruction: "Reopen your notes. With a different colour pen, add what you missed and fix what you got wrong.", minutes: 5 },
-      { title: "Re-test the gaps", instruction: "Close the notes again. From memory, write down just the things you missed or got wrong.", minutes: 5 },
-      { title: "Schedule your next review", instruction: "Put a reminder on your calendar to redo step 4 for this section tomorrow, using only the gaps from this session.", minutes: 0 },
+      {
+        title: "Choose and size your material",
+        instruction: "Pick one small chunk to learn: about 1–2 pages of notes or textbook, or 3–5 key ideas. Smaller is better; you can always do another round. Get a blank sheet of paper, a pen, and a second pen in a different colour. If you have practice questions or flashcards for this material, set them aside; you’ll use them in step 4 instead of the blank page.",
+        example: {
+          default: "One textbook section of 1–2 pages.",
+          quantitative: "One technique plus when to use it, such as the chain rule: the formula, when it applies, and one worked example.",
+          science: "The stages of mitosis and what happens in each.",
+          humanities: "The causes and key events of the French Revolution.",
+          language: "One vocabulary unit of about 20 words.",
+          programming: "How a hash map works and what its trade-offs are.",
+        },
+        tip: "If the chunk takes more than 5 minutes to read once, it’s too big. Cut it in half.",
+        minutes: 0,
+      },
+      {
+        title: "Study it once",
+        instruction: "Read or watch the material one time, carefully. Don’t highlight and don’t re-read; the point is to understand it well enough that you have something to recall. Notice headings and bold terms, since they’ll help you structure your recall.",
+        tip: "If you read it and it makes no sense, recall won’t work yet. Pause this session and try Feynman or Self-Explanation first.",
+        minutes: 5,
+      },
+      {
+        title: "Close it completely",
+        instruction: "Close the book or turn your notes face down, and put your phone away. Everything is out of sight before you start. Retrieval only works if you can’t peek.",
+        minutes: 0,
+      },
+      {
+        title: "Recall it from memory",
+        instruction: "Write down everything you can remember, with no looking. Don’t worry about order or neatness. Keep going even when it gets hard; that struggle is what makes the memory stick. Use the recall style that fits your subject. If you have practice questions or flashcards, answer them out loud or in writing instead.",
+        example: {
+          default: "Write a messy outline of every term, idea and example you remember.",
+          quantitative: "Write the formula, say when it applies, then do a similar problem from scratch.",
+          science: "Draw the process from memory and label each stage with what happens.",
+          humanities: "Write the main causes and events in order, with a date or name for each.",
+          language: "Write each word’s meaning from memory, or the word in the language from its meaning.",
+          programming: "Write the code or pseudocode from memory, then explain it in a sentence.",
+        },
+        tip: "Stuck? Write what you do remember about the topic, even a single word, to get started.",
+        minutes: 5,
+      },
+      {
+        title: "Check against the source",
+        instruction: "Reopen your notes. With the different-coloured pen, add what you missed and correct what you got wrong. Count how many you got right, so you can compare next time. Don’t just read your notes again.",
+        minutes: 5,
+      },
+      {
+        title: "Re-test the gaps",
+        instruction: "Close the notes again. Write or say only the things you missed or got wrong, from memory. Repeat the check if you still miss some. Done when you can recall every item you missed the first time.",
+        minutes: 5,
+      },
+      {
+        title: "Schedule your next review",
+        instruction: "Put a reminder in your calendar to redo steps 3–5 for this chunk tomorrow, using only the gaps from today. Add a second reminder for about a week later. Without these, most of what you just learned will fade.",
+        minutes: 0,
+      },
     ],
     fit: {
       material: ["facts", "concepts", "reading"],
@@ -52,11 +99,50 @@ export const METHODS = [
     ],
     evidence: "Also rated “high utility” by Dunlosky et al. (2013); compounds well with active recall.",
     session: [
-      { title: "Gather today’s material", instruction: "Collect the facts you want to remember: terms, formulas, dates. Get index cards or open a flashcard app like Anki.", minutes: 0 },
-      { title: "Make cards", instruction: "Write one question per card, with the answer on the back. Keep each card to a single fact, and phrase the front so you have to recall, not recognise.", minutes: 8 },
-      { title: "Review the pile", instruction: "Go through the cards. Say the answer out loud before flipping each one. Sort into two piles: got it, and missed it.", minutes: 5 },
-      { title: "Set the next review dates", instruction: "Missed cards come back tomorrow. Cards you got right go further out: 3 days for new ones, then a week, then two weeks. Write the date on the card or in your app.", minutes: 3 },
-      { title: "Put it on your calendar", instruction: "Add a reminder for tomorrow’s review of the missed pile. Even 5 minutes counts; the spacing is what matters.", minutes: 0 },
+      {
+        title: "Gather what to memorise",
+        instruction: "Spaced repetition is for things you have to remember outright: terms, definitions, formulas, dates, vocabulary. Pick 10–20 items from your notes. If something needs understanding, not memorising (like why a proof works), save it for a method like Feynman. You’ll need index cards, or an app like Anki.",
+        example: {
+          default: "Definitions, dates, names, and formulas from this week’s notes.",
+          quantitative: "Formulas, the conditions they apply under, and key definitions.",
+          science: "Terms, structures, enzyme names, and reaction steps.",
+          humanities: "Dates, people, events, and key terms.",
+          language: "New vocabulary and verb forms.",
+          programming: "Syntax, built-in functions, and the complexity of common operations.",
+        },
+        tip: "Aim for items you’d be annoyed to blank on during the exam.",
+        minutes: 0,
+      },
+      {
+        title: "Make one card per fact",
+        instruction: "Write one question on the front of each card and the answer on the back. One fact per card, and make the front a question you must recall, not something you can recognise. Keep answers short, a line at most.",
+        example: {
+          default: "Front: “What caused X?” Back: one-line answer.",
+          quantitative: "Front: “Derivative of sin x?” Back: “cos x.”",
+          science: "Front: “What does ATP synthase do?” Back: “Makes ATP using the proton gradient.”",
+          humanities: "Front: “What did the Treaty of Versailles require of Germany?” Back: “Reparations, lost territory, and military limits.”",
+          language: "Front: “the library” Back: “la biblioteca.”",
+          programming: "Front: “Time complexity of binary search?” Back: “O(log n).”",
+        },
+        tip: "If a card needs more than a line to answer, split it into two cards.",
+        minutes: 8,
+      },
+      {
+        title: "Go through the pile once",
+        instruction: "Take each card, say the answer out loud before flipping, then check. Make two piles: got it, and missed it. Be honest. “Sort of” goes in missed.",
+        minutes: 5,
+      },
+      {
+        title: "Set the review dates",
+        instruction: "Use three boxes, or the scheduling in your app. Missed cards go in Box 1 and come back tomorrow. Cards you got right move to the next box: Box 1 is daily, Box 2 is every 3 days, Box 3 is weekly. Anytime you miss a card, it drops back to Box 1. Write the next review date on each pile.",
+        tip: "Done when every card is in a box with a date. In an app, it does this for you; just check the next review dates look right.",
+        minutes: 3,
+      },
+      {
+        title: "Put it on your calendar",
+        instruction: "Add a daily 5–10 minute reminder labelled “review cards”. Short and regular beats long and rare. Each day, review whatever is due, and add new cards slowly, about 10 a day.",
+        minutes: 0,
+      },
     ],
     fit: {
       material: ["facts"],
@@ -79,12 +165,46 @@ export const METHODS = [
     ],
     evidence: "Grounded in Paivio’s dual-coding theory; gains are largest for material with real spatial or causal structure.",
     session: [
-      { title: "Pick a topic", instruction: "Choose one topic with real structure: a process, a timeline, a set of parts, or cause and effect. Have blank paper and a pen ready.", minutes: 0 },
-      { title: "Read it in words", instruction: "Read or listen to the material once, in words only. Don’t draw yet.", minutes: 5 },
-      { title: "Redraw it from memory", instruction: "Close the source. Draw the topic as a diagram, map, or timeline. Boxes and arrows are fine; it doesn’t have to be pretty.", minutes: 7 },
-      { title: "Label in your own words", instruction: "Label every part of your drawing in your own words, not the source’s. Add arrows that say how the parts connect.", minutes: 4 },
-      { title: "Compare and fix", instruction: "Open the source and compare. In a different colour, correct anything missing or wrong in your sketch.", minutes: 4 },
-      { title: "Explain your picture", instruction: "Using only your sketch, explain the topic out loud from start to finish. Notice where the picture fails you; that is what to review next.", minutes: 0 },
+      {
+        title: "Pick a topic that has structure",
+        instruction: "Dual coding works best on material with a shape: a process, a sequence, parts of a whole, a comparison, or cause and effect. Choose one such topic, about one page of material. If your material is plain facts with no shape, use Spaced Repetition instead. Have blank paper and a pen ready.",
+        example: {
+          default: "A process, a timeline, or a system with parts.",
+          quantitative: "A free-body diagram of a block on a ramp, or how a function’s graph changes as you adjust a parameter.",
+          science: "The Krebs cycle, the water cycle, or the structure of a neuron.",
+          humanities: "A timeline of the causes of World War I, or how a bill becomes law.",
+          language: "A table of how a verb changes across tenses, or a scene sketched with vocabulary labelled.",
+          programming: "How a call stack changes during recursion, or how data moves between parts of a program.",
+        },
+        tip: "Not sure what shape it has? Ask “is it steps, parts, or a comparison?”",
+        minutes: 0,
+      },
+      {
+        title: "Read it in words only",
+        instruction: "Read or listen to the material once, in words. Don’t draw yet. As you go, note the key items (the steps, parts, or things being compared) and how they connect.",
+        minutes: 5,
+      },
+      {
+        title: "Redraw it from memory",
+        instruction: "Close the source and draw the topic from memory. Choose the picture to match the shape: a flowchart or cycle for a process, a timeline for a sequence, a labelled diagram for parts, a table for a comparison, a concept map (circles and arrows) for ideas. It doesn’t have to be pretty. Boxes and arrows are fine.",
+        tip: "Blank on part of it? Leave a gap. The gaps tell you what to study.",
+        minutes: 7,
+      },
+      {
+        title: "Label it in your own words",
+        instruction: "Label every part of your drawing in your own words, not the source’s. On each arrow, write what it means: “leads to”, “causes”, “is made of”. If you can’t label something, mark it with a question mark.",
+        minutes: 4,
+      },
+      {
+        title: "Compare and fix",
+        instruction: "Open the source and compare. With a different-coloured pen, correct anything missing or wrong, and fill in the question marks.",
+        minutes: 4,
+      },
+      {
+        title: "Explain your picture",
+        instruction: "Using only your sketch, explain the topic out loud from start to finish. Where the picture fails you, you have a gap to review next. Done when your sketch alone is enough to explain the whole topic. Keep it for review.",
+        minutes: 0,
+      },
     ],
     fit: {
       material: ["diagrams"],
@@ -107,11 +227,41 @@ export const METHODS = [
     ],
     evidence: "Named for physicist Richard Feynman; it chains the elaboration and self-explanation effects into one routine.",
     session: [
-      { title: "Name the concept", instruction: "Write the name of one concept at the top of a blank page. Pick something small enough to explain in a few minutes.", minutes: 1 },
-      { title: "Explain it simply", instruction: "Explain the concept below the title as if to a friend who has never heard of it. Short words, no jargon. Say it out loud as you write.", minutes: 8 },
-      { title: "Find the gaps", instruction: "Read your explanation back. Circle every place you stalled, hedged, guessed, or used a technical term without explaining it.", minutes: 3 },
-      { title: "Go back to the source", instruction: "Look up only the circled spots in your notes or textbook. Make sure you understand each one before moving on.", minutes: 8 },
-      { title: "Simplify and re-explain", instruction: "Write the explanation again from scratch, using what you just learned. If you can do it smoothly with no circles, you’ve got it.", minutes: 5 },
+      {
+        title: "Name one concept",
+        instruction: "Write the name of a single concept at the top of a blank page. Pick something small enough to explain in a few minutes. Not “Chapter 4” but one idea inside it. Decide who you’re explaining it to: a friend in a different major, or a smart 12-year-old.",
+        example: {
+          default: "One idea from your course, such as “what a variable is.”",
+          quantitative: "Why the derivative measures slope, or what an eigenvector is.",
+          science: "How osmosis works, or what a catalyst does.",
+          humanities: "Why the Industrial Revolution began in Britain.",
+          language: "When to use the subjunctive.",
+          programming: "What recursion is, or how a hash map finds a value.",
+        },
+        tip: "If you can’t pick one concept, take the one you’d least like to be asked about.",
+        minutes: 1,
+      },
+      {
+        title: "Explain it simply",
+        instruction: "Write your explanation below the title in plain words, as if to your listener. No jargon; if you must use a technical term, explain it. Say it out loud as you write, or record a voice memo. Include an example or analogy if you can.",
+        tip: "Stalling, going vague, or saying “basically” and “you know”? That’s the sign of a gap. Keep going; you’ll find them next.",
+        minutes: 8,
+      },
+      {
+        title: "Find the gaps",
+        instruction: "Read your explanation back. Circle every place you stalled, guessed, hand-waved, or used a technical term without explaining it. These circles are the whole point: they’re what you don’t yet understand.",
+        minutes: 3,
+      },
+      {
+        title: "Go back to the source",
+        instruction: "Look up only the circled spots in your notes, textbook, or lectures. Read until you understand each one, then write the answer in your own words, not copied. If you still don’t get one, make a note to ask someone.",
+        minutes: 8,
+      },
+      {
+        title: "Simplify and re-explain",
+        instruction: "Write the explanation again from scratch, using what you just learned. Make it shorter and simpler, and add an analogy if you don’t have one. Done when you can explain it smoothly with no circles. If new circles appear, repeat steps 4–5 for them.",
+        minutes: 5,
+      },
     ],
     fit: {
       material: ["concepts", "diagrams"],
@@ -134,12 +284,46 @@ export const METHODS = [
     ],
     evidence: "Rated “moderate utility” by Dunlosky et al. (2013); works best on material with clear causes.",
     session: [
-      { title: "Pick your facts", instruction: "Choose 5 facts or claims from your notes that have a reason behind them, such as “the heart has four chambers.”", minutes: 0 },
-      { title: "Ask why", instruction: "Take the first fact and ask: “Why would this be true?” Write the question at the top of a line.", minutes: 1 },
-      { title: "Answer from what you know", instruction: "Answer in your own words using what you already know, not the text. A guess is fine; connecting ideas is the point.", minutes: 3 },
-      { title: "Check the source", instruction: "Look up the explanation in your notes or textbook. Fix your answer where it was wrong or too vague.", minutes: 2 },
-      { title: "Repeat for the rest", instruction: "Do the same for the remaining facts: ask why, answer from memory, then check. Move on after about 3 minutes each.", minutes: 9 },
-      { title: "Pick the weak spot", instruction: "Circle the fact you explained worst. Tomorrow, start there.", minutes: 0 },
+      {
+        title: "Pick facts that have a reason",
+        instruction: "This method works on facts that have a “why”, such as causes, rules, and mechanisms. If a fact is arbitrary (a vocabulary word, a date), skip it and use Spaced Repetition. Choose 5 facts or claims from your notes that have a reason behind them. Write each on its own line, leaving space below.",
+        example: {
+          default: "A claim with a cause behind it.",
+          quantitative: "Why the area of a circle is πr², or why a negative times a negative is positive.",
+          science: "Why enzymes lower activation energy, or why the heart has four chambers.",
+          humanities: "Why the Black Death led to higher wages, or why the Roman Republic collapsed.",
+          language: "Why Spanish adjectives agree with the noun, or why English has irregular verbs.",
+          programming: "Why a hash map lookup is usually O(1), or why we avoid global variables.",
+        },
+        tip: "Not sure it has a “why”? Try asking it. If you can’t, pick another fact.",
+        minutes: 0,
+      },
+      {
+        title: "Ask “why is that true?”",
+        instruction: "Take the first fact. Under it, write the question: “Why is this true?” or “Why would this be the case?” Don’t look at your notes yet.",
+        minutes: 1,
+      },
+      {
+        title: "Answer from what you already know",
+        instruction: "Answer in your own words using what you already know, not the text. A guess is fine; connecting ideas together is the point. Aim for a sentence or two that has a “because” in it. If you really have no idea, write what you do know about the topic.",
+        tip: "“It’s just a rule” isn’t an answer. Try “what would break if it weren’t true?”",
+        minutes: 3,
+      },
+      {
+        title: "Check the source",
+        instruction: "Look up the explanation in your notes or textbook. Compare it to your answer: mark what you got right, and fix what was wrong or too vague. Add anything the source explains that you missed.",
+        minutes: 2,
+      },
+      {
+        title: "Repeat for the other facts",
+        instruction: "Do the same for the remaining facts: ask why, answer from memory, then check. Give each about 3 minutes, and move on after that even if you’re unsure.",
+        minutes: 9,
+      },
+      {
+        title: "Pick the weak spot",
+        instruction: "Circle the fact you explained worst. Tomorrow, start there. If several were weak, the whole topic needs a method for understanding, such as Feynman or Self-Explanation.",
+        minutes: 0,
+      },
     ],
     fit: {
       material: ["facts"],
@@ -162,12 +346,65 @@ export const METHODS = [
     ],
     evidence: "Rated “moderate utility” by Dunlosky et al. (2013); especially effective on worked math and science examples.",
     session: [
-      { title: "Choose a worked example", instruction: "Pick one worked problem from your textbook or notes, or a short passage. Cover everything below the first step.", minutes: 0 },
-      { title: "Do one step at a time", instruction: "Read or work only the first step, then uncover the next. Don’t rush ahead.", minutes: 3 },
-      { title: "Explain each step", instruction: "After every step, say out loud what you just did, why it was allowed, and how it follows from the step before. Write down any step you can’t explain.", minutes: 10 },
-      { title: "Mark the gaps", instruction: "Look at your list of steps you couldn’t explain. Go back to your notes or textbook and work out each one.", minutes: 5 },
-      { title: "Redo it without notes", instruction: "Close the example and solve it again from scratch, narrating each step out loud. Stop and note it if you get stuck.", minutes: 5 },
-      { title: "Try a new problem", instruction: "Attempt a similar problem using the same narration. If you can explain every step, you’ve got it.", minutes: 0 },
+      {
+        title: "Gather your material",
+        instruction: "Self-explanation means talking through why each piece of something works, not just reading it. Pick one thing to practise on, about a page or less, and choose the case that matches what you have. A worked solution (a solved problem with the steps shown): you’ll explain each step. A problem with no solution to read: you’ll solve it yourself in the next step, then explain your own moves. An essay, article, or textbook passage: you’ll explain each paragraph or claim. Have a pen and scratch paper ready.",
+        example: {
+          default: "Worked solution: a solved problem from lecture. No solution: a homework problem you haven’t done yet. Passage: three paragraphs from a reading.",
+          quantitative: "A solved integral from lecture, a physics problem you haven’t finished yet, or the proof of a theorem from your textbook.",
+          science: "A worked stoichiometry problem, a diagram-plus-text explanation of how a cell makes ATP, or a reaction mechanism from your notes.",
+          humanities: "Three paragraphs from a reading arguing why the Roman Republic fell, or a short primary source with your professor’s commentary.",
+          language: "A short paragraph in the language with its translation, or a grammar rule from your textbook with its worked examples.",
+          programming: "A solved coding exercise, a short function from lecture, or an algorithm like binary search with its walkthrough.",
+        },
+        tip: "Pick something a little hard for you. If you already understand every part, you won’t learn much from explaining it.",
+        minutes: 0,
+      },
+      {
+        title: "Break it into chunks",
+        instruction: "A chunk is one small piece you can explain on its own. Worked solution: each line or move is a chunk; if it isn’t numbered, mark where each new move starts. No solution: solve the problem now on scratch paper, writing each move on its own line; those lines are your chunks. Essay or passage: each paragraph is a chunk, or each separate claim if paragraphs are long. Aim for 4 to 10 chunks, and cover or fold everything except the first chunk.",
+        example: {
+          default: "Essay paragraph chunks: “Armies became loyal to generals, not the state” / “Land reform failed” / “Senators blocked change.”",
+          quantitative: "Chunks of “Solve 2x + 6 = 14”: “subtract 6 from both sides” / “divide both sides by 2” / “check by plugging x = 4 back in.”",
+          science: "Chunks of glycolysis: “glucose is split into two three-carbon molecules” / “two ATP are spent, four are made” / “NAD+ picks up electrons.”",
+          humanities: "Essay paragraph chunks: “Armies became loyal to generals, not the state” / “Land reform failed” / “Senators blocked change.”",
+          language: "Chunks of a grammar rule: “when to use the past tense ending” / “the three irregular exceptions” / “how it changes with plural subjects.”",
+          programming: "Chunks of binary search: “check the middle element” / “if the target is smaller, discard the right half” / “repeat until the range is empty.”",
+        },
+        tip: "If the material is a single long block, split it wherever the topic changes. If it has 20 chunks, do just the first 6 today.",
+        minutes: 3,
+      },
+      {
+        title: "Explain each chunk out loud",
+        instruction: "For each chunk, say out loud or write one or two sentences covering: what it says or does, why it’s true or allowed, and how it connects to the chunk before it. Problem step: what changed, why that move is allowed, and how it moves you toward the answer. Essay: what the claim is, what supports it, and how it leads to the next paragraph. Then uncover the next chunk and repeat. Put a star by any chunk where you can’t answer all three.",
+        example: {
+          default: "Problem step: “I subtracted 6 from both sides. That’s allowed because doing the same thing to both sides keeps an equation true. It gets the x-term alone.” Essay: “The author claims armies became loyal to generals. The evidence is that soldiers were paid by generals, so it leads into the next paragraph about civil war.”",
+          quantitative: "“I subtracted 6 from both sides. That’s allowed because doing the same thing to both sides keeps an equation true. It gets the x-term alone, which is what I need to solve for it.”",
+          science: "“Two ATP are spent early in glycolysis. That’s needed because the sugar has to be activated before it can be split. It leads to the step where four ATP are made, for a net gain of two.”",
+          humanities: "“The author claims armies became loyal to generals. The evidence is that soldiers were paid by generals, not by the Senate. It leads into the next paragraph about civil war, because a general with loyal troops could challenge Rome itself.”",
+          language: "“This verb ends in -ió because it’s a past-tense, third-person form. The ending changes for ‘you’ and ‘I’ because the ending carries who did it. That matters because Spanish often drops the subject word.”",
+          programming: "“I compare the target to the middle element. That’s allowed because the list is sorted, so everything on one side is too small. It lets me throw away half the list on every pass, which is why it’s fast.”",
+        },
+        tip: "“Because the book or author said so” isn’t an explanation. If that’s your only reason, star the chunk; it’s a gap.",
+        minutes: 10,
+      },
+      {
+        title: "Work out the starred chunks",
+        instruction: "Each star is something you only thought you understood. Find the rule, definition, or background behind it in your notes, textbook, or lecture slides. Then explain that chunk again in your own words until you can say all three parts.",
+        tip: "Still stuck after a few minutes? Write your question down and bring it to office hours or a classmate; that’s better than rereading.",
+        minutes: 5,
+      },
+      {
+        title: "Redo it without the source",
+        instruction: "Hide the material. Problem: solve it again from scratch, narrating each move and why. Essay or passage: explain the argument from start to finish in your own words, out loud, chunk by chunk, without looking. If you get stuck, note exactly where, peek at only that chunk, and keep going.",
+        tip: "Done when: you can get through the whole thing and explain every chunk without looking.",
+        minutes: 5,
+      },
+      {
+        title: "Try something similar",
+        instruction: "Find one new problem or passage like the first, with different numbers, details, or topic, and explain it the same way. If you can explain every chunk, you’ve got it. If not, note which kind of chunk tripped you and start tomorrow’s session there.",
+        minutes: 0,
+      },
     ],
     fit: {
       material: ["problems"],
@@ -191,13 +428,59 @@ export const METHODS = [
     ],
     evidence: "Developed by Francis Robinson in 1946; most of its benefit comes from the recite step, which is active recall.",
     session: [
-      { title: "Choose a chapter", instruction: "Pick one chapter or section of dense reading, and have a blank sheet of paper ready.", minutes: 0 },
-      { title: "Survey", instruction: "Skim the headings, captions, bold terms, and the summary at the end. Don’t read paragraphs yet; just build a map.", minutes: 3 },
-      { title: "Question", instruction: "Turn each heading into a question on your paper. “Causes of the war” becomes “What caused the war?”", minutes: 4 },
-      { title: "Read one section", instruction: "Read the first section looking only for the answer to its question. Take no notes yet.", minutes: 7 },
-      { title: "Recite", instruction: "Close the text and answer the question out loud or in writing, in your own words. If you can’t, reread that section.", minutes: 3 },
-      { title: "Repeat for the next sections", instruction: "Go through the remaining sections: read, then recite, one at a time. Stop when your time is up and note where you stopped.", minutes: 15 },
-      { title: "Review", instruction: "Look only at your questions and answer them all again from memory. Mark any you missed and revisit them tomorrow.", minutes: 5 },
+      {
+        title: "Choose a chapter",
+        instruction: "Pick one chapter or section of dense reading, about 10–15 pages at most. For a longer chapter, do it in parts. Have a blank sheet of paper ready for your questions and answers.",
+        example: {
+          default: "A textbook chapter or a section of an article.",
+          quantitative: "One textbook section on a single topic, including its worked examples.",
+          science: "A chapter on one body system or one family of reactions.",
+          humanities: "A chapter on one period, or a journal article.",
+          language: "A reading passage or one grammar chapter.",
+          programming: "A chapter on one concept, such as recursion or sorting.",
+        },
+        tip: "A long reading? Do the first half now and finish tomorrow.",
+        minutes: 0,
+      },
+      {
+        title: "Survey",
+        instruction: "Skim the headings, captions, bold terms, any summary or learning goals, and the end-of-chapter questions. Don’t read paragraphs yet; build a map in your head. For something without headings, such as a research paper, read the abstract, the first sentence of each paragraph, and the conclusion.",
+        minutes: 3,
+      },
+      {
+        title: "Question",
+        instruction: "Turn each heading into a question on your paper, leaving space under it for your answer. Make it a question you’d like answered, starting with what, why, or how.",
+        example: {
+          default: "“Causes of the war” becomes “What caused the war?”",
+          quantitative: "“Conservation of energy” becomes “What is conserved, and when does it not hold?”",
+          science: "“The citric acid cycle” becomes “What goes in, what comes out, and what is it for?”",
+          humanities: "“The Treaty of Versailles” becomes “What did it require, and why did it cause resentment?”",
+          language: "“The preterite tense” becomes “When do I use it, and how is it formed?”",
+          programming: "“Recursion” becomes “What is a base case, and what happens without one?”",
+        },
+        minutes: 4,
+      },
+      {
+        title: "Read one section",
+        instruction: "Read the first section looking only for the answer to its question. Don’t take notes yet, and don’t highlight. When you reach the end of the section, stop.",
+        tip: "If you can’t find the answer, the question may be wrong. Rewrite it.",
+        minutes: 7,
+      },
+      {
+        title: "Recite",
+        instruction: "Close the book and answer the question out loud or in writing in your own words. If you can’t, reread just that section. This step is the most important: it’s active recall built into your reading.",
+        minutes: 3,
+      },
+      {
+        title: "Repeat for the other sections",
+        instruction: "Go through the remaining sections: read, then recite, one at a time. Stop when your time is up and note where you stopped, so you can pick up tomorrow.",
+        minutes: 15,
+      },
+      {
+        title: "Review",
+        instruction: "Cover your answers and look only at your questions. Answer all of them again from memory. Mark any you missed and revisit those tomorrow. Done when you can answer every question without the text.",
+        minutes: 5,
+      },
     ],
     fit: {
       material: ["reading"],
@@ -220,11 +503,41 @@ export const METHODS = [
     ],
     evidence: "Rated “moderate” by Dunlosky et al. (2013); later math-classroom trials show some of the largest effects on this list.",
     session: [
-      { title: "Choose 2–3 related topics", instruction: "Pick two or three topics or problem types that are easy to confuse, like different integration methods or different verb tenses. Collect 3–4 practice problems for each.", minutes: 0 },
-      { title: "Shuffle them together", instruction: "Mix all the problems into one pile and shuffle. Never do more than two of the same type in a row.", minutes: 3 },
-      { title: "Work the mixed set", instruction: "Solve the problems in the shuffled order. For each, first decide which type it is and why, then solve. It will feel harder than blocked practice; that is working.", minutes: 20 },
-      { title: "Check your answers", instruction: "Mark each problem. For each miss, note whether you used the wrong method or the right method wrongly.", minutes: 5 },
-      { title: "Review the confusions", instruction: "Write one line for each pair of topics you mixed up: how to tell them apart. Use this as tomorrow’s warm-up.", minutes: 2 },
+      {
+        title: "Choose 2–3 topics that get confused",
+        instruction: "Pick two or three related topics or problem types, ideally ones you tend to mix up. Then collect 3–4 practice items for each, from your homework, textbook, or old exams. If you only have one chapter of material, mix different problem types from within it.",
+        example: {
+          default: "Related topics you can confuse with each other.",
+          quantitative: "Integration by parts, substitution, and partial fractions.",
+          science: "Mitosis versus meiosis, or SN1 versus SN2 reactions.",
+          humanities: "Compare causes of three different revolutions, or mix questions on different time periods.",
+          language: "Past tenses: preterite versus imperfect, in mixed fill-in-the-blank sentences.",
+          programming: "Sorting algorithms, or loops versus recursion for the same problem.",
+        },
+        tip: "Humanities has no “problems”? Use essay prompts or short-answer questions from different topics.",
+        minutes: 0,
+      },
+      {
+        title: "Shuffle them together",
+        instruction: "Put all the items into one pile and shuffle, or write them in a list in random order. Never put more than two of the same type in a row. Don’t sort them by type, even though it’s tempting.",
+        minutes: 3,
+      },
+      {
+        title: "Work the mixed set",
+        instruction: "Go through the items in the shuffled order. For each one, first decide which type it is and why, then solve it. It will feel harder and slower than blocked practice. That is working. Don’t go back and group them.",
+        tip: "If you’re stuck on identifying the type, that’s the skill you’re training. Write down your guess and carry on.",
+        minutes: 20,
+      },
+      {
+        title: "Check your answers",
+        instruction: "Mark each item. For each miss, note whether you picked the wrong type or the right type and made a mistake solving it. These are different problems with different fixes.",
+        minutes: 5,
+      },
+      {
+        title: "Review the confusions",
+        instruction: "Write one line for each pair of topics you mixed up: how you tell them apart. Use that list as tomorrow’s warm-up. Done when you can say, for each pair, the clue that tells you which is which.",
+        minutes: 2,
+      },
     ],
     fit: {
       material: ["problems"],
@@ -247,10 +560,36 @@ export const METHODS = [
     ],
     evidence: "Devised by Francesco Cirillo in the late 1980s; the evidence is mostly on-task time and self-report.",
     session: [
-      { title: "Pick one task", instruction: "Write down the single thing you will work on for the next 25 minutes. Put your phone in another room or on silent, face down, out of reach.", minutes: 0 },
-      { title: "Focus", instruction: "Work only on that task. If something else pops into your head, jot it on a scrap of paper and go back. No switching.", minutes: 25 },
-      { title: "Break", instruction: "Stand up and step away from your screen. Stretch, get water, look out a window. Don’t check your phone.", minutes: 5 },
-      { title: "Review", instruction: "What did you get done? If there’s more to do, start another session from the top. After four rounds, take a longer break of 15–30 minutes.", minutes: 0 },
+      {
+        title: "Set up one task",
+        instruction: "Choose the single thing you’ll work on for 25 minutes. Make it specific and finishable in one round, such as “do problems 1–5” rather than “study”. If the task is big, write the first small piece. Then clear the area: phone in another room or silent and face down, close extra tabs, and fill your water.",
+        example: {
+          default: "A specific piece of work, such as “read pages 40–50 and write 3 questions.”",
+          quantitative: "“Do problems 1–5 from the homework.”",
+          science: "“Read the section on photosynthesis and fill in the diagram.”",
+          humanities: "“Write the first two paragraphs of the essay.”",
+          language: "“Learn the 15 words in unit 4.”",
+          programming: "“Get the first test in the assignment passing.”",
+        },
+        tip: "Feeling overwhelmed? Make the task smaller until you could start it right now.",
+        minutes: 0,
+      },
+      {
+        title: "Focus",
+        instruction: "Work only on that task. If something else pops into your head, jot it on a scrap of paper and go straight back. Don’t switch tasks, check messages, or stop to look something up. If you finish early, review what you just did.",
+        tip: "Want to quit at minute 10? That’s normal. Stay until the timer ends.",
+        minutes: 25,
+      },
+      {
+        title: "Break",
+        instruction: "Stand up and step away from your screen. Stretch, get water, look out a window. Don’t check your phone: scrolling doesn’t rest your attention.",
+        minutes: 5,
+      },
+      {
+        title: "Check in",
+        instruction: "What did you get done? Note it, and decide what the next round will be. If there’s more to do, start another round from the top. After four rounds, take a longer break of 15–30 minutes. Done when your task is finished or you’ve done four rounds.",
+        minutes: 0,
+      },
     ],
     requiresStruggle: true,
     fit: {
@@ -274,11 +613,41 @@ export const METHODS = [
     ],
     evidence: "Rated “high utility” by Dunlosky et al. (2013); the spacing effect dates to Ebbinghaus (1885).",
     session: [
-      { title: "Find your deadline", instruction: "Write down the exam or due date and count the weeks or days between now and then.", minutes: 0 },
-      { title: "List what you need to know", instruction: "Write every topic you must know by the deadline, as specific items such as “chapters 3–5” or “lab 2 concepts.”", minutes: 5 },
-      { title: "Assign topics to days", instruction: "Spread the topics across every remaining week, not just the last one. Aim for several short sessions a week rather than one long one.", minutes: 5 },
-      { title: "Add review sessions", instruction: "Each time you finish a topic, schedule a short revisit to it a few days later, and again a week after that.", minutes: 3 },
-      { title: "Put it on your calendar", instruction: "Enter each session as an event with its topic. Keep sessions to 30–45 minutes, and shorter as the date nears.", minutes: 2 },
+      {
+        title: "Find your deadline",
+        instruction: "Write down the exam or due date and count the days or weeks between now and then. Also note how many study sessions you realistically have per week, and on which days. If you only have a few days, spread what you have rather than cramming into one.",
+        minutes: 0,
+      },
+      {
+        title: "List what you need to know",
+        instruction: "Write every topic you must know by the deadline as specific items, not “study chapter 3” but its subtopics. Use your syllabus, lecture notes, or the exam’s coverage list. Mark the ones you find hardest.",
+        example: {
+          default: "Topics, chapters, and skills from the syllabus.",
+          quantitative: "Problem types, formulas, and proofs you’ll need.",
+          science: "Chapters, pathways, mechanisms, and terms.",
+          humanities: "Periods, themes, readings, and essay topics.",
+          language: "Vocabulary units, grammar points, and speaking practice.",
+          programming: "Concepts, data structures, and projects or assignments to finish.",
+        },
+        tip: "If the list is longer than you can cover, flag what’s worth the most marks first.",
+        minutes: 5,
+      },
+      {
+        title: "Assign topics to sessions",
+        instruction: "Spread the topics across every remaining week, not just the last one. Aim for several short sessions a week instead of one long one. Put the hardest topics earliest, so you have time to revisit them. Write the topic next to each date.",
+        tip: "Three weeks and three sessions a week gives you about nine sessions. Give hard topics two of them.",
+        minutes: 5,
+      },
+      {
+        title: "Add review sessions",
+        instruction: "Each time you finish a topic, schedule a short revisit to it a few days later, and again about a week after that. Mix older topics into later sessions instead of leaving them behind. Add one session near the end for a full practice test, if possible.",
+        minutes: 3,
+      },
+      {
+        title: "Put it on your calendar",
+        instruction: "Enter each session as an event with its topic and length. Keep sessions to 30–45 minutes, and shorter as the date nears; don’t compress by merging sessions. Done when every session is in your calendar. Then pick a method from this app for the first one.",
+        minutes: 2,
+      },
     ],
     requiresStruggle: true,
     fit: {

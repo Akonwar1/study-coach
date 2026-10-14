@@ -1,16 +1,17 @@
 import { button, el } from "./dom.js";
 import { METHODS } from "./methods.js";
-import { QUESTIONS } from "./questions.js";
+import { ALL_QUESTIONS, SUBJECT_QUESTION } from "./questions.js";
 import { recommend, validateAnswers } from "./recommend.js";
 import { elapsedMinutes, isComplete, isResumable, nextStep, startSession } from "./session.js";
 import { renderSession, stopTicking } from "./session-view.js";
+import { resolveSteps } from "./tailor.js";
 import { addHistoryEntry, clearActiveSession, loadActiveSession, loadHistory, saveActiveSession } from "./storage.js";
 
 const main = document.getElementById("main");
 const methodById = (id) => METHODS.find((m) => m.id === id);
 
 let answers = {};
-let stepIndex = 0; // which question we're on; QUESTIONS.length means "show results"
+let stepIndex = 0; // which question we're on; ALL_QUESTIONS.length means "show results"
 let errorMessage = "";
 let activeSession = null; // the guided session on screen, or null
 let finishedEntry = null; // the session just completed, for the "well done" screen
@@ -61,8 +62,8 @@ function renderHistory() {
 }
 
 function renderQuestion() {
-  const question = QUESTIONS[stepIndex];
-  const isLast = stepIndex === QUESTIONS.length - 1;
+  const question = ALL_QUESTIONS[stepIndex];
+  const isLast = stepIndex === ALL_QUESTIONS.length - 1;
   const selected = answers[question.id];
 
   const options = question.options.map((option) => {
@@ -97,7 +98,7 @@ function renderQuestion() {
         errorMessage = "Please choose an answer to continue.";
       } else if (isLast) {
         errorMessage = validateAnswers(answers) ?? "";
-        if (!errorMessage) stepIndex = QUESTIONS.length;
+        if (!errorMessage) stepIndex = ALL_QUESTIONS.length;
       } else {
         stepIndex += 1;
         errorMessage = "";
@@ -112,9 +113,9 @@ function renderQuestion() {
   show(
     ...(resumable ? [renderResumeBanner(resumable)] : []),
     el("section", { className: "question" }, [
-      el("p", { className: "progress", text: `Question ${stepIndex + 1} of ${QUESTIONS.length}` }),
+      el("p", { className: "progress", text: `Question ${stepIndex + 1} of ${ALL_QUESTIONS.length}` }),
       el("div", { className: "progress-bar" }, [
-        el("span", { attrs: { style: `width:${((stepIndex + 1) / QUESTIONS.length) * 100}%` } }),
+        el("span", { attrs: { style: `width:${((stepIndex + 1) / ALL_QUESTIONS.length) * 100}%` } }),
       ]),
       el("h2", { text: question.prompt }),
       el("div", { className: "options", attrs: { role: "group", "aria-label": question.prompt } }, options),
@@ -171,7 +172,7 @@ function renderResults() {
 // ---------- guided session ----------
 
 function beginSession(method) {
-  openSession(startSession(method, Date.now()));
+  openSession(startSession(method, Date.now(), answers.subject));
 }
 
 function openSession(session) {
@@ -214,8 +215,11 @@ function leaveSession() {
 
 function renderSessionScreen() {
   const method = methodById(activeSession.methodId);
+  const subject = SUBJECT_QUESTION.options.find((option) => option.id === activeSession.subject);
   const screen = renderSession({
     method,
+    steps: resolveSteps(method, activeSession.subject),
+    subjectLabel: subject && subject.id !== "other" ? subject.label : "",
     session: activeSession,
     onUpdate: updateSession,
     onNext: advanceSession,
@@ -255,7 +259,7 @@ function render() {
   stopTicking(); // only the session screen runs a clock, and it restarts its own
   if (activeSession) renderSessionScreen();
   else if (finishedEntry) renderDone();
-  else if (stepIndex >= QUESTIONS.length) renderResults();
+  else if (stepIndex >= ALL_QUESTIONS.length) renderResults();
   else renderQuestion();
 }
 

@@ -51,6 +51,13 @@ export const METHODS = [
       "Let the intervals stretch from a day to weeks as items stick.",
     ],
     evidence: "Also rated “high utility” by Dunlosky et al. (2013); compounds well with active recall.",
+    session: [
+      { title: "Gather today’s material", instruction: "Collect the facts you want to remember: terms, formulas, dates. Get index cards or open a flashcard app like Anki.", minutes: 0 },
+      { title: "Make cards", instruction: "Write one question per card, with the answer on the back. Keep each card to a single fact, and phrase the front so you have to recall, not recognise.", minutes: 8 },
+      { title: "Review the pile", instruction: "Go through the cards. Say the answer out loud before flipping each one. Sort into two piles: got it, and missed it.", minutes: 5 },
+      { title: "Set the next review dates", instruction: "Missed cards come back tomorrow. Cards you got right go further out: 3 days for new ones, then a week, then two weeks. Write the date on the card or in your app.", minutes: 3 },
+      { title: "Put it on your calendar", instruction: "Add a reminder for tomorrow’s review of the missed pile. Even 5 minutes counts; the spacing is what matters.", minutes: 0 },
+    ],
     fit: {
       material: ["facts"],
       struggle: ["forget"],
@@ -71,6 +78,14 @@ export const METHODS = [
       "Compare your sketch to the source and fix what’s off.",
     ],
     evidence: "Grounded in Paivio’s dual-coding theory; gains are largest for material with real spatial or causal structure.",
+    session: [
+      { title: "Pick a topic", instruction: "Choose one topic with real structure: a process, a timeline, a set of parts, or cause and effect. Have blank paper and a pen ready.", minutes: 0 },
+      { title: "Read it in words", instruction: "Read or listen to the material once, in words only. Don’t draw yet.", minutes: 5 },
+      { title: "Redraw it from memory", instruction: "Close the source. Draw the topic as a diagram, map, or timeline. Boxes and arrows are fine; it doesn’t have to be pretty.", minutes: 7 },
+      { title: "Label in your own words", instruction: "Label every part of your drawing in your own words, not the source’s. Add arrows that say how the parts connect.", minutes: 4 },
+      { title: "Compare and fix", instruction: "Open the source and compare. In a different colour, correct anything missing or wrong in your sketch.", minutes: 4 },
+      { title: "Explain your picture", instruction: "Using only your sketch, explain the topic out loud from start to finish. Notice where the picture fails you; that is what to review next.", minutes: 0 },
+    ],
     fit: {
       material: ["diagrams"],
       struggle: ["forget", "confused"],
@@ -118,6 +133,14 @@ export const METHODS = [
       "Check your explanation against the source and correct it.",
     ],
     evidence: "Rated “moderate utility” by Dunlosky et al. (2013); works best on material with clear causes.",
+    session: [
+      { title: "Pick your facts", instruction: "Choose 5 facts or claims from your notes that have a reason behind them, such as “the heart has four chambers.”", minutes: 0 },
+      { title: "Ask why", instruction: "Take the first fact and ask: “Why would this be true?” Write the question at the top of a line.", minutes: 1 },
+      { title: "Answer from what you know", instruction: "Answer in your own words using what you already know, not the text. A guess is fine; connecting ideas is the point.", minutes: 3 },
+      { title: "Check the source", instruction: "Look up the explanation in your notes or textbook. Fix your answer where it was wrong or too vague.", minutes: 2 },
+      { title: "Repeat for the rest", instruction: "Do the same for the remaining facts: ask why, answer from memory, then check. Move on after about 3 minutes each.", minutes: 9 },
+      { title: "Pick the weak spot", instruction: "Circle the fact you explained worst. Tomorrow, start there.", minutes: 0 },
+    ],
     fit: {
       material: ["facts"],
       struggle: ["confused"],
@@ -138,6 +161,14 @@ export const METHODS = [
       "Redo those steps until you can narrate them without notes.",
     ],
     evidence: "Rated “moderate utility” by Dunlosky et al. (2013); especially effective on worked math and science examples.",
+    session: [
+      { title: "Choose a worked example", instruction: "Pick one worked problem from your textbook or notes, or a short passage. Cover everything below the first step.", minutes: 0 },
+      { title: "Do one step at a time", instruction: "Read or work only the first step, then uncover the next. Don’t rush ahead.", minutes: 3 },
+      { title: "Explain each step", instruction: "After every step, say out loud what you just did, why it was allowed, and how it follows from the step before. Write down any step you can’t explain.", minutes: 10 },
+      { title: "Mark the gaps", instruction: "Look at your list of steps you couldn’t explain. Go back to your notes or textbook and work out each one.", minutes: 5 },
+      { title: "Redo it without notes", instruction: "Close the example and solve it again from scratch, narrating each step out loud. Stop and note it if you get stuck.", minutes: 5 },
+      { title: "Try a new problem", instruction: "Attempt a similar problem using the same narration. If you can explain every step, you’ve got it.", minutes: 0 },
+    ],
     fit: {
       material: ["problems"],
       struggle: ["confused", "unsure"],
@@ -159,6 +190,15 @@ export const METHODS = [
       "Review: once the chapter’s done, recite all the answers together.",
     ],
     evidence: "Developed by Francis Robinson in 1946; most of its benefit comes from the recite step, which is active recall.",
+    session: [
+      { title: "Choose a chapter", instruction: "Pick one chapter or section of dense reading, and have a blank sheet of paper ready.", minutes: 0 },
+      { title: "Survey", instruction: "Skim the headings, captions, bold terms, and the summary at the end. Don’t read paragraphs yet; just build a map.", minutes: 3 },
+      { title: "Question", instruction: "Turn each heading into a question on your paper. “Causes of the war” becomes “What caused the war?”", minutes: 4 },
+      { title: "Read one section", instruction: "Read the first section looking only for the answer to its question. Take no notes yet.", minutes: 7 },
+      { title: "Recite", instruction: "Close the text and answer the question out loud or in writing, in your own words. If you can’t, reread that section.", minutes: 3 },
+      { title: "Repeat for the next sections", instruction: "Go through the remaining sections: read, then recite, one at a time. Stop when your time is up and note where you stopped.", minutes: 15 },
+      { title: "Review", instruction: "Look only at your questions and answer them all again from memory. Mark any you missed and revisit them tomorrow.", minutes: 5 },
+    ],
     fit: {
       material: ["reading"],
       struggle: ["confused", "start"],
@@ -179,6 +219,13 @@ export const METHODS = [
       "Review misses by which topic you confused, not just which you got wrong.",
     ],
     evidence: "Rated “moderate” by Dunlosky et al. (2013); later math-classroom trials show some of the largest effects on this list.",
+    session: [
+      { title: "Choose 2–3 related topics", instruction: "Pick two or three topics or problem types that are easy to confuse, like different integration methods or different verb tenses. Collect 3–4 practice problems for each.", minutes: 0 },
+      { title: "Shuffle them together", instruction: "Mix all the problems into one pile and shuffle. Never do more than two of the same type in a row.", minutes: 3 },
+      { title: "Work the mixed set", instruction: "Solve the problems in the shuffled order. For each, first decide which type it is and why, then solve. It will feel harder than blocked practice; that is working.", minutes: 20 },
+      { title: "Check your answers", instruction: "Mark each problem. For each miss, note whether you used the wrong method or the right method wrongly.", minutes: 5 },
+      { title: "Review the confusions", instruction: "Write one line for each pair of topics you mixed up: how to tell them apart. Use this as tomorrow’s warm-up.", minutes: 2 },
+    ],
     fit: {
       material: ["problems"],
       struggle: ["unsure"],
@@ -226,6 +273,13 @@ export const METHODS = [
       "Shrink session length as the date nears; don’t compress by merging sessions.",
     ],
     evidence: "Rated “high utility” by Dunlosky et al. (2013); the spacing effect dates to Ebbinghaus (1885).",
+    session: [
+      { title: "Find your deadline", instruction: "Write down the exam or due date and count the weeks or days between now and then.", minutes: 0 },
+      { title: "List what you need to know", instruction: "Write every topic you must know by the deadline, as specific items such as “chapters 3–5” or “lab 2 concepts.”", minutes: 5 },
+      { title: "Assign topics to days", instruction: "Spread the topics across every remaining week, not just the last one. Aim for several short sessions a week rather than one long one.", minutes: 5 },
+      { title: "Add review sessions", instruction: "Each time you finish a topic, schedule a short revisit to it a few days later, and again a week after that.", minutes: 3 },
+      { title: "Put it on your calendar", instruction: "Enter each session as an event with its topic. Keep sessions to 30–45 minutes, and shorter as the date nears.", minutes: 2 },
+    ],
     requiresStruggle: true,
     fit: {
       material: [],

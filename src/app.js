@@ -2,7 +2,7 @@ import { button, el } from "./dom.js";
 import { METHODS } from "./methods.js";
 import { QUESTIONS } from "./questions.js";
 import { recommend, validateAnswers } from "./recommend.js";
-import { elapsedMinutes, hasWalkthrough, isComplete, isResumable, nextStep, startSession } from "./session.js";
+import { elapsedMinutes, isComplete, isResumable, nextStep, startSession } from "./session.js";
 import { renderSession, stopTicking } from "./session-view.js";
 import { addHistoryEntry, clearActiveSession, loadActiveSession, loadHistory, saveActiveSession } from "./storage.js";
 
@@ -129,9 +129,7 @@ function renderQuestion() {
 
 function renderResultCard({ method, reasons }, rank) {
   const isTop = rank === 0;
-  const startAction = hasWalkthrough(method)
-    ? button("Start guided session", { primary: true, onClick: () => beginSession(method) })
-    : el("p", { className: "coming-soon", text: "A guided walkthrough for this method is coming soon." });
+  const startAction = button("Start guided session", { primary: true, onClick: () => beginSession(method) });
 
   return el("article", { className: `result-card${isTop ? " top" : ""}` }, [
     el("p", { className: "badge", text: isTop ? "Start with this" : "Also worth trying" }),

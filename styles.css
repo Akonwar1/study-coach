@@ -200,7 +200,6 @@ button { font: inherit; color: inherit; cursor: pointer; }
 }
 
 .card-action { margin-top: 16px; }
-.coming-soon { margin: 0; font-size: 14px; color: var(--ink-soft); font-style: italic; }
 
 .banner {
   padding: 14px 16px;

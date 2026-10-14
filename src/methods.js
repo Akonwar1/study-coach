@@ -3,6 +3,7 @@
 // fit.material: kinds of material the method suits
 // fit.struggle: problems the method helps with
 // fit.horizon:  time-until-deadline buckets where the method works well
+// tags:         short labels for the library: what the method helps with, and how it works
 // requiresStruggle: only recommend when the student reports one of its struggles
 // session:      guided walkthrough, a list of { title, instruction, minutes (0 = no timer), example?, tip? };
 //               instruction, example and tip can vary by subject; see tailor.js
@@ -13,6 +14,7 @@ export const METHODS = [
     id: "active-recall",
     name: "Active Recall",
     tagline: "Retrieve before you re-read.",
+    tags: { helps: ["Memory", "Self-checking"], how: ["Self-testing"] },
     utility: 3,
     minutes: 20,
     def: "Close the book and try to pull information out of memory before you check it, through blank-page recall, flashcards, or practice questions.",
@@ -94,6 +96,7 @@ export const METHODS = [
     id: "spaced-repetition",
     name: "Spaced Repetition",
     tagline: "Review right before you’d forget.",
+    tags: { helps: ["Memory"], how: ["Flashcards", "Scheduling"] },
     utility: 3,
     minutes: 15,
     def: "Spread reviews of the same material across days and weeks at increasing intervals, so each review lands just as the memory starts to fade.",
@@ -163,6 +166,7 @@ export const METHODS = [
     id: "dual-coding",
     name: "Dual Coding",
     tagline: "Say it, then draw it.",
+    tags: { helps: ["Memory", "Understanding"], how: ["Drawing"] },
     utility: 2,
     minutes: 20,
     def: "Pair verbal information with a visual you make yourself, such as a diagram, timeline, or sketch, so the idea is encoded two ways instead of one.",
@@ -231,6 +235,7 @@ export const METHODS = [
     id: "feynman",
     name: "Feynman Technique",
     tagline: "Teach it to someone who knows nothing.",
+    tags: { helps: ["Understanding", "Self-checking"], how: ["Explaining"] },
     utility: 2,
     minutes: 25,
     def: "Explain a concept out loud in plain language, as if to someone with no background. Where your explanation gets clumsy is where your understanding is thin.",
@@ -293,6 +298,7 @@ export const METHODS = [
     id: "elaborative-interrogation",
     name: "Elaborative Interrogation",
     tagline: "Ask “why is that true?”",
+    tags: { helps: ["Understanding"], how: ["Asking why"] },
     utility: 2,
     minutes: 15,
     def: "For each fact you’re studying, stop and ask why it’s true, then explain it by connecting it to what you already know.",
@@ -360,6 +366,7 @@ export const METHODS = [
     id: "self-explanation",
     name: "Self-Explanation",
     tagline: "Narrate your own reasoning.",
+    tags: { helps: ["Understanding"], how: ["Explaining", "Problem solving"] },
     utility: 2,
     minutes: 20,
     def: "While working a problem or passage, explain each step out loud: how it follows from the last one and what role it plays.",
@@ -447,6 +454,7 @@ export const METHODS = [
     id: "sq3r",
     name: "SQ3R",
     tagline: "Survey, question, read, recite, review.",
+    tags: { helps: ["Understanding", "Getting started"], how: ["Reading", "Self-testing"] },
     utility: 2,
     minutes: 40,
     def: "A five-step structure for dense reading: survey headings, turn them into questions, read to answer them, recite the answers from memory, then review.",
@@ -529,6 +537,7 @@ export const METHODS = [
     id: "interleaving",
     name: "Interleaving",
     tagline: "Mix topics instead of blocking them.",
+    tags: { helps: ["Self-checking"], how: ["Practice problems", "Mixing topics"] },
     utility: 2,
     minutes: 30,
     def: "Mix several related topics or problem types within one session instead of drilling one at a time. It feels harder but trains you to tell the topics apart.",
@@ -588,6 +597,7 @@ export const METHODS = [
     id: "pomodoro",
     name: "Pomodoro Technique",
     tagline: "25 minutes on, 5 minutes off.",
+    tags: { helps: ["Focus", "Getting started"], how: ["Timed work"] },
     utility: 1,
     minutes: 25,
     def: "Work in fixed 25-minute intervals with a 5-minute break between them. It manages attention and starting, not what you remember, so pair it with a method above.",
@@ -645,6 +655,7 @@ export const METHODS = [
     id: "distributed-practice",
     name: "Distributed Practice Scheduling",
     tagline: "Plan sessions across weeks, not the night before.",
+    tags: { helps: ["Memory", "Planning"], how: ["Scheduling"] },
     utility: 3,
     minutes: 15,
     def: "Plan study sessions for a topic across the whole run-up to a deadline instead of massing them into one or two long sessions.",

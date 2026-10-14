@@ -16,14 +16,14 @@ function html(tag, className, children = [], attrs = {}) {
   return node;
 }
 
-function svg(tag, attrs = {}, children = []) {
+export function svg(tag, attrs = {}, children = []) {
   const node = document.createElementNS(SVG_NS, tag);
   for (const [name, value] of Object.entries(attrs)) node.setAttribute(name, String(value));
   for (const child of children) node.append(child);
   return node;
 }
 
-function svgText(text, attrs) {
+export function svgText(text, attrs) {
   const node = svg("text", attrs);
   node.textContent = text;
   return node;

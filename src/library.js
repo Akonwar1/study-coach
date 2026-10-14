@@ -32,12 +32,12 @@ export function hasActiveFilters(filters) {
 
 function labels(questionId, ids) {
   const question = QUESTIONS.find((q) => q.id === questionId);
-  return ids.map((id) => question.options.find((o) => o.id === id).label.toLowerCase());
+  return ids.map((id) => question.options.find((o) => o.id === id).label);
 }
 
 /** One-line plain-English summary of what a method suits and helps with. */
 export function describeFit(method) {
-  const material = method.fit.material.length ? labels("material", method.fit.material).join(", ") : "any material";
-  const struggle = labels("struggle", method.fit.struggle).join(", ");
+  const material = method.fit.material.length ? labels("material", method.fit.material).join(", ").toLowerCase() : "any material";
+  const struggle = labels("struggle", method.fit.struggle).map((label) => `“${label}”`).join(", ");
   return { material, struggle };
 }

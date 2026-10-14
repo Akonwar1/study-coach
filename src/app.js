@@ -1,4 +1,5 @@
 import { button, el } from "./dom.js";
+import { FILTER_GROUPS, NO_FILTERS, describeFit, filterMethods, hasActiveFilters } from "./library.js";
 import { METHODS } from "./methods.js";
 import { ALL_QUESTIONS, SUBJECT_QUESTION } from "./questions.js";
 import { recommend, validateAnswers } from "./recommend.js";
@@ -10,6 +11,8 @@ import { addHistoryEntry, clearActiveSession, loadActiveSession, loadHistory, sa
 const main = document.getElementById("main");
 const methodById = (id) => METHODS.find((m) => m.id === id);
 
+let view = location.hash === "#library" ? "library" : "coach";
+let libraryFilters = { ...NO_FILTERS };
 let answers = {};
 let stepIndex = 0; // which question we're on; ALL_QUESTIONS.length means "show results"
 let errorMessage = "";
@@ -128,6 +131,14 @@ function renderQuestion() {
 
 // ---------- results ----------
 
+function renderHowTo(method) {
+  return [
+    el("h4", { className: "steps-title", text: "How to do it" }),
+    el("ol", { className: "steps" }, method.steps.map((step) => el("li", { text: step }))),
+    el("p", { className: "evidence", text: method.evidence }),
+  ];
+}
+
 function renderResultCard({ method, reasons }, rank) {
   const isTop = rank === 0;
   const startAction = button("Start guided session", { primary: true, onClick: () => beginSession(method) });
@@ -139,9 +150,7 @@ function renderResultCard({ method, reasons }, rank) {
     el("span", { className: "duration", text: `about ${method.minutes} min per session` }),
     el("p", { text: method.def }),
     el("ul", { className: "reasons" }, reasons.map((reason) => el("li", { text: reason }))),
-    el("h4", { className: "steps-title", text: "How to do it" }),
-    el("ol", { className: "steps" }, method.steps.map((step) => el("li", { text: step }))),
-    el("p", { className: "evidence", text: method.evidence }),
+    ...renderHowTo(method),
     el("div", { className: "card-action" }, [startAction]),
   ]);
 }
@@ -219,6 +228,7 @@ function renderSessionScreen() {
   const screen = renderSession({
     method,
     steps: resolveSteps(method, activeSession.subject),
+    subject: activeSession.subject,
     subjectLabel: subject && subject.id !== "other" ? subject.label : "",
     session: activeSession,
     onUpdate: updateSession,
@@ -255,10 +265,121 @@ function renderDone() {
   );
 }
 
+// ---------- method library ----------
+
+function renderFilterGroup(group) {
+  const choices = [{ id: "", label: "Any" }, ...group.options];
+  const chips = choices.map((option) => {
+    const chip = el("button", {
+      className: "chip",
+      text: option.label,
+      attrs: { type: "button", "aria-pressed": String(libraryFilters[group.id] === option.id) },
+    });
+    chip.addEventListener("click", () => {
+      libraryFilters = { ...libraryFilters, [group.id]: option.id };
+      render();
+    });
+    return chip;
+  });
+  return el("fieldset", { className: "filter-group" }, [
+    el("legend", { text: group.prompt }),
+    el("div", { className: "chips" }, chips),
+  ]);
+}
+
+function renderSubjectPicker() {
+  const select = el("select", { attrs: { id: "library-subject" } }, SUBJECT_QUESTION.options.map((option) =>
+    el("option", { text: option.label, attrs: { value: option.id } }),
+  ));
+  select.value = answers.subject ?? "other";
+  select.addEventListener("change", () => {
+    answers.subject = select.value;
+  });
+  return el("div", { className: "subject-picker" }, [
+    el("label", { text: "Subject for guided sessions", attrs: { for: "library-subject" } }),
+    select,
+  ]);
+}
+
+function renderLibraryCard(method) {
+  const fit = describeFit(method);
+  return el("article", { className: "result-card" }, [
+    el("h3", { text: method.name }),
+    el("p", { className: "method-tagline", text: method.tagline }),
+    el("span", { className: "duration", text: `about ${method.minutes} min per session` }),
+    el("p", { text: method.def }),
+    el("dl", { className: "fit-list" }, [
+      el("dt", { text: "Suits" }),
+      el("dd", { text: fit.material }),
+      el("dt", { text: "Helps when" }),
+      el("dd", { text: fit.struggle }),
+    ]),
+    el("details", {}, [el("summary", { text: "Show the steps" }), ...renderHowTo(method)]),
+    el("div", { className: "card-action" }, [
+      button("Start guided session", { primary: true, onClick: () => beginSession(method) }),
+    ]),
+  ]);
+}
+
+function renderLibrary() {
+  const matches = filterMethods(METHODS, libraryFilters);
+  const clear = button("Clear filters", {
+    onClick: () => {
+      libraryFilters = { ...NO_FILTERS };
+      render();
+    },
+  });
+  const results = matches.length
+    ? matches.map(renderLibraryCard)
+    : [el("p", { className: "empty", text: "No methods match all of those filters. Try choosing “Any” for one of them." })];
+
+  show(
+    el("section", { className: "library" }, [
+      el("h2", { text: "Method library" }),
+      el("p", { className: "results-intro", text: "Browse all the study methods, or narrow them down by what you’re studying, what’s in your way, and how much time you have." }),
+      ...FILTER_GROUPS.map(renderFilterGroup),
+      renderSubjectPicker(),
+      el("p", { className: "library-count", text: `Showing ${matches.length} of ${METHODS.length} methods`, attrs: { role: "status" } }),
+      ...(hasActiveFilters(libraryFilters) ? [clear] : []),
+      ...results,
+    ]),
+  );
+}
+
+// ---------- tabs ----------
+
+const TABS = [
+  { id: "coach", label: "Coach me" },
+  { id: "library", label: "Method library" },
+];
+
+function switchView(next) {
+  view = next;
+  history.replaceState(null, "", next === "library" ? "#library" : location.pathname + location.search);
+  activeSession = null; // an in-progress session is already saved and can be resumed from the coach tab
+  finishedEntry = null;
+  render();
+}
+
+function renderTabs() {
+  const tabs = TABS.map((tab) => {
+    const node = el("button", {
+      className: "tab",
+      text: tab.label,
+      attrs: { type: "button", ...(view === tab.id ? { "aria-current": "page" } : {}) },
+    });
+    node.addEventListener("click", () => switchView(tab.id));
+    return node;
+  });
+  document.getElementById("tabs").replaceChildren(...tabs);
+}
+
 function render() {
   stopTicking(); // only the session screen runs a clock, and it restarts its own
+  renderTabs();
   if (activeSession) renderSessionScreen();
   else if (finishedEntry) renderDone();
+  else if (view === "library") renderLibrary();
   else if (stepIndex >= ALL_QUESTIONS.length) renderResults();
   else renderQuestion();
 }

@@ -6,6 +6,7 @@
 // requiresStruggle: only recommend when the student reports one of its struggles
 // session:      guided walkthrough, a list of { title, instruction, minutes (0 = no timer), example?, tip? };
 //               instruction, example and tip can vary by subject; see tailor.js
+//               visual?: { name, highlight? } shows a diagram from visuals.js above the step’s text
 
 export const METHODS = [
   {
@@ -39,17 +40,20 @@ export const METHODS = [
       },
       {
         title: "Study it once",
+        visual: { name: "flow", labels: ["Study once", "Close it", "Recall", "Check", "Re-test"], highlight: 0 },
         instruction: "Read or watch the material one time, carefully. Don’t highlight and don’t re-read; the point is to understand it well enough that you have something to recall. Notice headings and bold terms, since they’ll help you structure your recall.",
         tip: "If you read it and it makes no sense, recall won’t work yet. Pause this session and try Feynman or Self-Explanation first.",
         minutes: 5,
       },
       {
         title: "Close it completely",
+        visual: { name: "flow", labels: ["Study once", "Close it", "Recall", "Check", "Re-test"], highlight: 1 },
         instruction: "Close the book or turn your notes face down, and put your phone away. Everything is out of sight before you start. Retrieval only works if you can’t peek.",
         minutes: 0,
       },
       {
         title: "Recall it from memory",
+        visual: { name: "flow", labels: ["Study once", "Close it", "Recall", "Check", "Re-test"], highlight: 2 },
         instruction: "Write down everything you can remember, with no looking. Don’t worry about order or neatness. Keep going even when it gets hard; that struggle is what makes the memory stick. Use the recall style that fits your subject. If you have practice questions or flashcards, answer them out loud or in writing instead.",
         example: {
           default: "Write a messy outline of every term, idea and example you remember.",
@@ -64,11 +68,13 @@ export const METHODS = [
       },
       {
         title: "Check against the source",
+        visual: { name: "flow", labels: ["Study once", "Close it", "Recall", "Check", "Re-test"], highlight: 3 },
         instruction: "Reopen your notes. With the different-coloured pen, add what you missed and correct what you got wrong. Count how many you got right, so you can compare next time. Don’t just read your notes again.",
         minutes: 5,
       },
       {
         title: "Re-test the gaps",
+        visual: { name: "flow", labels: ["Study once", "Close it", "Recall", "Check", "Re-test"], highlight: 4 },
         instruction: "Close the notes again. Write or say only the things you missed or got wrong, from memory. Repeat the check if you still miss some. Done when you can recall every item you missed the first time.",
         minutes: 5,
       },
@@ -115,6 +121,7 @@ export const METHODS = [
       },
       {
         title: "Make one card per fact",
+        visual: { name: "flashcard" },
         instruction: "Write one question on the front of each card and the answer on the back. One fact per card, and make the front a question you must recall, not something you can recognise. Keep answers short, a line at most.",
         example: {
           default: "Front: “What caused X?” Back: one-line answer.",
@@ -129,11 +136,13 @@ export const METHODS = [
       },
       {
         title: "Go through the pile once",
+        visual: { name: "leitner" },
         instruction: "Take each card, say the answer out loud before flipping, then check. Make two piles: got it, and missed it. Be honest. “Sort of” goes in missed.",
         minutes: 5,
       },
       {
         title: "Set the review dates",
+        visual: { name: "leitner" },
         instruction: "Use three boxes, or the scheduling in your app. Missed cards go in Box 1 and come back tomorrow. Cards you got right move to the next box: Box 1 is daily, Box 2 is every 3 days, Box 3 is weekly. Anytime you miss a card, it drops back to Box 1. Write the next review date on each pile.",
         tip: "Done when every card is in a box with a date. In an app, it does this for you; just check the next review dates look right.",
         minutes: 3,
@@ -167,6 +176,7 @@ export const METHODS = [
     session: [
       {
         title: "Pick a topic that has structure",
+        visual: { name: "diagram-types" },
         instruction: "Dual coding works best on material with a shape: a process, a sequence, parts of a whole, a comparison, or cause and effect. Choose one such topic, about one page of material. If your material is plain facts with no shape, use Spaced Repetition instead. Have blank paper and a pen ready.",
         example: {
           default: "A process, a timeline, or a system with parts.",
@@ -181,27 +191,32 @@ export const METHODS = [
       },
       {
         title: "Read it in words only",
+        visual: { name: "flow", labels: ["Read", "Draw", "Label", "Compare", "Explain"], highlight: 0 },
         instruction: "Read or listen to the material once, in words. Don’t draw yet. As you go, note the key items (the steps, parts, or things being compared) and how they connect.",
         minutes: 5,
       },
       {
         title: "Redraw it from memory",
+        visual: { name: "diagram-types" },
         instruction: "Close the source and draw the topic from memory. Choose the picture to match the shape: a flowchart or cycle for a process, a timeline for a sequence, a labelled diagram for parts, a table for a comparison, a concept map (circles and arrows) for ideas. It doesn’t have to be pretty. Boxes and arrows are fine.",
         tip: "Blank on part of it? Leave a gap. The gaps tell you what to study.",
         minutes: 7,
       },
       {
         title: "Label it in your own words",
+        visual: { name: "flow", labels: ["Read", "Draw", "Label", "Compare", "Explain"], highlight: 2 },
         instruction: "Label every part of your drawing in your own words, not the source’s. On each arrow, write what it means: “leads to”, “causes”, “is made of”. If you can’t label something, mark it with a question mark.",
         minutes: 4,
       },
       {
         title: "Compare and fix",
+        visual: { name: "flow", labels: ["Read", "Draw", "Label", "Compare", "Explain"], highlight: 3 },
         instruction: "Open the source and compare. With a different-coloured pen, correct anything missing or wrong, and fill in the question marks.",
         minutes: 4,
       },
       {
         title: "Explain your picture",
+        visual: { name: "flow", labels: ["Read", "Draw", "Label", "Compare", "Explain"], highlight: 4 },
         instruction: "Using only your sketch, explain the topic out loud from start to finish. Where the picture fails you, you have a gap to review next. Done when your sketch alone is enough to explain the whole topic. Keep it for review.",
         minutes: 0,
       },
@@ -229,6 +244,7 @@ export const METHODS = [
     session: [
       {
         title: "Name one concept",
+        visual: { name: "flow", labels: ["Name it", "Explain simply", "Find gaps", "Back to source", "Simplify"], highlight: 0 },
         instruction: "Write the name of a single concept at the top of a blank page. Pick something small enough to explain in a few minutes. Not “Chapter 4” but one idea inside it. Decide who you’re explaining it to: a friend in a different major, or a smart 12-year-old.",
         example: {
           default: "One idea from your course, such as “what a variable is.”",
@@ -243,22 +259,26 @@ export const METHODS = [
       },
       {
         title: "Explain it simply",
+        visual: { name: "flow", labels: ["Name it", "Explain simply", "Find gaps", "Back to source", "Simplify"], highlight: 1 },
         instruction: "Write your explanation below the title in plain words, as if to your listener. No jargon; if you must use a technical term, explain it. Say it out loud as you write, or record a voice memo. Include an example or analogy if you can.",
         tip: "Stalling, going vague, or saying “basically” and “you know”? That’s the sign of a gap. Keep going; you’ll find them next.",
         minutes: 8,
       },
       {
         title: "Find the gaps",
+        visual: { name: "flow", labels: ["Name it", "Explain simply", "Find gaps", "Back to source", "Simplify"], highlight: 2 },
         instruction: "Read your explanation back. Circle every place you stalled, guessed, hand-waved, or used a technical term without explaining it. These circles are the whole point: they’re what you don’t yet understand.",
         minutes: 3,
       },
       {
         title: "Go back to the source",
+        visual: { name: "flow", labels: ["Name it", "Explain simply", "Find gaps", "Back to source", "Simplify"], highlight: 3 },
         instruction: "Look up only the circled spots in your notes, textbook, or lectures. Read until you understand each one, then write the answer in your own words, not copied. If you still don’t get one, make a note to ask someone.",
         minutes: 8,
       },
       {
         title: "Simplify and re-explain",
+        visual: { name: "flow", labels: ["Name it", "Explain simply", "Find gaps", "Back to source", "Simplify"], highlight: 4, loop: "Still stuck on a part? Go round again for it." },
         instruction: "Write the explanation again from scratch, using what you just learned. Make it shorter and simpler, and add an analogy if you don’t have one. Done when you can explain it smoothly with no circles. If new circles appear, repeat steps 4–5 for them.",
         minutes: 5,
       },
@@ -286,6 +306,7 @@ export const METHODS = [
     session: [
       {
         title: "Pick facts that have a reason",
+        visual: { name: "flow", labels: ["Pick a fact", "Ask why", "Answer it", "Check source"], highlight: 0 },
         instruction: "This method works on facts that have a “why”, such as causes, rules, and mechanisms. If a fact is arbitrary (a vocabulary word, a date), skip it and use Spaced Repetition. Choose 5 facts or claims from your notes that have a reason behind them. Write each on its own line, leaving space below.",
         example: {
           default: "A claim with a cause behind it.",
@@ -300,22 +321,26 @@ export const METHODS = [
       },
       {
         title: "Ask “why is that true?”",
+        visual: { name: "flow", labels: ["Pick a fact", "Ask why", "Answer it", "Check source"], highlight: 1 },
         instruction: "Take the first fact. Under it, write the question: “Why is this true?” or “Why would this be the case?” Don’t look at your notes yet.",
         minutes: 1,
       },
       {
         title: "Answer from what you already know",
+        visual: { name: "flow", labels: ["Pick a fact", "Ask why", "Answer it", "Check source"], highlight: 2 },
         instruction: "Answer in your own words using what you already know, not the text. A guess is fine; connecting ideas together is the point. Aim for a sentence or two that has a “because” in it. If you really have no idea, write what you do know about the topic.",
         tip: "“It’s just a rule” isn’t an answer. Try “what would break if it weren’t true?”",
         minutes: 3,
       },
       {
         title: "Check the source",
+        visual: { name: "flow", labels: ["Pick a fact", "Ask why", "Answer it", "Check source"], highlight: 3 },
         instruction: "Look up the explanation in your notes or textbook. Compare it to your answer: mark what you got right, and fix what was wrong or too vague. Add anything the source explains that you missed.",
         minutes: 2,
       },
       {
         title: "Repeat for the other facts",
+        visual: { name: "flow", labels: ["Pick a fact", "Ask why", "Answer it", "Check source"], highlight: 0, loop: "Do this loop for each fact." },
         instruction: "Do the same for the remaining facts: ask why, answer from memory, then check. Give each about 3 minutes, and move on after that even if you’re unsure.",
         minutes: 9,
       },
@@ -348,6 +373,7 @@ export const METHODS = [
     session: [
       {
         title: "Gather your material",
+        visual: { name: "flow", labels: ["Gather", "Chunk it", "Explain", "Fix stars", "Redo", "Try new"], highlight: 0 },
         instruction: "Self-explanation means talking through why each piece of something works, not just reading it. Pick one thing to practise on, about a page or less, and choose the case that matches what you have. A worked solution (a solved problem with the steps shown): you’ll explain each step. A problem with no solution to read: you’ll solve it yourself in the next step, then explain your own moves. An essay, article, or textbook passage: you’ll explain each paragraph or claim. Have a pen and scratch paper ready.",
         example: {
           default: "Worked solution: a solved problem from lecture. No solution: a homework problem you haven’t done yet. Passage: three paragraphs from a reading.",
@@ -362,6 +388,7 @@ export const METHODS = [
       },
       {
         title: "Break it into chunks",
+        visual: { name: "flow", labels: ["Gather", "Chunk it", "Explain", "Fix stars", "Redo", "Try new"], highlight: 1 },
         instruction: "A chunk is one small piece you can explain on its own. Worked solution: each line or move is a chunk; if it isn’t numbered, mark where each new move starts. No solution: solve the problem now on scratch paper, writing each move on its own line; those lines are your chunks. Essay or passage: each paragraph is a chunk, or each separate claim if paragraphs are long. Aim for 4 to 10 chunks, and cover or fold everything except the first chunk.",
         example: {
           default: "Essay paragraph chunks: “Armies became loyal to generals, not the state” / “Land reform failed” / “Senators blocked change.”",
@@ -376,6 +403,7 @@ export const METHODS = [
       },
       {
         title: "Explain each chunk out loud",
+        visual: { name: "explain-questions" },
         instruction: "For each chunk, say out loud or write one or two sentences covering: what it says or does, why it’s true or allowed, and how it connects to the chunk before it. Problem step: what changed, why that move is allowed, and how it moves you toward the answer. Essay: what the claim is, what supports it, and how it leads to the next paragraph. Then uncover the next chunk and repeat. Put a star by any chunk where you can’t answer all three.",
         example: {
           default: "Problem step: “I subtracted 6 from both sides. That’s allowed because doing the same thing to both sides keeps an equation true. It gets the x-term alone.” Essay: “The author claims armies became loyal to generals. The evidence is that soldiers were paid by generals, so it leads into the next paragraph about civil war.”",
@@ -390,18 +418,21 @@ export const METHODS = [
       },
       {
         title: "Work out the starred chunks",
+        visual: { name: "flow", labels: ["Gather", "Chunk it", "Explain", "Fix stars", "Redo", "Try new"], highlight: 3 },
         instruction: "Each star is something you only thought you understood. Find the rule, definition, or background behind it in your notes, textbook, or lecture slides. Then explain that chunk again in your own words until you can say all three parts.",
         tip: "Still stuck after a few minutes? Write your question down and bring it to office hours or a classmate; that’s better than rereading.",
         minutes: 5,
       },
       {
         title: "Redo it without the source",
+        visual: { name: "flow", labels: ["Gather", "Chunk it", "Explain", "Fix stars", "Redo", "Try new"], highlight: 4 },
         instruction: "Hide the material. Problem: solve it again from scratch, narrating each move and why. Essay or passage: explain the argument from start to finish in your own words, out loud, chunk by chunk, without looking. If you get stuck, note exactly where, peek at only that chunk, and keep going.",
         tip: "Done when: you can get through the whole thing and explain every chunk without looking.",
         minutes: 5,
       },
       {
         title: "Try something similar",
+        visual: { name: "flow", labels: ["Gather", "Chunk it", "Explain", "Fix stars", "Redo", "Try new"], highlight: 5 },
         instruction: "Find one new problem or passage like the first, with different numbers, details, or topic, and explain it the same way. If you can explain every chunk, you’ve got it. If not, note which kind of chunk tripped you and start tomorrow’s session there.",
         minutes: 0,
       },
@@ -444,11 +475,13 @@ export const METHODS = [
       },
       {
         title: "Survey",
+        visual: { name: "flow", labels: ["Survey", "Question", "Read", "Recite", "Review"], highlight: 0 },
         instruction: "Skim the headings, captions, bold terms, any summary or learning goals, and the end-of-chapter questions. Don’t read paragraphs yet; build a map in your head. For something without headings, such as a research paper, read the abstract, the first sentence of each paragraph, and the conclusion.",
         minutes: 3,
       },
       {
         title: "Question",
+        visual: { name: "flow", labels: ["Survey", "Question", "Read", "Recite", "Review"], highlight: 1 },
         instruction: "Turn each heading into a question on your paper, leaving space under it for your answer. Make it a question you’d like answered, starting with what, why, or how.",
         example: {
           default: "“Causes of the war” becomes “What caused the war?”",
@@ -462,22 +495,26 @@ export const METHODS = [
       },
       {
         title: "Read one section",
+        visual: { name: "flow", labels: ["Survey", "Question", "Read", "Recite", "Review"], highlight: 2, loop: "Read, then recite, one section at a time." },
         instruction: "Read the first section looking only for the answer to its question. Don’t take notes yet, and don’t highlight. When you reach the end of the section, stop.",
         tip: "If you can’t find the answer, the question may be wrong. Rewrite it.",
         minutes: 7,
       },
       {
         title: "Recite",
+        visual: { name: "flow", labels: ["Survey", "Question", "Read", "Recite", "Review"], highlight: 3, loop: "Read, then recite, one section at a time." },
         instruction: "Close the book and answer the question out loud or in writing in your own words. If you can’t, reread just that section. This step is the most important: it’s active recall built into your reading.",
         minutes: 3,
       },
       {
         title: "Repeat for the other sections",
+        visual: { name: "flow", labels: ["Survey", "Question", "Read", "Recite", "Review"], highlight: 2, loop: "Read, then recite, one section at a time." },
         instruction: "Go through the remaining sections: read, then recite, one at a time. Stop when your time is up and note where you stopped, so you can pick up tomorrow.",
         minutes: 15,
       },
       {
         title: "Review",
+        visual: { name: "flow", labels: ["Survey", "Question", "Read", "Recite", "Review"], highlight: 4 },
         instruction: "Cover your answers and look only at your questions. Answer all of them again from memory. Mark any you missed and revisit those tomorrow. Done when you can answer every question without the text.",
         minutes: 5,
       },
@@ -519,11 +556,13 @@ export const METHODS = [
       },
       {
         title: "Shuffle them together",
+        visual: { name: "blocked-versus-mixed" },
         instruction: "Put all the items into one pile and shuffle, or write them in a list in random order. Never put more than two of the same type in a row. Don’t sort them by type, even though it’s tempting.",
         minutes: 3,
       },
       {
         title: "Work the mixed set",
+        visual: { name: "blocked-versus-mixed" },
         instruction: "Go through the items in the shuffled order. For each one, first decide which type it is and why, then solve it. It will feel harder and slower than blocked practice. That is working. Don’t go back and group them.",
         tip: "If you’re stuck on identifying the type, that’s the skill you’re training. Write down your guess and carry on.",
         minutes: 20,
@@ -562,6 +601,7 @@ export const METHODS = [
     session: [
       {
         title: "Set up one task",
+        visual: { name: "pomodoro-cycle" },
         instruction: "Choose the single thing you’ll work on for 25 minutes. Make it specific and finishable in one round, such as “do problems 1–5” rather than “study”. If the task is big, write the first small piece. Then clear the area: phone in another room or silent and face down, close extra tabs, and fill your water.",
         example: {
           default: "A specific piece of work, such as “read pages 40–50 and write 3 questions.”",
@@ -576,17 +616,20 @@ export const METHODS = [
       },
       {
         title: "Focus",
+        visual: { name: "pomodoro-cycle", highlight: "focus" },
         instruction: "Work only on that task. If something else pops into your head, jot it on a scrap of paper and go straight back. Don’t switch tasks, check messages, or stop to look something up. If you finish early, review what you just did.",
         tip: "Want to quit at minute 10? That’s normal. Stay until the timer ends.",
         minutes: 25,
       },
       {
         title: "Break",
+        visual: { name: "pomodoro-cycle", highlight: "break" },
         instruction: "Stand up and step away from your screen. Stretch, get water, look out a window. Don’t check your phone: scrolling doesn’t rest your attention.",
         minutes: 5,
       },
       {
         title: "Check in",
+        visual: { name: "pomodoro-cycle", highlight: "longbreak" },
         instruction: "What did you get done? Note it, and decide what the next round will be. If there’s more to do, start another round from the top. After four rounds, take a longer break of 15–30 minutes. Done when your task is finished or you’ve done four rounds.",
         minutes: 0,
       },
@@ -634,17 +677,20 @@ export const METHODS = [
       },
       {
         title: "Assign topics to sessions",
+        visual: { name: "study-calendar", show: "sessions" },
         instruction: "Spread the topics across every remaining week, not just the last one. Aim for several short sessions a week instead of one long one. Put the hardest topics earliest, so you have time to revisit them. Write the topic next to each date.",
         tip: "Three weeks and three sessions a week gives you about nine sessions. Give hard topics two of them.",
         minutes: 5,
       },
       {
         title: "Add review sessions",
+        visual: { name: "study-calendar", show: "reviews" },
         instruction: "Each time you finish a topic, schedule a short revisit to it a few days later, and again about a week after that. Mix older topics into later sessions instead of leaving them behind. Add one session near the end for a full practice test, if possible.",
         minutes: 3,
       },
       {
         title: "Put it on your calendar",
+        visual: { name: "study-calendar", show: "all" },
         instruction: "Enter each session as an event with its topic and length. Keep sessions to 30–45 minutes, and shorter as the date nears; don’t compress by merging sessions. Done when every session is in your calendar. Then pick a method from this app for the first one.",
         minutes: 2,
       },

@@ -1,5 +1,6 @@
 import { button, el } from "./dom.js";
 import { formatClock, isTimerRunning, pauseTimer, previousStep, remainingMs, startTimer } from "./session.js";
+import { renderStepStrip, renderVisual } from "./visuals.js";
 
 const APP_TITLE = "Study Coach";
 let tickHandle = null;
@@ -17,9 +18,11 @@ export function stopTicking() {
  * onUpdate(session) is called with every change so the caller can save and redraw;
  * onNext() moves on (the caller decides when the session is finished); onLeave() goes home.
  */
-export function renderSession({ method, steps, subjectLabel, session, onUpdate, onNext, onLeave }) {
+export function renderSession({ method, steps, subject, subjectLabel, session, onUpdate, onNext, onLeave }) {
   stopTicking();
   const step = steps[session.stepIndex];
+  const visual = step.visual ? renderVisual(step.visual, { subject }) : null;
+  const strip = renderStepStrip(steps, session.stepIndex);
   const isLastStep = session.stepIndex === steps.length - 1;
 
   const clock = el("p", { className: "clock", attrs: { role: "timer" } });
@@ -36,6 +39,9 @@ export function renderSession({ method, steps, subjectLabel, session, onUpdate, 
     const left = remainingMs(session, Date.now());
     clock.textContent = formatClock(left);
     const finished = left === 0;
+    const fraction = 1 - left / (step.minutes * 60_000);
+    strip.update(fraction);
+    visual?.update?.(fraction);
     const running = isTimerRunning(session) && !finished;
     clock.classList.toggle("running", running);
     clock.classList.toggle("finished", finished);
@@ -58,10 +64,9 @@ export function renderSession({ method, steps, subjectLabel, session, onUpdate, 
 
   return el("section", { className: "session" }, [
     el("p", { className: "progress", text: `${method.name}${subjectLabel ? ` for ${subjectLabel}` : ""} · step ${session.stepIndex + 1} of ${steps.length}` }),
-    el("div", { className: "progress-bar" }, [
-      el("span", { attrs: { style: `width:${((session.stepIndex + 1) / steps.length) * 100}%` } }),
-    ]),
+    strip.node,
     el("h2", { text: step.title }),
+    ...(visual ? [el("div", { className: "visual-wrap" }, [visual.node])] : []),
     el("p", { className: "instruction", text: step.instruction }),
     ...(step.example ? [el("p", { className: "step-note example", text: `Example: ${step.example}` })] : []),
     ...(step.tip ? [el("p", { className: "step-note tip", text: `Tip: ${step.tip}` })] : []),

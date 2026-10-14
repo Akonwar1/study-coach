@@ -1,6 +1,6 @@
 # Study Coach
 
-Answer three quick questions and get the study method that fits, then be walked through it step by step with timers.
+Answer a few quick questions and get the study method that fits, then be walked through it step by step with timers.
 
 Try it: https://akonwar1.github.io/study-coach/
 

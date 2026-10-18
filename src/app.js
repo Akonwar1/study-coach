@@ -1,11 +1,13 @@
 import { button, el } from "./dom.js";
 import { GOAL_RANGE_TEXT, buildEntry, cleanEntries, loggingThreshold, parseGoalHours, shouldLogStopped } from "./history.js";
 import { renderHistoryScreen } from "./history-view.js";
+import { renderMethodPage } from "./method-page.js";
+import { METHOD_PAGES, hasMethodPage } from "./method-pages.js";
 import { FILTER_GROUPS, NO_FILTERS, describeFit, filterMethods, hasActiveFilters } from "./library.js";
 import { METHODS } from "./methods.js";
 import { ALL_QUESTIONS, SUBJECT_QUESTION } from "./questions.js";
 import { recommend, validateAnswers } from "./recommend.js";
-import { isComplete, isResumable, nextStep, startSession, upgradeSession } from "./session.js";
+import { isComplete, isResumable, nextStep, pauseTimer, startSession, upgradeSession } from "./session.js";
 import { renderSession, stopTicking } from "./session-view.js";
 import { resolveSteps } from "./tailor.js";
 import {
@@ -16,7 +18,18 @@ const main = document.getElementById("main");
 const methodById = (id) => METHODS.find((m) => m.id === id);
 
 const VIEWS = ["coach", "library", "history"];
+const METHOD_ROUTE = "#method/";
+
+/** The method whose page the address asks for (#method/<id>), or null. */
+function routeMethodId() {
+  const id = location.hash.startsWith(METHOD_ROUTE) ? location.hash.slice(METHOD_ROUTE.length) : "";
+  return hasMethodPage(id) ? id : null;
+}
+
 let view = VIEWS.find((id) => location.hash === `#${id}`) ?? "coach";
+let methodPageId = routeMethodId(); // the method page on screen, or null
+if (methodPageId) view = "library"; // a shared link opens the page with the library tab highlighted
+let pageOpenedInApp = false; // true when we pushed the page ourselves, so Back can use the browser's history
 let libraryFilters = { ...NO_FILTERS };
 let answers = {};
 let stepIndex = 0; // which question we're on; ALL_QUESTIONS.length means "show results"
@@ -159,6 +172,11 @@ function renderHowTo(method) {
   ];
 }
 
+/** A "Read the full story" button if this method has an in-depth page, otherwise nothing. */
+function readMoreLink(method) {
+  return hasMethodPage(method.id) ? [button("Read the full story", { onClick: () => openMethodPage(method.id) })] : [];
+}
+
 function renderResultCard({ method, reasons }, rank) {
   const isTop = rank === 0;
   const startAction = button("Start guided session", { primary: true, onClick: () => beginSession(method) });
@@ -171,7 +189,7 @@ function renderResultCard({ method, reasons }, rank) {
     el("p", { text: method.def }),
     el("ul", { className: "reasons" }, reasons.map((reason) => el("li", { text: reason }))),
     ...renderHowTo(method),
-    el("div", { className: "card-action" }, [startAction]),
+    el("div", { className: "card-action" }, [startAction, ...readMoreLink(method)]),
   ]);
 }
 
@@ -208,6 +226,11 @@ function logStoppedSession(session) {
 }
 
 function beginSession(method) {
+  if (methodPageId) {
+    // Starting from a method page: leave the page for good, so exiting the session lands on the tab, not the page.
+    methodPageId = null;
+    history.replaceState(null, "", view === "coach" ? location.pathname + location.search : `#${view}`);
+  }
   const replaced = savedSession(); // starting fresh replaces a session that was left unfinished
   if (replaced) logStoppedSession(replaced);
   openSession(startSession(method, Date.now(), answers.subject));
@@ -249,6 +272,12 @@ function leaveSession() {
   render();
 }
 
+/** Opens a method's page from inside a session: the timer is paused and saved, and Back returns to the session. */
+function readMoreFromSession(methodId) {
+  saveActiveSession(pauseTimer(activeSession, Date.now()));
+  openMethodPage(methodId, { fromSession: true });
+}
+
 function renderSessionScreen() {
   const method = methodById(activeSession.methodId);
   const subject = SUBJECT_QUESTION.options.find((option) => option.id === activeSession.subject);
@@ -261,6 +290,7 @@ function renderSessionScreen() {
     onUpdate: updateSession,
     onNext: advanceSession,
     onFinishEarly: () => finishSession(method, activeSession, false),
+    onReadMore: hasMethodPage(method.id) ? () => readMoreFromSession(method.id) : undefined,
     onLeave: leaveSession,
   });
   show(
@@ -354,7 +384,10 @@ function renderLibraryCard(method) {
       el("p", { className: "library-fit" }, [el("strong", { text: "Suits: " }), fit.material]),
       ...renderHowTo(method),
     ]),
-    button("Start guided session", { primary: true, onClick: () => beginSession(method) }),
+    el("div", { className: "library-card-actions" }, [
+      button("Start guided session", { primary: true, onClick: () => beginSession(method) }),
+      ...readMoreLink(method),
+    ]),
   ]);
 }
 
@@ -442,6 +475,43 @@ function renderHistoryTab() {
   }));
 }
 
+// ---------- method pages ----------
+
+function openMethodPage(methodId, { fromSession = false } = {}) {
+  if (fromSession) history.replaceState({ inSession: true }, ""); // so the browser's Back button can return to the session
+  history.pushState(null, "", `${METHOD_ROUTE}${methodId}`);
+  pageOpenedInApp = true;
+  methodPageId = methodId;
+  activeSession = null;
+  finishedEntry = null;
+  render();
+}
+
+function leaveMethodPage() {
+  if (pageOpenedInApp) history.back(); // the popstate handler redraws whatever we came from
+  else switchView("library");
+}
+
+function renderMethodPageScreen() {
+  const method = methodById(methodPageId);
+  show(renderMethodPage({
+    method,
+    page: METHOD_PAGES[methodPageId],
+    onBack: leaveMethodPage,
+    onStart: () => beginSession(method),
+  }));
+}
+
+window.addEventListener("popstate", (event) => {
+  methodPageId = routeMethodId();
+  if (!methodPageId) view = VIEWS.find((id) => location.hash === `#${id}`) ?? "coach";
+  activeSession = null;
+  finishedEntry = null;
+  const saved = event.state?.inSession ? savedSession() : null;
+  if (saved) openSession(saved);
+  else render();
+});
+
 // ---------- tabs ----------
 
 const TABS = [
@@ -452,6 +522,7 @@ const TABS = [
 
 function switchView(next) {
   view = next;
+  methodPageId = null;
   history.replaceState(null, "", next === "coach" ? location.pathname + location.search : `#${next}`);
   goalError = "";
   pendingDeleteKey = null;
@@ -478,9 +549,10 @@ function renderTabs() {
 function render() {
   stopTicking(); // only the session screen runs a clock, and it restarts its own
   renderTabs();
-  document.querySelector(".app").classList.toggle("wide", view === "library" && !activeSession && !finishedEntry);
+  document.querySelector(".app").classList.toggle("wide", view === "library" && !activeSession && !finishedEntry && !methodPageId);
   if (activeSession) renderSessionScreen();
   else if (finishedEntry) renderDone();
+  else if (methodPageId) renderMethodPageScreen();
   else if (view === "library") renderLibrary();
   else if (view === "history") renderHistoryTab();
   else if (stepIndex >= ALL_QUESTIONS.length) renderResults();

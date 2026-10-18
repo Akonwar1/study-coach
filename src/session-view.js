@@ -23,7 +23,7 @@ function panel(name, title, children) {
   return node;
 }
 
-function renderAboutPanel(method) {
+function renderAboutPanel(method, onReadMore) {
   const fit = describeFit(method);
   return panel("about", "About this method", [
     el("p", { className: "panel-lead", text: method.tagline }),
@@ -35,6 +35,7 @@ function renderAboutPanel(method) {
     el("p", { text: method.why.science }),
     el("p", { className: "library-fit" }, [el("strong", { text: "Helps when: " }), fit.struggle]),
     el("p", { className: "library-fit" }, [el("strong", { text: "Suits: " }), fit.material]),
+    ...(onReadMore ? [button(`Read the full page on ${method.name}`, { onClick: onReadMore })] : []),
   ]);
 }
 
@@ -83,9 +84,9 @@ function renderFinishEarly(onFinishEarly) {
  * `steps` are the method's steps already tailored to the subject (see tailor.js).
  * onUpdate(session) is called with every change so the caller can save and redraw;
  * onNext() moves on (the caller decides when the session is finished); onFinishEarly() ends it now;
- * onLeave() goes home with the session saved.
+ * onReadMore() (optional) opens the method's in-depth page; onLeave() goes home with the session saved.
  */
-export function renderSession({ method, steps, subject, subjectLabel, session, onUpdate, onNext, onFinishEarly, onLeave }) {
+export function renderSession({ method, steps, subject, subjectLabel, session, onUpdate, onNext, onFinishEarly, onReadMore, onLeave }) {
   stopTicking();
   const now = Date.now();
   const step = steps[session.stepIndex];
@@ -145,7 +146,7 @@ export function renderSession({ method, steps, subject, subjectLabel, session, o
   return el("section", { className: "session" }, [
     el("p", { className: "progress", text: `${method.name}${subjectLabel ? ` for ${subjectLabel}` : ""} · step ${session.stepIndex + 1} of ${steps.length}` }),
     strip.node,
-    el("div", { className: "session-panels" }, [renderAboutPanel(method), renderStepsPanel(steps, session, goTo)]),
+    el("div", { className: "session-panels" }, [renderAboutPanel(method, onReadMore), renderStepsPanel(steps, session, goTo)]),
     el("h2", { text: step.title }),
     ...(visual ? [el("div", { className: "visual-wrap" }, [visual.node])] : []),
     el("p", { className: "instruction", text: step.instruction }),

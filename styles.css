@@ -236,7 +236,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .session-exits .link-btn { margin-top: 8px; }
 .confirm-row { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 10px; margin-top: 12px; }
 
-.card-action { margin-top: 16px; }
+.card-action { margin-top: 16px; display: flex; flex-wrap: wrap; gap: 8px; }
 
 .banner {
   padding: 14px 16px;
@@ -449,3 +449,47 @@ details summary { cursor: pointer; font-weight: 600; min-height: 32px; font-size
 .day-panel .empty { margin: 4px 0 0; }
 .day-panel .log-list { margin: 10px 0 0; }
 .day-panel .log-list:empty { display: none; }
+
+/* ---------- method pages ---------- */
+.method-page > .btn:first-child { min-height: 36px; padding: 4px 14px; font-size: 14px; margin-bottom: 14px; }
+.method-page h2 { font-size: 32px; font-weight: 600; margin: 4px 0 4px; }
+.page-lede { font-size: 18px; line-height: 1.6; margin: 10px 0 0; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 18px 0 8px; }
+.chip { min-height: 36px; padding: 4px 14px; border: 1px solid var(--accent); border-radius: 999px; background: var(--accent-soft); color: var(--accent-strong); font-size: 14px; font-weight: 600; }
+.chip:hover { background: var(--accent); color: var(--paper); }
+.page-section { margin-top: 32px; scroll-margin-top: 16px; }
+.page-section h3 { font-size: 22px; font-weight: 600; margin-bottom: 12px; padding-bottom: 6px; border-bottom: 2px solid var(--manila); }
+.page-block h4, .evidence-entry h4 { font-size: 17px; font-weight: 600; margin: 0 0 4px; }
+.page-block, .evidence-entry { margin-bottom: 20px; }
+.page-block p, .evidence-entry p { margin: 0 0 10px; line-height: 1.6; }
+
+.stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+.stat { padding: 14px 16px; background: color-mix(in srgb, var(--manila) 12%, var(--surface)); border: 1px solid var(--manila); border-left-width: 5px; border-radius: 6px; }
+.stat-value { margin: 0; font-family: var(--font-display); font-size: 28px; font-weight: 600; color: var(--accent-strong); overflow-wrap: anywhere; }
+.stat-label { margin: 4px 0 0; font-size: 14px; line-height: 1.45; color: var(--ink-soft); }
+
+.timeline { list-style: none; margin: 0; padding: 0 0 0 16px; border-left: 3px solid var(--accent); display: flex; flex-direction: column; gap: 16px; }
+.timeline li { position: relative; }
+.timeline li::before { content: ""; position: absolute; left: -24px; top: 4px; width: 11px; height: 11px; border-radius: 50%; background: var(--paper); border: 3px solid var(--accent); }
+.timeline-when { font-family: var(--font-mono); font-size: 13px; font-weight: 600; color: var(--accent-strong); }
+.timeline p { margin: 2px 0 0; line-height: 1.55; }
+
+.sources { margin: 0; padding-left: 20px; font-size: 14px; line-height: 1.5; color: var(--ink-soft); display: flex; flex-direction: column; gap: 6px; }
+
+/* bar charts */
+.barchart { margin: 14px 0; padding: 14px 16px; background: var(--surface); border: 1px solid var(--line); border-radius: 6px; box-shadow: var(--shadow-card); }
+.barchart-title { font-weight: 600; font-size: 15px; margin-bottom: 10px; }
+.barchart-legend { list-style: none; margin: 0 0 10px; padding: 0; display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 14px; }
+.barchart-legend li { display: flex; align-items: center; gap: 6px; }
+.barchart-group { margin-bottom: 14px; }
+.barchart-group-label { margin: 0 0 4px; font-size: 14px; font-weight: 600; color: var(--ink-soft); }
+.barchart-row { display: grid; grid-template-columns: 1fr auto; align-items: center; column-gap: 10px; margin-bottom: 6px; }
+.barchart-bar-label { grid-column: 1 / -1; font-size: 14px; }
+.barchart-track { height: 16px; background: var(--line); border-radius: 4px; overflow: hidden; }
+.barchart-fill { display: block; height: 100%; border-radius: 4px; }
+.barchart-value { font-family: var(--font-mono); font-size: 14px; font-weight: 600; min-width: 3.2em; text-align: right; }
+.tone-a { background: var(--accent); }
+.tone-b { background: var(--manila); }
+.tone-c { background: var(--ink-soft); }
+.barchart-source { margin: 8px 0 0; font-size: 13px; color: var(--ink-soft); }
+.library-card-actions { display: flex; flex-wrap: wrap; gap: 8px; }

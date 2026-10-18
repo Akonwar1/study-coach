@@ -705,7 +705,7 @@ export const METHODS = [
     evidence: "Rated “high utility” by Dunlosky et al. (2013); the spacing effect dates to Ebbinghaus (1885).",
     why: {
       intuition: "Cramming works for tomorrow and fades by next week. Spreading the same hours over weeks gives your memory time to forget a little and then rebuild, which is what makes it last. Scheduling the sessions in advance means the spacing really happens instead of staying a good intention.",
-      science: "This applies the spacing effect (Ebbinghaus, 1885; Cepeda et al., 2006): the same total study time, spread out, beats one massed session for long-term retention. Dunlosky et al. (2013) rated distributed practice “high utility”. Cepeda et al. (2008) also found that the best gap between sessions depends on how long you need to remember, roughly 10–20% of the time until the test, so for an exam three weeks away, sessions about two to four days apart.",
+      science: "This applies the spacing effect (Ebbinghaus, 1885; Cepeda et al., 2006): the same total study time, spread out, beats one massed session for long-term retention. Dunlosky et al. (2013) rated distributed practice “high utility”. Cepeda et al. (2008) also found that the best gap depends on how long you need to remember: roughly 20–40% of the time until a test one week away, shrinking to 5–10% for a test a year away. For an exam a few weeks off, about 20% is a sensible start, so sessions roughly four days apart for an exam three weeks away.",
     },
     session: [
       {

@@ -110,7 +110,7 @@ export const METHODS = [
     session: [
       {
         title: "Gather what to memorise",
-        instruction: "Spaced repetition is for things you have to remember outright: terms, definitions, formulas, dates, vocabulary. Pick 10–20 items from your notes. If something needs understanding, not memorising (like why a proof works), save it for a method like Feynman. You’ll need index cards, or an app like Anki.",
+        instruction: "Spaced repetition is for things you have to remember outright: terms, definitions, formulas, dates, vocabulary. Pick 10–15 items from your notes. If something needs understanding, not memorising (like why a proof works), save it for a method like Feynman. You’ll need index cards, or an app like Anki.",
         example: {
           default: "Definitions, dates, names, and formulas from this week’s notes.",
           quantitative: "Formulas, the conditions they apply under, and key definitions.",
@@ -130,12 +130,12 @@ export const METHODS = [
           default: "Front: “What caused X?” Back: one-line answer.",
           quantitative: "Front: “Derivative of sin x?” Back: “cos x.”",
           science: "Front: “What does ATP synthase do?” Back: “Makes ATP using the proton gradient.”",
-          humanities: "Front: “What did the Treaty of Versailles require of Germany?” Back: “Reparations, lost territory, and military limits.”",
+          humanities: "Front: “Which treaty formally ended World War I with Germany?” Back: “The Treaty of Versailles (1919).”",
           language: "Front: “the library” Back: “la biblioteca.”",
           programming: "Front: “Time complexity of binary search?” Back: “O(log n).”",
         },
         tip: "If a card needs more than a line to answer, split it into two cards.",
-        minutes: 8,
+        minutes: 7,
       },
       {
         title: "Go through the pile once",
@@ -146,7 +146,7 @@ export const METHODS = [
       {
         title: "Set the review dates",
         visual: { name: "leitner" },
-        instruction: "Use three boxes, or the scheduling in your app. Missed cards go in Box 1 and come back tomorrow. Cards you got right move to the next box: Box 1 is daily, Box 2 is every 3 days, Box 3 is weekly. Anytime you miss a card, it drops back to Box 1. Write the next review date on each pile.",
+        instruction: "Use three boxes, or the scheduling in your app. Box 1 is reviewed daily, Box 2 every 3 days, Box 3 weekly. Every new card starts in Box 1: cards you missed today stay there and come back tomorrow, and cards you got right move up to Box 2. From then on, a right answer moves a card up one box and a miss drops it back to Box 1. Write the next review date on each pile.",
         tip: "Done when every card is in a box with a date. In an app, it does this for you; just check the next review dates look right.",
         minutes: 3,
       },
@@ -168,7 +168,7 @@ export const METHODS = [
     tagline: "Say it, then draw it.",
     tags: { helps: ["Memory", "Understanding"], how: ["Drawing"] },
     utility: 2,
-    minutes: 20,
+    minutes: 25,
     def: "Pair verbal information with a visual you make yourself, such as a diagram, timeline, or sketch, so the idea is encoded two ways instead of one.",
     steps: [
       "Read or listen to the material once, in words only.",
@@ -204,7 +204,7 @@ export const METHODS = [
         visual: { name: "diagram-types" },
         instruction: "Close the source and draw the topic from memory. Choose the picture to match the shape: a flowchart or cycle for a process, a timeline for a sequence, a labelled diagram for parts, a table for a comparison, a concept map (circles and arrows) for ideas. It doesn’t have to be pretty. Boxes and arrows are fine.",
         tip: "Blank on part of it? Leave a gap. The gaps tell you what to study.",
-        minutes: 7,
+        minutes: 8,
       },
       {
         title: "Label it in your own words",
@@ -222,7 +222,7 @@ export const METHODS = [
         title: "Explain your picture",
         visual: { name: "flow", labels: ["Read", "Draw", "Label", "Compare", "Explain"], highlight: 4 },
         instruction: "Using only your sketch, explain the topic out loud from start to finish. Where the picture fails you, you have a gap to review next. Done when your sketch alone is enough to explain the whole topic. Keep it for review.",
-        minutes: 0,
+        minutes: 4,
       },
     ],
     fit: {
@@ -319,7 +319,7 @@ export const METHODS = [
           quantitative: "Why the area of a circle is πr², or why a negative times a negative is positive.",
           science: "Why enzymes lower activation energy, or why the heart has four chambers.",
           humanities: "Why the Black Death led to higher wages, or why the Roman Republic collapsed.",
-          language: "Why Spanish adjectives agree with the noun, or why English has irregular verbs.",
+          language: "Why Spanish uses the imperfect for background description but the preterite for completed events.",
           programming: "Why a hash map lookup is usually O(1), or why we avoid global variables.",
         },
         tip: "Not sure it has a “why”? Try asking it. If you can’t, pick another fact.",
@@ -347,7 +347,7 @@ export const METHODS = [
       {
         title: "Repeat for the other facts",
         visual: { name: "flow", labels: ["Pick a fact", "Ask why", "Answer it", "Check source"], highlight: 0, loop: "Do this loop for each fact." },
-        instruction: "Do the same for the remaining facts: ask why, answer from memory, then check. Give each about 3 minutes, and move on after that even if you’re unsure.",
+        instruction: "Do the same for the remaining facts: ask why, answer from memory, then check. Give each about 2 minutes, and move on after that even if you’re unsure.",
         minutes: 9,
       },
       {
@@ -368,7 +368,7 @@ export const METHODS = [
     tagline: "Narrate your own reasoning.",
     tags: { helps: ["Understanding"], how: ["Explaining", "Problem solving"] },
     utility: 2,
-    minutes: 20,
+    minutes: 25,
     def: "While working a problem or passage, explain each step out loud: how it follows from the last one and what role it plays.",
     steps: [
       "Work a problem or read a passage one step at a time.",
@@ -401,17 +401,16 @@ export const METHODS = [
           default: "Essay paragraph chunks: “Armies became loyal to generals, not the state” / “Land reform failed” / “Senators blocked change.”",
           quantitative: "Chunks of “Solve 2x + 6 = 14”: “subtract 6 from both sides” / “divide both sides by 2” / “check by plugging x = 4 back in.”",
           science: "Chunks of glycolysis: “glucose is split into two three-carbon molecules” / “two ATP are spent, four are made” / “NAD+ picks up electrons.”",
-          humanities: "Essay paragraph chunks: “Armies became loyal to generals, not the state” / “Land reform failed” / “Senators blocked change.”",
           language: "Chunks of a grammar rule: “when to use the past tense ending” / “the three irregular exceptions” / “how it changes with plural subjects.”",
           programming: "Chunks of binary search: “check the middle element” / “if the target is smaller, discard the right half” / “repeat until the range is empty.”",
         },
         tip: "If the material is a single long block, split it wherever the topic changes. If it has 20 chunks, do just the first 6 today.",
-        minutes: 3,
+        minutes: 5,
       },
       {
         title: "Explain each chunk out loud",
         visual: { name: "explain-questions" },
-        instruction: "For each chunk, say out loud or write one or two sentences covering: what it says or does, why it’s true or allowed, and how it connects to the chunk before it. Problem step: what changed, why that move is allowed, and how it moves you toward the answer. Essay: what the claim is, what supports it, and how it leads to the next paragraph. Then uncover the next chunk and repeat. Put a star by any chunk where you can’t answer all three.",
+        instruction: "For each chunk, say out loud or write one or two sentences covering: what it says or does, why it’s true or allowed, and how it connects to the chunk before it (for the first chunk, how it sets up what follows). Problem step: what changed, why that move is allowed, and how it moves you toward the answer. Essay: what the claim is, what supports it, and how it leads to the next paragraph. Then uncover the next chunk and repeat. Put a star by any chunk where you can’t answer all three.",
         example: {
           default: "Problem step: “I subtracted 6 from both sides. That’s allowed because doing the same thing to both sides keeps an equation true. It gets the x-term alone.” Essay: “The author claims armies became loyal to generals. The evidence is that soldiers were paid by generals, so it leads into the next paragraph about civil war.”",
           quantitative: "“I subtracted 6 from both sides. That’s allowed because doing the same thing to both sides keeps an equation true. It gets the x-term alone, which is what I need to solve for it.”",
@@ -469,7 +468,7 @@ export const METHODS = [
     session: [
       {
         title: "Choose a chapter",
-        instruction: "Pick one chapter or section of dense reading, about 10–15 pages at most. For a longer chapter, do it in parts. Have a blank sheet of paper ready for your questions and answers.",
+        instruction: "Pick one chapter or section of dense reading, about 5–8 pages at most. For a longer chapter, do it in parts. Have a blank sheet of paper ready for your questions and answers.",
         example: {
           default: "A textbook chapter or a section of an article.",
           quantitative: "One textbook section on a single topic, including its worked examples.",
@@ -511,14 +510,14 @@ export const METHODS = [
       {
         title: "Recite",
         visual: { name: "flow", labels: ["Survey", "Question", "Read", "Recite", "Review"], highlight: 3, loop: "Read, then recite, one section at a time." },
-        instruction: "Close the book and answer the question out loud or in writing in your own words. If you can’t, reread just that section. This step is the most important: it’s active recall built into your reading.",
+        instruction: "Close the book and answer the question in your own words, out loud first, then jot a short answer in the space under the question. If you can’t, reread just that section. This step is the most important: it’s active recall built into your reading.",
         minutes: 3,
       },
       {
         title: "Repeat for the other sections",
         visual: { name: "flow", labels: ["Survey", "Question", "Read", "Recite", "Review"], highlight: 2, loop: "Read, then recite, one section at a time." },
         instruction: "Go through the remaining sections: read, then recite, one at a time. Stop when your time is up and note where you stopped, so you can pick up tomorrow.",
-        minutes: 15,
+        minutes: 18,
       },
       {
         title: "Review",
@@ -551,7 +550,7 @@ export const METHODS = [
     session: [
       {
         title: "Choose 2–3 topics that get confused",
-        instruction: "Pick two or three related topics or problem types, ideally ones you tend to mix up. Then collect 3–4 practice items for each, from your homework, textbook, or old exams. If you only have one chapter of material, mix different problem types from within it.",
+        instruction: "Pick two or three related topics or problem types, ideally ones you tend to mix up. Then collect 3–4 practice items for each, from your homework, textbook, or old exams, and make sure you have the answers or solutions to check against. If you only have one chapter of material, mix different problem types from within it.",
         example: {
           default: "Related topics you can confuse with each other.",
           quantitative: "Integration by parts, substitution, and partial fractions.",
@@ -560,7 +559,7 @@ export const METHODS = [
           language: "Past tenses: preterite versus imperfect, in mixed fill-in-the-blank sentences.",
           programming: "Sorting algorithms, or loops versus recursion for the same problem.",
         },
-        tip: "Humanities has no “problems”? Use essay prompts or short-answer questions from different topics.",
+        tip: "Humanities has no “problems”? Use short-answer questions or one-paragraph outlines for essay prompts from different topics, not full essays.",
         minutes: 0,
       },
       {
@@ -578,7 +577,7 @@ export const METHODS = [
       },
       {
         title: "Check your answers",
-        instruction: "Mark each item. For each miss, note whether you picked the wrong type or the right type and made a mistake solving it. These are different problems with different fixes.",
+        instruction: "Mark each item against your answers or solutions. For each miss, note whether you picked the wrong type or the right type and made a mistake solving it. These are different problems with different fixes.",
         minutes: 5,
       },
       {
@@ -599,7 +598,7 @@ export const METHODS = [
     tagline: "25 minutes on, 5 minutes off.",
     tags: { helps: ["Focus", "Getting started"], how: ["Timed work"] },
     utility: 1,
-    minutes: 25,
+    minutes: 30,
     def: "Work in fixed 25-minute intervals with a 5-minute break between them. It manages attention and starting, not what you remember, so pair it with a method above.",
     steps: [
       "Pick one task and set a timer for 25 minutes.",
@@ -640,7 +639,7 @@ export const METHODS = [
       {
         title: "Check in",
         visual: { name: "pomodoro-cycle", highlight: "longbreak" },
-        instruction: "What did you get done? Note it, and decide what the next round will be. If there’s more to do, start another round from the top. After four rounds, take a longer break of 15–30 minutes. Done when your task is finished or you’ve done four rounds.",
+        instruction: "What did you get done? Note it, and decide what the next round will be. If there’s more to do, finish this session and press “Study again” to start another round. After four rounds, take a longer break of 15–30 minutes. Done when your task is finished or you’ve done four rounds.",
         minutes: 0,
       },
     ],
@@ -657,7 +656,7 @@ export const METHODS = [
     tagline: "Plan sessions across weeks, not the night before.",
     tags: { helps: ["Memory", "Planning"], how: ["Scheduling"] },
     utility: 3,
-    minutes: 15,
+    minutes: 25,
     def: "Plan study sessions for a topic across the whole run-up to a deadline instead of massing them into one or two long sessions.",
     steps: [
       "List everything you need to know by the deadline.",
@@ -670,7 +669,7 @@ export const METHODS = [
       {
         title: "Find your deadline",
         instruction: "Write down the exam or due date and count the days or weeks between now and then. Also note how many study sessions you realistically have per week, and on which days. If you only have a few days, spread what you have rather than cramming into one.",
-        minutes: 0,
+        minutes: 2,
       },
       {
         title: "List what you need to know",
@@ -684,26 +683,26 @@ export const METHODS = [
           programming: "Concepts, data structures, and projects or assignments to finish.",
         },
         tip: "If the list is longer than you can cover, flag what’s worth the most marks first.",
-        minutes: 5,
+        minutes: 7,
       },
       {
         title: "Assign topics to sessions",
         visual: { name: "study-calendar", show: "sessions" },
         instruction: "Spread the topics across every remaining week, not just the last one. Aim for several short sessions a week instead of one long one. Put the hardest topics earliest, so you have time to revisit them. Write the topic next to each date.",
         tip: "Three weeks and three sessions a week gives you about nine sessions. Give hard topics two of them.",
-        minutes: 5,
+        minutes: 8,
       },
       {
         title: "Add review sessions",
         visual: { name: "study-calendar", show: "reviews" },
         instruction: "Each time you finish a topic, schedule a short revisit to it a few days later, and again about a week after that. Mix older topics into later sessions instead of leaving them behind. Add one session near the end for a full practice test, if possible.",
-        minutes: 3,
+        minutes: 5,
       },
       {
         title: "Put it on your calendar",
         visual: { name: "study-calendar", show: "all" },
         instruction: "Enter each session as an event with its topic and length. Keep sessions to 30–45 minutes, and shorter as the date nears; don’t compress by merging sessions. Done when every session is in your calendar. Then pick a method from this app for the first one.",
-        minutes: 2,
+        minutes: 3,
       },
     ],
     requiresStruggle: true,

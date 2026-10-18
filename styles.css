@@ -199,6 +199,43 @@ button { font: inherit; color: inherit; cursor: pointer; }
   text-decoration: underline;
 }
 
+.link-btn.compact { margin-top: 0; min-height: 36px; font-size: 14px; }
+[hidden] { display: none !important; }
+
+/* panels under the step strip: the method's description and the list of all steps */
+.session-panels { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+.session-panel { border: 1px solid var(--panel-tone); border-left-width: 5px; border-radius: 6px; padding: 4px 14px; background: color-mix(in srgb, var(--panel-tone) 12%, var(--surface)); }
+.session-panel.about { --panel-tone: var(--manila); }
+.session-panel.steps { --panel-tone: var(--accent); }
+.session-panel { --panel-text: color-mix(in srgb, var(--panel-tone) 65%, var(--ink)); }
+.session-panel summary { min-height: 40px; display: flex; align-items: center; font-size: 15px; color: var(--panel-text); }
+.panel-heading { margin: 14px 0 4px; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; font-family: var(--font-mono); color: var(--panel-text); }
+.session-panel[open] { padding-bottom: 12px; }
+.session-panel p { margin: 0 0 8px; font-size: 15px; line-height: 1.5; }
+.panel-lead { font-weight: 600; margin-top: 4px; }
+.step-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; }
+.step-row {
+  width: 100%;
+  min-height: 48px;
+  padding: 8px 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  text-align: left;
+  background: none;
+  border: 1px solid transparent;
+  border-radius: 6px;
+}
+.step-row:hover { border-color: var(--accent); }
+.step-row.current { background: var(--accent-soft); border-color: var(--accent); }
+.step-row-title { font-weight: 600; font-size: 15px; }
+.step-row-meta { font-family: var(--font-mono); font-size: 12px; color: var(--ink-soft); text-align: right; flex: none; }
+
+.session-exits { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; column-gap: 20px; }
+.session-exits .link-btn { margin-top: 8px; }
+.confirm-row { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 10px; margin-top: 12px; }
+
 .card-action { margin-top: 16px; }
 
 .banner {
@@ -229,10 +266,14 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .visual-bar { display: block; width: 100%; height: auto; }
 .visual-caption { margin: 10px 0 0; font-size: 14px; color: var(--ink-soft); }
 
-/* step progress strip */
-.step-strip { display: flex; gap: 3px; height: 8px; margin-bottom: 20px; }
-.strip-seg { flex-basis: 0; min-width: 8px; background: var(--line); border-radius: 999px; overflow: hidden; }
-.strip-seg.current { outline: 2px solid var(--accent); outline-offset: 1px; }
+/* step progress strip: each segment is a button with a tall tap area around a thin bar */
+.step-strip { display: flex; gap: 3px; margin-bottom: 12px; }
+.strip-seg { flex-basis: 0; min-width: 12px; height: 28px; padding: 10px 0; background: none; border: 0; }
+.strip-bar { display: block; height: 8px; background: var(--line); border-radius: 999px; overflow: hidden; }
+.strip-seg.current .strip-bar { outline: 2px solid var(--accent); outline-offset: 1px; }
+.strip-seg.skipped .strip-bar { background: repeating-linear-gradient(135deg, var(--line) 0 4px, transparent 4px 8px); }
+.strip-seg:hover .strip-bar { outline: 2px solid var(--ink-soft); outline-offset: 1px; }
+.strip-seg.current:hover .strip-bar { outline-color: var(--accent); }
 .strip-fill { display: block; height: 100%; width: 0; background: var(--accent); transition: width 0.5s linear; }
 
 /* Pomodoro cycle */

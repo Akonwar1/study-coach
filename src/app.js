@@ -1,11 +1,11 @@
 import { button, el } from "./dom.js";
-import { GOAL_RANGE_TEXT, buildEntry, cleanEntries, parseGoalHours, shouldLogStopped } from "./history.js";
+import { GOAL_RANGE_TEXT, buildEntry, cleanEntries, loggingThreshold, parseGoalHours, shouldLogStopped } from "./history.js";
 import { renderHistoryScreen } from "./history-view.js";
 import { FILTER_GROUPS, NO_FILTERS, describeFit, filterMethods, hasActiveFilters } from "./library.js";
 import { METHODS } from "./methods.js";
 import { ALL_QUESTIONS, SUBJECT_QUESTION } from "./questions.js";
 import { recommend, validateAnswers } from "./recommend.js";
-import { isComplete, isResumable, nextStep, startSession } from "./session.js";
+import { isComplete, isResumable, nextStep, startSession, upgradeSession } from "./session.js";
 import { renderSession, stopTicking } from "./session-view.js";
 import { resolveSteps } from "./tailor.js";
 import {
@@ -22,7 +22,8 @@ let answers = {};
 let stepIndex = 0; // which question we're on; ALL_QUESTIONS.length means "show results"
 let errorMessage = "";
 let activeSession = null; // the guided session on screen, or null
-let finishedEntry = null; // the session just completed, for the "well done" screen
+let finishedEntry = null; // the session just ended, for the "well done" screen
+let finishedLogged = false; // whether finishedEntry was added to the history (an early finish only is if enough was done)
 let saveFailed = false;
 let goalError = "";
 let pendingDeleteKey = null; // the history entry waiting for "Yes, delete"
@@ -45,7 +46,8 @@ function refresh() {
 // ---------- home: questions, resume banner, recent sessions ----------
 
 function savedSession() {
-  const session = loadActiveSession();
+  const stored = loadActiveSession();
+  const session = upgradeSession(methodById(stored?.methodId), stored);
   return isResumable(session, METHODS) ? session : null;
 }
 
@@ -217,21 +219,25 @@ function openSession(session) {
   render();
 }
 
+/** Saves and redraws. Changes on the same step (timer buttons) keep the scroll position; moving to another step goes to the top. */
 function updateSession(session) {
+  keepScroll = session.stepIndex === activeSession.stepIndex;
   openSession(session);
 }
 
 function advanceSession() {
   const method = methodById(activeSession.methodId);
-  const moved = nextStep(method, activeSession);
-  if (isComplete(method, moved)) finishSession(method);
+  const moved = nextStep(activeSession, Date.now());
+  if (isComplete(method, moved)) finishSession(method, moved, true);
   else updateSession(moved);
 }
 
-function finishSession(method) {
+/** Ends the session. An early finish is added to the history only if enough of the timers were done (see shouldLogStopped). */
+function finishSession(method, session, completed) {
   const now = Date.now();
-  finishedEntry = buildEntry({ method, session: activeSession, now, completed: true });
-  saveFailed = !addHistoryEntry(finishedEntry);
+  finishedEntry = buildEntry({ method, session, now, completed });
+  finishedLogged = completed || shouldLogStopped(method, session, now);
+  saveFailed = finishedLogged ? !addHistoryEntry(finishedEntry) : false;
   clearActiveSession();
   activeSession = null;
   render();
@@ -254,6 +260,7 @@ function renderSessionScreen() {
     session: activeSession,
     onUpdate: updateSession,
     onNext: advanceSession,
+    onFinishEarly: () => finishSession(method, activeSession, false),
     onLeave: leaveSession,
   });
   show(
@@ -262,16 +269,28 @@ function renderSessionScreen() {
   );
 }
 
+function describeEnding(entry) {
+  const method = methodById(entry.methodId);
+  if (entry.completed !== false) {
+    return { badge: "Session complete", heading: `Nice work. You finished ${entry.methodName}.`, saved: "Saved to your recent sessions." };
+  }
+  const saved = finishedLogged
+    ? "Saved to your history as stopped early."
+    : `Not added to your history: it logs an early finish once about ${loggingThreshold(method)} minutes of timers are done.`;
+  return { badge: "Session ended", heading: `You ended ${entry.methodName} early.`, saved };
+}
+
 function renderDone() {
   const entry = finishedEntry;
+  const ending = describeEnding(entry);
   show(
     el("section", { className: "done" }, [
-      el("p", { className: "badge", text: "Session complete" }),
-      el("h2", { text: `Nice work. You finished ${entry.methodName}.` }),
+      el("p", { className: "badge", text: ending.badge }),
+      el("h2", { text: ending.heading }),
       el("p", { text: `That took about ${entry.minutes} minute${entry.minutes === 1 ? "" : "s"}.` }),
       el("p", {
         className: saveFailed ? "error" : "saved-note",
-        text: saveFailed ? "This browser couldn’t save the session to your history." : "Saved to your recent sessions.",
+        text: saveFailed ? "This browser couldn’t save the session to your history." : ending.saved,
       }),
       el("div", { className: "nav-row" }, [
         button("Study again", {

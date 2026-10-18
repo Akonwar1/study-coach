@@ -36,20 +36,33 @@ const percent = (fraction) => `${Math.round(Math.min(1, Math.max(0, fraction)) *
 const MIN_SEGMENT_WEIGHT = 2; // untimed steps still get a visible slice
 
 /**
- * One slice per step, sized by its minutes. Finished steps are full and the current one fills as its timer runs.
- * Untimed steps are shown full once you reach them.
+ * One tappable slice per step, sized by its minutes. Done steps are full, skipped steps are hatched, and the
+ * others fill with their own timers (`fractions`, one per step). The current slice is outlined and fills live
+ * through update(). Untimed steps are shown full once you reach them.
+ * options: { statuses, fractions, onPick(index) }; without them, steps before the current one count as done.
  */
-export function renderStepStrip(steps, currentIndex) {
+export function renderStepStrip(steps, currentIndex, { statuses, fractions, onPick } = {}) {
   let currentFill = null;
   const slices = steps.map((step, index) => {
+    const status = statuses?.[index] ?? (index < currentIndex ? "done" : "todo");
+    const isCurrent = index === currentIndex;
+    const full = status === "done" || (isCurrent && step.minutes === 0);
     const fill = html("span", "strip-fill");
-    fill.style.width = index < currentIndex || (index === currentIndex && step.minutes === 0) ? "100%" : "0%";
-    if (index === currentIndex) currentFill = fill;
-    const slice = html("span", `strip-seg${index === currentIndex ? " current" : ""}`, [fill]);
+    fill.style.width = full ? "100%" : percent(fractions?.[index] ?? 0);
+    if (isCurrent) currentFill = fill;
+    const label = `Step ${index + 1}: ${step.title}${status === "done" ? " (done)" : status === "skipped" ? " (skipped)" : ""}`;
+    const classes = `strip-seg${isCurrent ? " current" : ""}${status === "skipped" ? " skipped" : ""}`;
+    const slice = html("button", classes, [html("span", "strip-bar", [fill])], {
+      type: "button",
+      title: label,
+      "aria-label": label,
+      ...(isCurrent ? { "aria-current": "step" } : {}),
+    });
     slice.style.flexGrow = String(Math.max(step.minutes, MIN_SEGMENT_WEIGHT));
+    slice.addEventListener("click", () => onPick?.(index));
     return slice;
   });
-  const node = html("div", "step-strip", slices, { role: "img", "aria-label": `Step ${currentIndex + 1} of ${steps.length}` });
+  const node = html("div", "step-strip", slices, { role: "group", "aria-label": `Step ${currentIndex + 1} of ${steps.length}. Tap a step to jump to it.` });
   return { node, update: (fraction) => { currentFill.style.width = percent(fraction); } };
 }
 

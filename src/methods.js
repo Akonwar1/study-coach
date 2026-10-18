@@ -4,6 +4,8 @@
 // fit.struggle: problems the method helps with
 // fit.horizon:  time-until-deadline buckets where the method works well
 // tags:         short labels for the library: what the method helps with, and how it works
+// why:          { intuition, science }: shown in the session's "About this method" panel;
+//               intuition says in plain words what the method does for you, science names the research
 // requiresStruggle: only recommend when the student reports one of its struggles
 // session:      guided walkthrough, a list of { title, instruction, minutes (0 = no timer), example?, tip? };
 //               instruction, example and tip can vary by subject; see tailor.js
@@ -25,6 +27,10 @@ export const METHODS = [
       "Re-test on the gaps a day later instead of re-reading them.",
     ],
     evidence: "Rated “high utility” in Dunlosky et al.’s 2013 review of ten learning techniques.",
+    why: {
+      intuition: "Re-reading feels productive because the page looks familiar, but familiar is not the same as remembered. Pulling an answer out of your own head, even badly, is the real workout: it shows you what you actually know, and each successful pull makes that memory easier to reach next time.",
+      science: "This is the testing effect, or retrieval practice. In experiments like Roediger and Karpicke (2006), students who tested themselves remembered more a week later than students who spent the same time re-reading, even though the re-readers felt more confident. Retrieval seems to strengthen the memory and the cues that lead back to it, and a failed attempt followed by the right answer also helps. Dunlosky et al. (2013) rated practice testing “high utility”.",
+    },
     session: [
       {
         title: "Choose and size your material",
@@ -107,6 +113,10 @@ export const METHODS = [
       "Let the intervals stretch from a day to weeks as items stick.",
     ],
     evidence: "Also rated “high utility” by Dunlosky et al. (2013); compounds well with active recall.",
+    why: {
+      intuition: "Memories fade, and the best moment to refresh one is just as it gets hard to recall. Reviewing too soon is easy and teaches little; waiting too long means starting over. Spacing keeps you in the sweet spot, so each review costs a little effort and buys a longer stretch of remembering.",
+      science: "It builds on the spacing effect, first measured by Ebbinghaus in 1885. A large review by Cepeda et al. (2006) found that spreading study out beats cramming it for long-term retention. A retrieval that comes after some forgetting strengthens memory more than one with no forgetting in between, which Bjork calls a “desirable difficulty”. Dunlosky et al. (2013) rated distributed practice “high utility”, and card systems like the Leitner boxes put it into practice.",
+    },
     session: [
       {
         title: "Gather what to memorise",
@@ -177,6 +187,10 @@ export const METHODS = [
       "Compare your sketch to the source and fix what’s off.",
     ],
     evidence: "Grounded in Paivio’s dual-coding theory; gains are largest for material with real spatial or causal structure.",
+    why: {
+      intuition: "Your brain handles words and pictures through partly separate channels. If you only read, the idea is stored one way; if you also draw it, you build a second route back to it. Drawing also forces you to decide how the pieces connect, which exposes gaps that words let you skate past.",
+      science: "Paivio’s dual-coding theory (1971, 1986) proposes separate but linked verbal and visual systems, so information stored in both is easier to retrieve. Research on learning from words plus diagrams, such as Mayer’s work on multimedia learning, supports the pairing. The evidence is strongest when the picture shows real structure (steps, causes, relationships); decorative sketches, or just imagining a picture while reading, have much weaker support.",
+    },
     session: [
       {
         title: "Pick a topic that has structure",
@@ -246,6 +260,10 @@ export const METHODS = [
       "Return to the source for those spots, then simplify your explanation again.",
     ],
     evidence: "Named for physicist Richard Feynman; it chains the elaboration and self-explanation effects into one routine.",
+    why: {
+      intuition: "It is easy to feel you understand something because the words are familiar. Trying to explain it simply, with no jargon to hide behind, shows exactly where your understanding runs out. Then you go back to the source, patch that spot, and explain it again.",
+      science: "It combines several well-studied effects. Self-explanation (Chi et al., 1994) helps learners who explain material to themselves. The “illusion of explanatory depth” (Rozenblit and Keil, 2002) shows people overrate how well they understand something until they are asked to explain it. And expecting to teach someone improves how well you learn and recall (Nestojko et al., 2014). The technique itself is a routine, not a lab-tested method, but each part has research behind it.",
+    },
     session: [
       {
         title: "Name one concept",
@@ -309,6 +327,10 @@ export const METHODS = [
       "Check your explanation against the source and correct it.",
     ],
     evidence: "Rated “moderate utility” by Dunlosky et al. (2013); works best on material with clear causes.",
+    why: {
+      intuition: "A fact you can explain connects to other things you know, and connected knowledge is far easier to find again than a loose fact. Asking “why would that be true?” makes you build those connections instead of just storing the sentence.",
+      science: "Studies by Pressley, Woloshyn and colleagues in the 1980s and 90s found that students who explained why facts were true remembered more than students who only read them. Dunlosky et al. (2013) rated it “moderate utility”. It works best when you already know something about the topic to connect to, and worse for complete beginners or for facts with no underlying reason, like arbitrary vocabulary.",
+    },
     session: [
       {
         title: "Pick facts that have a reason",
@@ -377,6 +399,10 @@ export const METHODS = [
       "Redo those steps until you can narrate them without notes.",
     ],
     evidence: "Rated “moderate utility” by Dunlosky et al. (2013); especially effective on worked math and science examples.",
+    why: {
+      intuition: "When you read a worked solution, every step looks obvious, so you nod along and learn little. Saying why each step follows, and what it is for, turns watching into understanding and shows you which steps you could not actually justify.",
+      science: "Chi et al. (1989) found that the students who learned most from worked physics examples were the ones who explained the steps to themselves, and Chi et al. (1994) showed that prompting students to do it improved learning. It seems to work by making you notice gaps and wrong beliefs and by linking each step to what you already know. Dunlosky et al. (2013) rated it “moderate utility”.",
+    },
     session: [
       {
         title: "Gather your material",
@@ -465,6 +491,10 @@ export const METHODS = [
       "Review: once the chapter’s done, recite all the answers together.",
     ],
     evidence: "Developed by Francis Robinson in 1946; most of its benefit comes from the recite step, which is active recall.",
+    why: {
+      intuition: "Reading cold is passive: your eyes move and little sticks. SQ3R gives you a map first (survey), a reason to read (questions), and a check afterward (recite and review), so you read to find answers and then prove to yourself that you got them.",
+      science: "Francis Robinson designed it in 1946 as a structure, not a single effect. Its parts match later research: previewing gives you an overview that helps comprehension, asking questions gives reading a purpose, and reciting from memory is retrieval practice, probably the strongest part. Evidence for the full five-step package is thinner than for its individual parts.",
+    },
     session: [
       {
         title: "Choose a chapter",
@@ -547,6 +577,10 @@ export const METHODS = [
       "Review misses by which topic you confused, not just which you got wrong.",
     ],
     evidence: "Rated “moderate” by Dunlosky et al. (2013); later math-classroom trials show some of the largest effects on this list.",
+    why: {
+      intuition: "When you practise one problem type many times in a row, you always know which method to use, so you never practise choosing. In an exam the problems are mixed. Mixing them while you practise feels harder and messier, but it trains the skill the exam really tests: working out which tool fits.",
+      science: "Mixed practice forces you to compare problem types, which improves telling them apart, and it spaces out the repeats of each type. In Rohrer and Taylor (2007) and a later classroom study (Rohrer, Dedrick and Stershic, 2015), students who practised math problems mixed beat students who practised them in blocks on later tests, often by a lot, even though blocked practice looked better during practice itself. Dunlosky et al. (2013) rated it “moderate utility”.",
+    },
     session: [
       {
         title: "Choose 2–3 topics that get confused",
@@ -607,6 +641,10 @@ export const METHODS = [
       "After four intervals, take a 15–30 minute break.",
     ],
     evidence: "Devised by Francesco Cirillo in the late 1980s; the evidence is mostly on-task time and self-report.",
+    why: {
+      intuition: "The hardest part of studying is often starting, and long open-ended sessions invite drifting to your phone. A short fixed timer makes starting feel small (“just 25 minutes”), gives you a finish line, and the break lets you reset before your attention fades.",
+      science: "Pomodoro is a time-management routine, not a memory technique, so there is little direct research on it. It leans on better-established ideas: small, well-defined chunks of work lower the barrier to starting, and brief breaks can help people keep their focus on a long task (for example Ariga and Lleras, 2011). Evidence for the 25-and-5 timing itself is mostly self-report, so treat the numbers as adjustable.",
+    },
     session: [
       {
         title: "Set up one task",
@@ -665,6 +703,10 @@ export const METHODS = [
       "Shrink session length as the date nears; don’t compress by merging sessions.",
     ],
     evidence: "Rated “high utility” by Dunlosky et al. (2013); the spacing effect dates to Ebbinghaus (1885).",
+    why: {
+      intuition: "Cramming works for tomorrow and fades by next week. Spreading the same hours over weeks gives your memory time to forget a little and then rebuild, which is what makes it last. Scheduling the sessions in advance means the spacing really happens instead of staying a good intention.",
+      science: "This applies the spacing effect (Ebbinghaus, 1885; Cepeda et al., 2006): the same total study time, spread out, beats one massed session for long-term retention. Dunlosky et al. (2013) rated distributed practice “high utility”. Cepeda et al. (2008) also found that the best gap between sessions depends on how long you need to remember, roughly 10–20% of the time until the test, so for an exam three weeks away, sessions about two to four days apart.",
+    },
     session: [
       {
         title: "Find your deadline",

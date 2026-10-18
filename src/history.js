@@ -6,7 +6,7 @@
 // `completed` means the session was finished.
 
 import { SUBJECT_QUESTION } from "./questions.js";
-import { elapsedMinutes, remainingMs } from "./session.js";
+import { elapsedMinutes, stepRemainingMs } from "./session.js";
 
 const MINUTE_MS = 60_000;
 const LOG_THRESHOLD_SHARE = 0.3; // a stopped session is logged once this share of the method's timed minutes is done
@@ -26,13 +26,13 @@ export function loggingThreshold(method) {
   return Math.max(MIN_LOG_THRESHOLD_MINUTES, Math.round(plannedMinutes(method) * LOG_THRESHOLD_SHARE));
 }
 
-/** Minutes of timer progress so far: finished steps at their planned length plus the current step's elapsed timer. */
+/** Minutes of timer progress so far: steps marked done count at their planned length, the rest at whatever their timers have run. */
 export function timerProgressMinutes(method, session, now) {
-  const finished = method.session.slice(0, session.stepIndex).reduce((total, step) => total + step.minutes, 0);
-  const step = method.session[session.stepIndex];
-  const left = remainingMs(session, now);
-  const current = step && left !== null ? (step.minutes * MINUTE_MS - left) / MINUTE_MS : 0;
-  return Math.max(0, finished + current);
+  return method.session.reduce((total, step, index) => {
+    if (session.statuses[index] === "done") return total + step.minutes;
+    const left = stepRemainingMs(session, index, now);
+    return total + (left === null ? 0 : (step.minutes * MINUTE_MS - left) / MINUTE_MS);
+  }, 0);
 }
 
 export function shouldLogStopped(method, session, now) {

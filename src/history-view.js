@@ -1,13 +1,9 @@
 import { button, el } from "./dom.js";
-import { byMethod, bySubject, formatMinutes, isFinished, minutesPerDay, subjectLabel, summarize } from "./history.js";
-import { svg, svgText } from "./visuals.js";
+import { byMethod, bySubject, dayKey, formatMinutes, groupByDay, isFinished, minutesPerDay, monthCells, subjectLabel, summarize } from "./history.js";
 
 const CHART_DAYS = 14;
-const CHART_WIDTH = 300;
-const CHART_HEIGHT = 130;
-const CHART_TOP = 18;
-const CHART_BOTTOM = 106;
 const BREAKDOWN_ROWS = 5;
+const WEEKDAY_HEADINGS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
 const entryKey = (entry) => `${entry.startedAt}-${entry.completedAt}`;
 
@@ -50,33 +46,31 @@ function renderGoal({ goalMinutes, weekMinutes, goalError, onSetGoal, onClearGoa
   ]);
 }
 
-function renderChart(entries, now) {
+function renderChart(entries, now, { selectedKey, onPickDay }) {
   const days = minutesPerDay(entries, CHART_DAYS, now);
   const tallest = Math.max(...days.map((day) => day.minutes), 1);
-  const slot = CHART_WIDTH / days.length;
-  const barWidth = slot - 6;
   const total = days.reduce((sum, day) => sum + day.minutes, 0);
 
-  const bars = days.flatMap((day, index) => {
-    const height = (day.minutes / tallest) * (CHART_BOTTOM - CHART_TOP);
-    const x = index * slot + 3;
-    const parts = [
-      svg("rect", { class: `bar${day.isToday ? " today" : ""}`, x, y: CHART_BOTTOM - height, width: barWidth, height: Math.max(height, day.minutes > 0 ? 2 : 0), rx: 3 }, [
-        Object.assign(svg("title"), { textContent: `${day.weekday}: ${formatMinutes(day.minutes)}` }),
+  const columns = days.map((day) => {
+    const column = el("button", {
+      className: `chart-col${day.isToday ? " today" : ""}${day.key === selectedKey ? " selected" : ""}`,
+      attrs: { type: "button", "aria-label": `${day.fullDate}: ${formatMinutes(day.minutes)}. Show this day’s sessions.`, title: `${day.fullDate}: ${formatMinutes(day.minutes)}` },
+    }, [
+      el("span", { className: "chart-value", text: day.minutes > 0 ? String(day.minutes) : "" }),
+      el("span", { className: "chart-track" }, [
+        el("span", { className: "chart-bar", attrs: { style: `height:${day.minutes > 0 ? Math.max(4, (day.minutes / tallest) * 100) : 0}%` } }),
       ]),
-      svgText(day.weekday.slice(0, 1), { x: x + barWidth / 2, y: CHART_HEIGHT - 8, class: `chart-label${day.isToday ? " today" : ""}` }),
-    ];
-    if (day.minutes > 0) parts.push(svgText(String(day.minutes), { x: x + barWidth / 2, y: CHART_BOTTOM - height - 4, class: "chart-value" }));
-    return parts;
+      el("span", { className: "chart-weekday", text: day.weekday }),
+      el("span", { className: "chart-date", text: String(day.dayOfMonth) }),
+    ]);
+    column.addEventListener("click", () => onPickDay(day.key));
+    return column;
   });
 
-  const chart = svg("svg", { viewBox: `0 0 ${CHART_WIDTH} ${CHART_HEIGHT}`, class: "chart", role: "img", "aria-label": `Minutes studied per day over the last ${CHART_DAYS} days: ${formatMinutes(total)} in total.` }, [
-    svg("line", { class: "chart-axis", x1: 0, x2: CHART_WIDTH, y1: CHART_BOTTOM, y2: CHART_BOTTOM }),
-    ...bars,
-  ]);
   return el("section", { className: "chart-card" }, [
     el("h3", { text: `Minutes per day, last ${CHART_DAYS} days` }),
-    chart,
+    el("p", { className: "tag-key", text: `${formatMinutes(total)} in total. Tap a day to see its sessions below.` }),
+    el("div", { className: "chart" }, columns),
   ]);
 }
 
@@ -101,7 +95,7 @@ function renderLogEntry(entry, { pendingDeleteKey, onAskDelete, onConfirmDelete,
   const key = entryKey(entry);
   const confirming = pendingDeleteKey === key;
   const detail = [
-    `${when.toLocaleDateString(undefined, { weekday: "short", month: "short", day: "numeric" })}, ${when.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" })}`,
+    when.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" }),
     formatMinutes(entry.minutes),
     subjectLabel(entry.subject),
   ].join(" · ");
@@ -125,11 +119,66 @@ function renderLogEntry(entry, { pendingDeleteKey, onAskDelete, onConfirmDelete,
   ]);
 }
 
+function renderCalendar({ entries, year, month, selectedKey, todayKey, onPickDay, onShowMonth }) {
+  const byDay = groupByDay(entries);
+  const monthStart = new Date(year, month, 1);
+  const earliest = new Date(Math.min(...entries.map((entry) => entry.completedAt)));
+  const canGoBack = monthStart > new Date(earliest.getFullYear(), earliest.getMonth(), 1);
+  const canGoForward = dayKey(new Date(year, month + 1, 1, 12).getTime()) <= todayKey;
+  const longest = Math.max(...[...byDay.values()].map((day) => day.minutes), 1);
+
+  const cells = monthCells(year, month).map((cell) => {
+    if (!cell) return el("span", { className: "cal-pad" });
+    const day = byDay.get(cell.key);
+    const classes = ["cal-day", day ? "has-sessions" : "", cell.key === selectedKey ? "selected" : "", cell.key === todayKey ? "today" : ""].filter(Boolean).join(" ");
+    const count = day?.entries.length ?? 0;
+    const node = el("button", {
+      className: classes,
+      attrs: {
+        type: "button",
+        "aria-pressed": String(cell.key === selectedKey),
+        "aria-label": `${new Date(year, month, cell.day).toLocaleDateString(undefined, { weekday: "long", month: "long", day: "numeric" })}: ${day ? `${formatMinutes(day.minutes)}, ${count} session${count === 1 ? "" : "s"}` : "no sessions"}`,
+        ...(day ? { style: `--level:${Math.round(15 + (day.minutes / longest) * 35)}%` } : {}),
+      },
+    }, [el("span", { className: "cal-number", text: String(cell.day) }), el("span", { className: "cal-minutes", text: day ? `${day.minutes}m` : "" })]);
+    node.addEventListener("click", () => onPickDay(cell.key));
+    return node;
+  });
+
+  const previous = button("‹", { onClick: () => onShowMonth(year, month - 1), disabled: !canGoBack });
+  const next = button("›", { onClick: () => onShowMonth(year, month + 1), disabled: !canGoForward });
+  previous.setAttribute("aria-label", "Previous month");
+  next.setAttribute("aria-label", "Next month");
+  return el("div", { className: "session-calendar" }, [
+    el("div", { className: "cal-header" }, [
+      previous,
+      el("h4", { text: monthStart.toLocaleDateString(undefined, { month: "long", year: "numeric" }) }),
+      next,
+    ]),
+    el("div", { className: "cal-grid" }, [...WEEKDAY_HEADINGS.map((name) => el("span", { className: "cal-weekday", text: name })), ...cells]),
+  ]);
+}
+
+function renderDayPanel({ entries, selectedKey, todayKey, pendingDeleteKey, handlers }) {
+  const [year, month, day] = selectedKey.split("-").map(Number);
+  const heading = new Date(year, month - 1, day).toLocaleDateString(undefined, { weekday: "long", month: "long", day: "numeric" });
+  const sessions = entries.filter((entry) => dayKey(entry.completedAt) === selectedKey).sort((a, b) => b.completedAt - a.completedAt);
+  const minutes = sessions.reduce((sum, entry) => sum + entry.minutes, 0);
+  return el("div", { className: "day-panel", attrs: { "aria-live": "polite" } }, [
+    el("h4", { text: `${selectedKey === todayKey ? "Today · " : ""}${heading}` }),
+    sessions.length === 0
+      ? el("p", { className: "empty", text: "No sessions logged this day." })
+      : el("p", { className: "log-detail", text: `${formatMinutes(minutes)} across ${sessions.length} session${sessions.length === 1 ? "" : "s"}` }),
+    el("ul", { className: "log-list" }, sessions.map((entry) => renderLogEntry(entry, { pendingDeleteKey, ...handlers }))),
+  ]);
+}
+
 /**
- * The History tab: weekly goal, totals, a 14-day chart, breakdowns and the full log.
- * `entries` are cleaned history entries, newest first. Handlers are supplied by the caller.
+ * The History tab: weekly goal, totals, a 14-day chart, breakdowns and a calendar of past sessions.
+ * `entries` are cleaned history entries, newest first. `selectedKey` (a dayKey) and `shownMonth` ({ year, month })
+ * may be null, in which case the day of the latest session is selected and its month shown. Handlers are supplied by the caller.
  */
-export function renderHistoryScreen({ entries, now, goalMinutes, goalError, pendingDeleteKey, visibleCount, handlers }) {
+export function renderHistoryScreen({ entries, now, goalMinutes, goalError, pendingDeleteKey, selectedKey, shownMonth, handlers }) {
   if (entries.length === 0) {
     return el("section", { className: "history-tab" }, [
       el("h2", { text: "Study history" }),
@@ -140,7 +189,11 @@ export function renderHistoryScreen({ entries, now, goalMinutes, goalError, pend
   }
 
   const totals = summarize(entries, now);
-  const shown = entries.slice(0, visibleCount);
+  const todayKey = dayKey(now);
+  const selected = selectedKey ?? dayKey(entries[0].completedAt);
+  const [selectedYear, selectedMonth] = selected.split("-").map(Number);
+  const { year, month } = shownMonth ?? { year: selectedYear, month: selectedMonth - 1 };
+  const calendarProps = { entries, selectedKey: selected, todayKey, onPickDay: handlers.onPickDay };
   return el("section", { className: "history-tab" }, [
     el("h2", { text: "Study history" }),
     renderGoal({ goalMinutes, weekMinutes: totals.weekMinutes, goalError, ...handlers }),
@@ -150,13 +203,13 @@ export function renderHistoryScreen({ entries, now, goalMinutes, goalError, pend
       stat(formatMinutes(totals.weekMinutes), `this week · ${totals.weekSessions} session${totals.weekSessions === 1 ? "" : "s"}`),
       stat(`${totals.streak} day${totals.streak === 1 ? "" : "s"}`, "current streak"),
     ]),
-    renderChart(entries, now),
+    renderChart(entries, now, { selectedKey: selected, onPickDay: handlers.onPickDay }),
     el("div", { className: "breakdowns" }, [renderBreakdown("Methods you use most", byMethod(entries)), renderBreakdown("Time by subject", bySubject(entries))]),
     el("section", { className: "log" }, [
-      el("h3", { text: "All sessions" }),
-      el("p", { className: "tag-key", text: "Sessions you stop early are logged once you have done about a third of the method’s timed minutes." }),
-      el("ul", { className: "log-list" }, shown.map((entry) => renderLogEntry(entry, { pendingDeleteKey, ...handlers }))),
-      ...(entries.length > visibleCount ? [button(`Show more (${entries.length - visibleCount} older)`, { onClick: handlers.onShowMore })] : []),
+      el("h3", { text: "Past sessions" }),
+      el("p", { className: "tag-key", text: "Pick a day to see what you studied. Sessions you stop early are logged once you have done about a third of the method’s timed minutes." }),
+      renderCalendar({ ...calendarProps, year, month, onShowMonth: handlers.onShowMonth }),
+      renderDayPanel({ entries, selectedKey: selected, todayKey, pendingDeleteKey, handlers }),
     ]),
   ]);
 }

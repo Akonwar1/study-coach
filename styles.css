@@ -361,13 +361,17 @@ details summary { cursor: pointer; font-weight: 600; min-height: 32px; font-size
 .stat-value { margin: 0; font: 600 20px var(--font-mono); color: var(--accent-strong); }
 .stat-label { margin: 2px 0 0; font-size: 13px; color: var(--ink-soft); }
 
-.chart { display: block; width: 100%; height: auto; }
-.chart .bar { fill: var(--accent); opacity: 0.55; }
-.chart .bar.today { opacity: 1; }
-.chart-axis { stroke: var(--line); stroke-width: 1; }
-.chart-label { fill: var(--ink-soft); font: 11px var(--font-mono); text-anchor: middle; }
-.chart-label.today { fill: var(--ink); font-weight: 700; }
-.chart-value { fill: var(--ink-soft); font: 10px var(--font-mono); text-anchor: middle; }
+.chart { display: grid; grid-template-columns: repeat(14, minmax(0, 1fr)); gap: 2px; }
+.chart-col { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 4px 0 2px; font: inherit; color: inherit; background: none; border: 1px solid transparent; border-radius: 6px; cursor: pointer; }
+.chart-col:hover { background: var(--accent-soft); }
+.chart-col.selected { border-color: var(--accent); background: var(--accent-soft); }
+.chart-value { height: 14px; font: 10px/14px var(--font-mono); color: var(--ink-soft); }
+.chart-track { display: flex; align-items: flex-end; width: 70%; height: 80px; border-bottom: 1px solid var(--line); }
+.chart-bar { display: block; width: 100%; background: var(--accent); opacity: 0.55; border-radius: 3px 3px 0 0; }
+.chart-col.today .chart-bar { opacity: 1; }
+.chart-weekday { font-size: 10px; line-height: 1.2; color: var(--ink-soft); letter-spacing: -0.02em; }
+.chart-date { font: 600 12px/1.2 var(--font-mono); color: var(--ink); }
+.chart-col.today .chart-weekday { color: var(--ink); font-weight: 700; }
 
 .breakdowns { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr)); gap: 14px; margin-bottom: 22px; }
 .breakdowns .breakdown { margin-bottom: 0; }
@@ -386,3 +390,21 @@ details summary { cursor: pointer; font-weight: 600; min-height: 32px; font-size
 .log-detail { margin: 2px 0 0; font-size: 13px; color: var(--ink-soft); }
 .log-actions { display: flex; gap: 6px; flex: none; }
 .log-actions .btn, .goal-form .btn { min-height: 36px; padding: 4px 12px; font-size: 14px; }
+
+.session-calendar { margin-bottom: 14px; }
+.cal-header { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 8px; }
+.cal-header h4 { margin: 0; font-size: 17px; font-weight: 600; }
+.cal-header .btn { min-height: 40px; min-width: 44px; padding: 0 12px; font-size: 20px; }
+.cal-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; }
+.cal-weekday { text-align: center; font-size: 12px; font-weight: 600; color: var(--ink-soft); }
+.cal-day { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 48px; padding: 2px; font: inherit; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; cursor: pointer; }
+.cal-day.has-sessions { background: color-mix(in srgb, var(--accent) var(--level, 15%), var(--surface)); }
+.cal-day.today { border-color: var(--ink); }
+.cal-day.selected { outline: 3px solid var(--accent); outline-offset: 1px; }
+.cal-number { font-size: 15px; font-weight: 600; line-height: 1.2; }
+.cal-minutes { min-height: 12px; font: 10px/12px var(--font-mono); }
+.day-panel { padding: 14px; background: var(--surface-2); border: 1px solid var(--line); border-radius: 4px; }
+.day-panel h4 { margin: 0 0 4px; font-size: 16px; font-weight: 600; }
+.day-panel .empty { margin: 4px 0 0; }
+.day-panel .log-list { margin: 10px 0 0; }
+.day-panel .log-list:empty { display: none; }

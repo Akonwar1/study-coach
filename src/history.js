@@ -123,6 +123,27 @@ export function summarize(entries, now) {
   };
 }
 
+/** Sessions grouped by the local day they ended: Map of dayKey -> { minutes, entries } (entries keep their order). */
+export function groupByDay(entries) {
+  const days = new Map();
+  for (const entry of entries) {
+    const key = dayKey(entry.completedAt);
+    const day = days.get(key) ?? { minutes: 0, entries: [] };
+    day.minutes += entry.minutes;
+    day.entries.push(entry);
+    days.set(key, day);
+  }
+  return days;
+}
+
+/** The cells of a calendar month, weeks starting on Monday: null for padding, else { key, day }. `month` is 0-11. */
+export function monthCells(year, month) {
+  const leading = (new Date(year, month, 1).getDay() + 6) % 7;
+  const length = new Date(year, month + 1, 0).getDate();
+  const days = Array.from({ length }, (_, index) => ({ key: dayKey(new Date(year, month, index + 1, 12).getTime()), day: index + 1 }));
+  return [...Array(leading).fill(null), ...days];
+}
+
 /** Minutes studied on each of the last `days` days, oldest first. */
 export function minutesPerDay(entries, days, now) {
   const perDay = new Map();
@@ -132,6 +153,8 @@ export function minutesPerDay(entries, days, now) {
     return {
       key: dayKey(date.getTime()),
       weekday: date.toLocaleDateString(undefined, { weekday: "short" }),
+      dayOfMonth: date.getDate(),
+      fullDate: date.toLocaleDateString(undefined, { weekday: "long", month: "long", day: "numeric" }),
       minutes: perDay.get(dayKey(date.getTime())) ?? 0,
       isToday: index === days - 1,
     };

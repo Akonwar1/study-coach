@@ -12,7 +12,6 @@ import {
   addHistoryEntry, clearActiveSession, deleteHistoryEntry, loadActiveSession, loadHistory, loadWeeklyGoal, saveActiveSession, saveWeeklyGoal,
 } from "./storage.js";
 
-const HISTORY_PAGE_SIZE = 20;
 const main = document.getElementById("main");
 const methodById = (id) => METHODS.find((m) => m.id === id);
 
@@ -27,11 +26,20 @@ let finishedEntry = null; // the session just completed, for the "well done" scr
 let saveFailed = false;
 let goalError = "";
 let pendingDeleteKey = null; // the history entry waiting for "Yes, delete"
-let historyVisibleCount = HISTORY_PAGE_SIZE;
+let selectedDayKey = null; // the day shown in the history tab; null means the day of the latest session
+let shownMonth = null; // { year, month } shown in the history calendar; null follows the selected day
+let keepScroll = false; // set by changes made in place (delete, goal, calendar) so the page does not jump to the top
 
 function show(...nodes) {
   main.replaceChildren(...nodes);
-  window.scrollTo({ top: 0 });
+  if (!keepScroll) window.scrollTo({ top: 0 });
+  keepScroll = false;
+}
+
+/** Redraws the current screen without scrolling to the top, for changes the student made in place. */
+function refresh() {
+  keepScroll = true;
+  render();
 }
 
 // ---------- home: questions, resume banner, recent sessions ----------
@@ -371,28 +379,35 @@ function renderHistoryTab() {
       } else {
         goalError = saveWeeklyGoal(minutes) ? "" : "This browser couldn’t save your goal.";
       }
-      render();
+      refresh();
     },
     onClearGoal() {
       goalError = saveWeeklyGoal(null) ? "" : "This browser couldn’t remove your goal.";
-      render();
+      refresh();
     },
     onAskDelete(key) {
       pendingDeleteKey = key;
-      render();
+      refresh();
     },
     onCancelDelete() {
       pendingDeleteKey = null;
-      render();
+      refresh();
     },
     onConfirmDelete(entry) {
       pendingDeleteKey = null;
       deleteHistoryEntry(entry);
-      render();
+      refresh();
     },
-    onShowMore() {
-      historyVisibleCount += HISTORY_PAGE_SIZE;
-      render();
+    onPickDay(key) {
+      selectedDayKey = key;
+      shownMonth = null;
+      pendingDeleteKey = null;
+      refresh();
+    },
+    onShowMonth(year, month) {
+      const shown = new Date(year, month, 1); // month -1 or 12 rolls over into the neighbouring year
+      shownMonth = { year: shown.getFullYear(), month: shown.getMonth() };
+      refresh();
     },
     onGoCoach: () => switchView("coach"),
   };
@@ -402,7 +417,8 @@ function renderHistoryTab() {
     goalMinutes: loadWeeklyGoal(),
     goalError,
     pendingDeleteKey,
-    visibleCount: historyVisibleCount,
+    selectedKey: selectedDayKey,
+    shownMonth,
     handlers,
   }));
 }
@@ -420,6 +436,8 @@ function switchView(next) {
   history.replaceState(null, "", next === "coach" ? location.pathname + location.search : `#${next}`);
   goalError = "";
   pendingDeleteKey = null;
+  selectedDayKey = null;
+  shownMonth = null;
   activeSession = null; // an in-progress session is already saved and can be resumed from the coach tab
   finishedEntry = null;
   render();

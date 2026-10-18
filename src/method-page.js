@@ -1,5 +1,6 @@
 import { renderBarChart } from "./charts.js";
 import { button, el } from "./dom.js";
+import { renderGlance } from "./glance.js";
 import { renderVisual } from "./visuals.js";
 
 function section(title, children) {
@@ -31,8 +32,7 @@ function renderPractice(practice) {
  */
 export function renderMethodPage({ method, page, onBack, onStart }) {
   const sections = [
-    { id: "glance", title: "At a glance", children: [el("div", { className: "stat-grid" }, page.glance.map((stat) =>
-      el("div", { className: "stat" }, [el("p", { className: "stat-value", text: stat.value }), el("p", { className: "stat-label", text: stat.label })])))] },
+    { id: "glance", title: "At a glance", children: [renderGlance(page.glance)] },
     { id: "history", title: "Where it came from", children: [el("ol", { className: "timeline" }, page.history.map((item) =>
       el("li", {}, [el("span", { className: "timeline-when", text: item.when }), el("p", { text: item.text })])))] },
     { id: "how", title: "How it works", children: page.how.map(labelledParagraph) },

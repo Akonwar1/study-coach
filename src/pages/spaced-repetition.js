@@ -1,0 +1,111 @@
+export default {
+  glance: [
+    { kind: "compare", items: [{ name: "After 20 minutes", value: 58.2, tone: "a" }, { name: "After 31 days", value: 21.1, tone: "c" }], max: 100, unit: "%", text: "of his original effort that Ebbinghaus saved when relearning a list", source: "Ebbinghaus, 1885" },
+    { kind: "number", value: "839", text: "comparisons from 317 experiments in 184 articles pooled in one review of distributed practice", source: "Cepeda et al., 2006" },
+    { kind: "number", value: "+111%", text: "more facts recalled 70 days later with the best gap between two study sessions than with no gap, for the same total study time", source: "Cepeda et al., 2008" },
+    { kind: "compare", items: [{ name: "Test 1 week away", value: 3, tone: "a" }, { name: "Test about a year away", value: 27, tone: "b" }], max: 30, unit: " days", text: "the best gap before a review session", source: "Cepeda et al., 2008" },
+  ],
+  history: [
+    { when: "1885", text: "Hermann Ebbinghaus memorised lists of nonsense syllables and measured how much faster he could relearn them after different delays. His results gave the first measured forgetting curve, and he also noticed that spreading repetitions out helped." },
+    { when: "1967", text: "Language teacher and researcher Paul Pimsleur proposed “graduated-interval recall” in an article called “A memory schedule”: review each item after longer and longer gaps. His language courses were among the first to put it into practice." },
+    { when: "1972", text: "Sebastian Leitner’s book So lernt man lernen (“How to learn to learn”) described the box system of paper flashcards that this app’s guided session uses: cards you get right move to a box reviewed less often, and misses go back to the first box." },
+    { when: "Late 1980s", text: "Piotr Wozniak turned the idea into software, SuperMemo, which worked out each card’s next review date. Sources differ on exact years. Later free programs such as Anki (2006) use schedulers based on his work." },
+    { when: "2006–2008", text: "Cepeda and colleagues pooled the spacing research in a meta-analysis (2006), then ran an experiment with 1,354 people to find how the best gap depends on how long you want to remember (2008)." },
+    { when: "2013", text: "Dunlosky and colleagues rated distributed practice, the general principle behind spaced repetition, “high utility” in their review of ten study techniques." },
+    { when: "2015", text: "Murre and Dros repeated Ebbinghaus’s experiment on one volunteer and got the same overall shape, with some differences, described below." },
+  ],
+  how: [
+    { heading: "The forgetting curve", text: "Memories do not fade at a steady rate. Ebbinghaus found that most of the loss comes quickly, then it slows down. That curve is why a review that comes right after learning does little, and why a review after some forgetting does more." },
+    { heading: "The spacing effect", text: "With the same total study time, splitting it into sessions with time between them beats doing it all at once. Cepeda and colleagues’ 2006 review pooled 839 comparisons from 317 experiments and found this pattern held up. Reviewing something you have partly forgotten means retrieving it with effort, which is the same ingredient that makes Active Recall work." },
+    { heading: "The best gap depends on how long you want to remember", text: "The 2008 experiment found that the ideal gap between two sessions is not one fixed number. The authors put it simply: to know the best way to space your study, decide how long you want to remember. The longer the time until the test, the longer the best gap, though as a share of that time it gets smaller." },
+    { heading: "Too long hurts less than too short", text: "In the same experiment, recall rose steeply as the gap grew and then fell off much more gradually. The authors note that using a gap longer than the best one costs much less than using one that is too short. When unsure, space reviews a little further apart." },
+    { heading: "Why it works is still being debated", text: "The authors of the 2008 study could not make the models they tried match both patterns they found: the best gap growing with test delay, and its share of the delay shrinking. Researchers are confident the spacing effect is real; its explanation is less settled." },
+    { heading: "How flashcard boxes put it into practice", text: "The Leitner box system schedules spacing for you. New cards start in the first box and are seen often. A card you get right moves up a box and comes back less often; a card you miss goes back to box 1. Cards you know well take almost no time, and your time goes to the ones that are slipping." },
+  ],
+  evidence: [
+    {
+      title: "Ebbinghaus (1885) and Murre & Dros (2015): how fast we forget",
+      text: "Ebbinghaus memorised lists of nonsense syllables, then relearned each list after a delay. “Savings” is the share of the original learning time he saved when relearning. In 2015, Murre and Dros repeated the experiment with one volunteer, a 22-year-old man, using 70 lists of 104 nonsense syllables each, at similar delays.",
+      chart: {
+        title: "Share of the original learning effort saved when relearning",
+        legend: [
+          { tone: "a", label: "Ebbinghaus (1885)" },
+          { tone: "b", label: "Murre & Dros replication (2015, one volunteer)" },
+        ],
+        groups: [
+          { label: "After about 20 minutes", bars: [{ value: 58.2, tone: "a", series: "Ebbinghaus (1885)" }, { value: 47.2, tone: "b", series: "Replication (2015)" }] },
+          { label: "After 1 hour", bars: [{ value: 44.2, tone: "a", series: "Ebbinghaus (1885)" }, { value: 37.3, tone: "b", series: "Replication (2015)" }] },
+          { label: "After 9 hours", bars: [{ value: 35.8, tone: "a", series: "Ebbinghaus (1885)" }, { value: 27.6, tone: "b", series: "Replication (2015)" }] },
+          { label: "After 1 day", bars: [{ value: 33.7, tone: "a", series: "Ebbinghaus (1885)" }, { value: 31.7, tone: "b", series: "Replication (2015)" }] },
+          { label: "After 2 days", bars: [{ value: 27.8, tone: "a", series: "Ebbinghaus (1885)" }, { value: 23.0, tone: "b", series: "Replication (2015)" }] },
+          { label: "After 6 days", bars: [{ value: 25.4, tone: "a", series: "Ebbinghaus (1885)" }, { value: 16.8, tone: "b", series: "Replication (2015)" }] },
+          { label: "After 31 days", bars: [{ value: 21.1, tone: "a", series: "Ebbinghaus (1885)" }, { value: 4.1, tone: "b", series: "Replication (2015)" }] },
+        ],
+        max: 100,
+        unit: "%",
+        decimals: 1,
+        source: "Murre & Dros (2015), Table 3. Ebbinghaus’s own intervals were slightly different from the rounded ones shown.",
+      },
+      afterText: "Both curves drop fast and then level off (the replication has a small bump at 1 day). The replication saved less at 31 days (4.1% vs 21.1%). With one learner and meaningless syllables, treat the exact percentages as an illustration of the shape, not as numbers that apply to your notes.",
+    },
+    {
+      title: "Cepeda et al. (2006): the big review",
+      text: "This paper pooled 839 comparisons of spaced versus massed study from 317 experiments in 184 articles, all on remembering verbal material such as word lists and facts. Across them, the best gap between sessions grew as the time until the test grew.",
+    },
+    {
+      title: "Cepeda et al. (2008): finding the best gap",
+      text: "1,354 people learned 32 obscure true trivia facts (for example, which European nation eats the most spicy Mexican food: Norway) until they had recalled each one correctly once. After a gap that ranged from none up to 3.5 months, they studied the facts again, and a final test came up to a year after that. 26 gap-and-delay combinations were tested, with the same study time in each.",
+      chart: {
+        title: "The best gap between sessions, as a share of the time until the test",
+        groups: [
+          { label: "Test 7 days later", bars: [{ value: 43, tone: "a", valueText: "about 3 days (43%)" }] },
+          { label: "Test 35 days later", bars: [{ value: 23, tone: "a", valueText: "about 8 days (23%)" }] },
+          { label: "Test 70 days later", bars: [{ value: 17, tone: "a", valueText: "about 12 days (17%)" }] },
+          { label: "Test 350 days later", bars: [{ value: 8, tone: "a", valueText: "about 27 days (8%)" }] },
+        ],
+        max: 50,
+        unit: "%",
+        source: "Cepeda et al. (2008), estimated gaps for recall. The paper’s abstract summarises this as about 20–40% of a 1-week delay down to about 5–10% of a 1-year delay.",
+      },
+    },
+    {
+      title: "Cepeda et al. (2008): what the best gap was worth",
+      text: "Compared with studying twice with no gap, using the best gap gave this much more recall. For a test only a week away, spacing was worth only a little. For tests further away, it was worth far more.",
+      chart: {
+        title: "Extra facts recalled with the best gap, compared with no gap",
+        groups: [
+          { label: "Test 7 days later", bars: [{ value: 10, tone: "b", valueText: "+10%" }] },
+          { label: "Test 35 days later", bars: [{ value: 59, tone: "b", valueText: "+59%" }] },
+          { label: "Test 70 days later", bars: [{ value: 111, tone: "b", valueText: "+111%" }] },
+          { label: "Test 350 days later", bars: [{ value: 77, tone: "b", valueText: "+77%" }] },
+        ],
+        max: 120,
+        unit: "%",
+        source: "Cepeda et al. (2008). Study time was the same in every condition.",
+      },
+    },
+    {
+      title: "Dunlosky et al. (2013): the ten-technique review",
+      text: "Distributed practice, the general idea behind spaced repetition, was rated “high utility”, one of only two techniques given that rating.",
+    },
+  ],
+  limits: [
+    { heading: "There is no single right schedule", text: "The best gap depends on how long you want to remember. This app’s Leitner boxes (every day, every 3 days, every week) are a simple stand-in, not a number the research gives." },
+    { heading: "The numbers come from facts, not from understanding", text: "These studies mostly measured memory for words, facts and trivia. Spacing may help other kinds of learning too, but the evidence summarised here is about recall of facts." },
+    { heading: "Ebbinghaus was one person with nonsense syllables", text: "The replication kept the shape of the curve but found less saved after a month. Real material that you understand is not forgotten like random syllables." },
+    { heading: "For a test next week it matters less", text: "In the 2008 experiment, the best gap bought only 10% more recall for a test 7 days away, but 111% more for a test 70 days away. The further off the test, the more spacing is worth." },
+  ],
+  practice: {
+    visual: { name: "leitner" },
+    caption: "Illustration: the three boxes used in the guided Spaced Repetition session.",
+  },
+  sources: [
+    "Cepeda, N. J., Pashler, H., Vul, E., Wixted, J. T., & Rohrer, D. (2006). Distributed practice in verbal recall tasks: A review and quantitative synthesis. Psychological Bulletin, 132(3), 354–380.",
+    "Cepeda, N. J., Vul, E., Rohrer, D., Wixted, J. T., & Pashler, H. (2008). Spacing effects in learning: A temporal ridgeline of optimal retention. Psychological Science, 19(11), 1095–1102.",
+    "Dunlosky, J., Rawson, K. A., Marsh, E. J., Nathan, M. J., & Willingham, D. T. (2013). Improving students’ learning with effective learning techniques. Psychological Science in the Public Interest, 14(1), 4–58.",
+    "Ebbinghaus, H. (1885). Über das Gedächtnis. Leipzig: Duncker & Humblot.",
+    "Leitner, S. (1972). So lernt man lernen. Freiburg: Herder.",
+    "Murre, J. M. J., & Dros, J. (2015). Replication and analysis of Ebbinghaus’ forgetting curve. PLOS ONE, 10(7), e0120644.",
+    "Pimsleur, P. (1967). A memory schedule. Modern Language Journal, 51(2), 73–75.",
+  ],
+};

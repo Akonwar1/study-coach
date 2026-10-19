@@ -44,12 +44,14 @@ export default {
     { heading: "You need something to work with", text: "Explaining a step you have never seen explained, with no worked example or text to check, can lead you to the wrong idea. This is why the guided session works from a worked solution or source and has you compare with it." },
     { heading: "Classroom and long-term evidence is weaker", text: "Rittle-Johnson, Loehr and Durkin pooled prompted self-explanation in mathematics. Right after learning the effects were small to moderate (g = 0.28 for procedures, 0.33 for concepts, 0.46 for transfer). Only nine experiments tested a week to a month later: procedures 0.13 and concepts −0.05, neither clearly above zero, though transfer held at 0.32. Only seven experiments were in classrooms, and the classroom gain for procedures (0.38) was not clearly different from zero. We read the authors’ manuscript." },
     { heading: "The checks for missing studies were simple ones", text: "Bisra and colleagues tested for publication bias with two simple counts: 6,028 hidden null studies would be needed to cancel the result by one test, and 274 to pull it under 0.1 by the other. They judged it not a plausible threat. Results also varied between studies (I² = 65%), so the average hides some swings." },
+    { heading: "Prompts did not help when added to worked examples", text: "In a meta-analysis of worked examples in mathematics, examples paired with prompts to explain each step did worse than examples without prompts (Barbieri et al., 2023). That compares examples with and without prompts, not prompts with no prompts, but it suggests that if you already have a clear solved example, studying it may serve you as well as explaining it." },
   ],
   practice: {
     visual: { name: "flow", labels: ["Gather", "Chunk it", "Explain", "Fix stars", "Redo", "Try new"] },
     caption: "Illustration: the loop used in the guided Self-Explanation session.",
   },
   sources: [
+    "Barbieri, C. A., Miller-Cotto, D., Clerjuste, S. N., & Chawla, K. (2023). A meta-analysis of the worked examples effect on mathematics performance. Educational Psychology Review, 35, Article 11.",
     "Bisra, K., Liu, Q., Nesbit, J. C., Salimi, F., & Winne, P. H. (2018). Inducing self-explanation: A meta-analysis. Educational Psychology Review, 30(3), 703–725.",
     "Chi, M. T. H., Bassok, M., Lewis, M. W., Reimann, P., & Glaser, R. (1989). Self-explanations: How students study and use examples in learning to solve problems. Cognitive Science, 13, 145–182.",
     "Chi, M. T. H., de Leeuw, N., Chiu, M.-H., & LaVancher, C. (1994). Eliciting self-explanations improves understanding. Cognitive Science, 18, 439–477.",

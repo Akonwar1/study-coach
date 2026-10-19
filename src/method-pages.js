@@ -21,9 +21,12 @@ import elaborativeInterrogation from "./pages/elaborative-interrogation.js";
 import feynman from "./pages/feynman.js";
 import interleaving from "./pages/interleaving.js";
 import pomodoro from "./pages/pomodoro.js";
+import problemFirst from "./pages/problem-first.js";
 import selfExplanation from "./pages/self-explanation.js";
 import spacedRepetition from "./pages/spaced-repetition.js";
 import sq3r from "./pages/sq3r.js";
+import tryFirst from "./pages/try-first.js";
+import workedExamples from "./pages/worked-examples.js";
 
 export const METHOD_PAGES = {
   "active-recall": activeRecall,
@@ -36,6 +39,9 @@ export const METHOD_PAGES = {
   interleaving,
   pomodoro,
   "distributed-practice": distributedPractice,
+  "try-first": tryFirst,
+  "worked-examples": workedExamples,
+  "problem-first": problemFirst,
 };
 
 export const hasMethodPage = (methodId) => Object.hasOwn(METHOD_PAGES, methodId);

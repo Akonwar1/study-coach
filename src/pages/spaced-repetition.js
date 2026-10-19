@@ -90,7 +90,7 @@ export default {
     },
     {
       title: "Latimier et al. (2021): spacing out retrieval practice",
-      text: "Latimier, Peyre and Ramus pooled 29 studies in which the same retrieval practice was spread out over time. That is the closest published match to reviewing flashcards on a schedule, since it combines testing yourself with spacing. We could read only the abstract-level record, which gives the number of studies, so no effect size is quoted here.",
+      text: "Latimier, Peyre and Ramus pooled 29 studies in which the same retrieval practice was spread out over time, which is the closest published match to reviewing flashcards on a schedule. For spaced versus massed retrieval practice (11 studies, 39 effect sizes), the average benefit was g = 1.02, but a check for missing studies found signs that negative results had gone unpublished. Adjusting for that gave g = 0.74 (range 0.55 to 0.92), still a large benefit. Most were lab studies with undergraduates, and results varied moderately (I² = 51%). We read the authors’ preprint manuscript, so figures in the published version may differ slightly.",
     },
   ],
   limits: [
@@ -98,12 +98,15 @@ export default {
     { heading: "The numbers come from facts, not from understanding", text: "These studies mostly measured memory for words, facts and trivia. Spacing may help other kinds of learning too, but the evidence summarised here is about recall of facts." },
     { heading: "Ebbinghaus was one person with nonsense syllables", text: "The replication kept the shape of the curve but found less saved after a month. Real material that you understand is not forgotten like random syllables." },
     { heading: "For a test next week it matters less", text: "In the 2008 experiment, the best gap bought only 10% more recall for a test 7 days away, but 111% more for a test 70 days away. The further off the test, the more spacing is worth." },
+    { heading: "Widening gaps did not beat even gaps", text: "The Leitner boxes make the gaps grow as a card gets easier. In Latimier and colleagues’ pooled analysis of 16 studies, widening gaps did no better than evenly spaced ones (g = 0.03, range −0.10 to 0.17). The reliable benefit comes from spacing out your retrieval at all, not from the exact schedule." },
+    { heading: "In real courses it helped in only some", text: "Bego and colleagues tested spaced retrieval practice in nine introductory STEM courses, with a test 30 or 34 days later. Spacing helped significantly in only two, and the overall gain was small (2.1 percentage points, range 0.2 to 4.0). They call the evidence promising but its spread across courses unclear." },
   ],
   practice: {
     visual: { name: "leitner" },
     caption: "Illustration: the three boxes used in the guided Spaced Repetition session.",
   },
   sources: [
+    "Bego, C. R., Lyle, K. B., Ralston, P. A. S., Immekus, J. C., Chastain, R. J., Haynes, L. D., Hoyt, L. K., Pigg, R. M., Rabin, S. D., Scobee, M. W., & Starr, T. L. (2024). Single-paper meta-analyses of the effects of spaced retrieval practice in nine introductory STEM courses: Is the glass half full or half empty? International Journal of STEM Education, 11, Article 9.",
     "Cepeda, N. J., Pashler, H., Vul, E., Wixted, J. T., & Rohrer, D. (2006). Distributed practice in verbal recall tasks: A review and quantitative synthesis. Psychological Bulletin, 132(3), 354–380.",
     "Cepeda, N. J., Vul, E., Rohrer, D., Wixted, J. T., & Pashler, H. (2008). Spacing effects in learning: A temporal ridgeline of optimal retention. Psychological Science, 19(11), 1095–1102.",
     "Donoghue, G. M., & Hattie, J. A. C. (2021). A meta-analysis of ten learning techniques. Frontiers in Education, 6, Article 581216.",

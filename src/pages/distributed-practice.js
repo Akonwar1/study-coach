@@ -94,13 +94,17 @@ export default {
       title: "Mawson & Kang (2025): spacing in real classrooms",
       text: "Mawson and Kang pooled applied research from classrooms: 22 reports with 31 effect sizes and more than 3,000 students. Distributed practice beat massed practice by d = 0.54 (95% range 0.31 to 0.77). Results varied a lot between studies (I² = 92%), larger effects went with longer gaps before the test, and no study in the review tested more than 42 days later. A funnel-plot test showed asymmetry, which the authors put down to small studies rather than unpublished results.",
     },
+    {
+      title: "Bego et al. (2024): nine real STEM courses",
+      text: "Bego and colleagues put spaced retrieval practice into introductory university courses. Practice questions on weekly quizzes were either massed on one quiz or spread over several, and a test at the end of the course came 30 or 34 days after the last quiz (578 students across eight courses, plus a calculus course reported earlier). Spacing helped significantly in only two courses, Calculus I and Chemistry for Health Professionals. Across the eight courses the average gain was 1.5 percentage points, not clearly different from zero (95% range −0.2 to 3.3). Adding calculus gave 2.1 points (range 0.2 to 4.0), only just above zero. Results varied a lot between courses (I² = 89%). The study ran in the first semester of COVID with remote proctoring, which may have hidden some benefit. The authors call the evidence promising but say how well it carries across STEM courses is still unclear.",
+    },
   ],
   limits: [
     { heading: "There is no one right schedule", text: "The best gap depends on how long you need to remember something. The numbers above are for trivia facts and a particular set of delays; for your course, they are a starting point. The 2008 study also found that a gap that was too short cost much more than one that was too long." },
     { heading: "For a test next week, it is worth less", text: "In Cepeda’s 2008 experiment, the best gap bought about 10% more recall for a test a week away, compared with 111% more for a test 70 days away. The further off the test, the more it pays to start early." },
     { heading: "Small studies sit next to big ones", text: "Bahrick’s study had four people, and Rohrer and Taylor’s first experiment had 66 undergraduates. The large meta-analyses agree with them in direction, but the size of the benefit varied a lot between studies." },
     { heading: "Mostly facts and procedures", text: "Most of this research measured memory for facts, word pairs and practice problems. Spreading out study is a strong default, but these studies do not show how much it helps deep understanding." },
-    { heading: "In real classrooms the average is lower", text: "Across all studies Donoghue and Hattie found d = 0.85. In the classroom studies Mawson and Kang pooled, the average was d = 0.54. The two analyses used different studies, so they are not strictly comparable, but for a real exam the lower figure is the safer one to expect." },
+    { heading: "In real courses the benefit is smaller and uneven", text: "Across all studies Donoghue and Hattie found d = 0.85. In the classroom studies Mawson and Kang pooled, the average was d = 0.54. And when Bego and colleagues tested spacing in nine real STEM courses, it helped clearly in only two. These analyses used different studies, so they are not strictly comparable, but for a real exam expect less than the lab numbers suggest." },
   ],
   practice: {
     visual: { name: "study-calendar", show: "sessions" },
@@ -108,6 +112,7 @@ export default {
   },
   sources: [
     "Bahrick, H. P., Bahrick, L. E., Bahrick, A. S., & Bahrick, P. E. (1993). Maintenance of foreign language vocabulary and the spacing effect. Psychological Science, 4(5), 316–321.",
+    "Bego, C. R., Lyle, K. B., Ralston, P. A. S., Immekus, J. C., Chastain, R. J., Haynes, L. D., Hoyt, L. K., Pigg, R. M., Rabin, S. D., Scobee, M. W., & Starr, T. L. (2024). Single-paper meta-analyses of the effects of spaced retrieval practice in nine introductory STEM courses: Is the glass half full or half empty? International Journal of STEM Education, 11, Article 9.",
     "Cepeda, N. J., Pashler, H., Vul, E., Wixted, J. T., & Rohrer, D. (2006). Distributed practice in verbal recall tasks: A review and quantitative synthesis. Psychological Bulletin, 132(3), 354–380.",
     "Cepeda, N. J., Vul, E., Rohrer, D., Wixted, J. T., & Pashler, H. (2008). Spacing effects in learning: A temporal ridgeline of optimal retention. Psychological Science, 19(11), 1095–1102.",
     "Donoghue, G. M., & Hattie, J. A. C. (2021). A meta-analysis of ten learning techniques. Frontiers in Education, 6, Article 581216.",

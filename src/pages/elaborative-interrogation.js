@@ -38,6 +38,8 @@ export default {
     { heading: "You need something to connect to", text: "The effect was larger for learners with more prior knowledge. With no background in a topic, there is little to attach a “because” to, and answers tend to be guesses." },
     { heading: "Vague answers help less", text: "Precise explanations beat imprecise ones. “Because it’s important” is not an explanation. The guided session asks you to compare your answer with the source for that reason." },
     { heading: "The average hides a wide range", text: "Studies of this technique disagreed a lot with each other, so a medium average effect does not guarantee a medium benefit for any one student or subject." },
+    { heading: "Not every experiment finds a benefit", text: "In a 2019 experiment with 96 university students, being prompted to ask why did not improve free recall or problem solving compared with a control group (Kühl & Bertrams, 2019). It is one small study, but it is a reminder that an average across studies includes experiments that find nothing." },
+    { heading: "What Dunlosky’s review could not say", text: "Dunlosky and colleagues found firm evidence for elaborative interrogation on tests of memory after short delays, across a broad range of factual topics. They rated the evidence insufficient on whether it helps comprehension, whether the benefit lasts across longer delays and whether it works in representative educational settings, and had concerns about material lengthier or more complex than lists of facts." },
   ],
   practice: {
     visual: { name: "flow", labels: ["Pick a fact", "Ask why", "Answer it", "Check source"] },
@@ -47,6 +49,7 @@ export default {
     "Donoghue, G. M., & Hattie, J. A. C. (2021). A meta-analysis of ten learning techniques. Frontiers in Education, 6, Article 581216.",
     "Dunlosky, J. (2013). Strengthening the student toolbox: Study strategies to boost learning. American Educator, Fall 2013.",
     "Dunlosky, J., Rawson, K. A., Marsh, E. J., Nathan, M. J., & Willingham, D. T. (2013). Improving students’ learning with effective learning techniques. Psychological Science in the Public Interest, 14(1), 4–58.",
+    "Kühl, T., & Bertrams, A. (2019). Is learning with elaborative interrogation less desirable when learners are depleted? Frontiers in Psychology, 10, Article 707.",
     "Pressley, M., McDaniel, M. A., Turnure, J. E., Wood, E., & Ahmad, M. (1987). Generation and precision of elaboration: Effects on intentional and incidental learning. Journal of Experimental Psychology: Learning, Memory, and Cognition, 13, 291–300.",
     "Woloshyn, V. E., Pressley, M., & Schneider, W. (1992). Elaborative-interrogation and prior-knowledge effects on learning of facts. Journal of Educational Psychology, 84(1), 115–124.",
   ],

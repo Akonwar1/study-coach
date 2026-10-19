@@ -43,10 +43,14 @@ export default {
       title: "Donoghue & Hattie (2021) and Dunlosky et al. (2013): imagery use",
       text: "In a meta-analysis of the ten techniques from Dunlosky’s review, imagery use for learning text had an average effect of d = 0.56 across 135 comparisons and 1,052 learners. Dunlosky’s review rated it low utility, noting that it is limited to material that is easy to picture and to what memory can hold.",
     },
+    {
+      title: "Zhang & Fiorella (2021): drawing from a text",
+      text: "Two experiments with college students who studied a text on the human circulatory system. In the first (107 students), students either studied provided visuals or drew their own from the text, with or without verbal support. Drawing took more time and felt harder, but all groups learned equally well. In the second (85 students), drawing from the text and then using the provided visuals as feedback beat studying the provided visuals on comprehension, again at a cost in time and effort. We read the abstract only.",
+    },
   ],
   limits: [
     { heading: "It suits some material better than others", text: "The strong results are for things with a shape: how a pump works, easy-to-draw words, relationships between parts. For a list of dates or abstract definitions, a drawing may add little." },
-    { heading: "Drawing takes time", text: "Making a good diagram is slower than rereading. In Wammes’s experiments, the benefit held with less drawing time, but the tasks were simple words, not whole topics." },
+    { heading: "Drawing takes time", text: "Making a good diagram is slower than rereading. In Wammes’s experiments, the benefit held with less drawing time, but the tasks were simple words. When Zhang and Fiorella had students draw from a whole text, drawing took longer and felt harder, and it improved comprehension in only one of two experiments." },
     { heading: "Most of the multimedia research used ready-made graphics", text: "Mayer’s large effect compares learning from words with learning from words plus a graphic made by experts. It does not by itself show that drawing your own diagram works as well." },
     { heading: "The theory is still debated", text: "Wammes and colleagues found that the benefit of drawing could not be explained by imagery, depth of processing or picture superiority alone. Dual-coding theory is a useful picture of why diagrams might help, not a settled account." },
   ],
@@ -63,5 +67,6 @@ export default {
     "Paivio, A. (1986). Mental representations: A dual coding approach. New York: Oxford University Press.",
     "Shepard, R. N. (1967). Recognition memory for words, sentences, and pictures. Journal of Verbal Learning and Verbal Behavior, 6, 156–163.",
     "Wammes, J. D., Meade, M. E., & Fernandes, M. A. (2016). The drawing effect: Evidence for reliable and robust memory benefits in free recall. Quarterly Journal of Experimental Psychology. https://doi.org/10.1080/17470218.2015.1094494",
+    "Zhang, Q., & Fiorella, L. (2021). Learning by drawing: When is it worth the time and effort? Contemporary Educational Psychology.",
   ],
 };

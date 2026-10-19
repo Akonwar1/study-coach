@@ -110,6 +110,14 @@ export default {
       title: "Samani & Pan (2021): a university physics course",
       text: "Students in two sections of an introductory physics course did homework for eight weeks, with problems either interleaved or grouped by topic. On two surprise tests of new, harder problems, the interleaved group recalled more relevant information and solved more problems correctly, even though students found interleaving harder and believed they had learned less from it. We read the abstract only.",
     },
+    {
+      title: "Rohrer et al. (2020): a randomised trial in 787 seventh graders",
+      text: "In a cluster randomised trial reviewed by the What Works Clearinghouse, 787 seventh graders did mathematics worksheets with four problem types either mixed together or blocked by type, and teachers got no support. On an unannounced test 43 days later the interleaved group averaged 62% and the blocked group 38%. The Clearinghouse said the study meets its standards without reservations, and noted that the test was written by the study’s authors, the same research group behind the earlier classroom studies.",
+    },
+    {
+      title: "Firth, Rivers & Boyle (2021): a second systematic review",
+      text: "This review included 26 studies on learning new categories from mixed or blocked examples, 17 of them (32 datasets) in a meta-analysis. Interleaving helped memory for studied items (g = 0.65, 3 datasets) and transfer to new items from a learned category (g = 0.59 within participants and 0.66 between participants, 13 datasets each), and the benefit lasted on delayed tests. It was larger for art (g = 0.64) than for science materials (0.38), and tests for missing studies found no sign of publication bias. No study used high-school students: three used adults recruited online and the rest used undergraduates. The review left out studies of reviewing material after learning it, so the classroom trials above are not part of it. We read the full paper.",
+    },
   ],
   limits: [
     { heading: "It can backfire with words", text: "For studies of word learning, blocking did better than mixing (g = −0.39), and for expository text and tastes the results were unclear (Brunmair & Richter, 2019). In one study, college students learning French vocabulary did just as well when words were grouped by category as when mixed; in another, mixing did not help high school students learn comma rules (Dunlosky, 2013)." },
@@ -117,6 +125,7 @@ export default {
     { heading: "The first experiments were small and narrow", text: "Rohrer and Taylor had 18 college students in their second experiment, tested on the same kinds of problems they practised, with procedures, not concepts. The authors say it is not known whether the benefit holds for transfer to new problems or for conceptual tasks. The later classroom studies address part of this." },
     { heading: "It slows you down at first", text: "Mixed practice gave lower scores during practice in these studies. If you judge your studying by how well the practice session goes, mixing will look like a mistake." },
     { heading: "Some studies may be missing", text: "Brunmair and Richter’s check for unpublished results suggested 23 studies were missing, and adjusting for them lowered the average from g = 0.42 to 0.29. The benefit stayed clearly positive, but the first figure is probably a little generous. Results also varied a lot between studies (I² = 77%)." },
+    { heading: "The research is small and has null results", text: "Dunlosky and colleagues gave interleaving a moderate rating because the research was small yet contained enough null results to raise concern. They also noted that some of those results may come from not fully understanding when to use it, for example when students had not practised each task type enough first." },
   ],
   practice: {
     visual: { name: "blocked-versus-mixed" },
@@ -127,10 +136,12 @@ export default {
     "Donoghue, G. M., & Hattie, J. A. C. (2021). A meta-analysis of ten learning techniques. Frontiers in Education, 6, Article 581216.",
     "Dunlosky, J. (2013). Strengthening the student toolbox: Study strategies to boost learning. American Educator, Fall 2013.",
     "Dunlosky, J., Rawson, K. A., Marsh, E. J., Nathan, M. J., & Willingham, D. T. (2013). Improving students’ learning with effective learning techniques. Psychological Science in the Public Interest, 14(1), 4–58.",
+    "Firth, J., Rivers, I., & Boyle, J. (2021). A systematic review of interleaving as a concept learning strategy. Review of Education, 9(2), 642–684.",
     "Kornell, N., & Bjork, R. A. (2008). Learning concepts and categories: Is spacing the “enemy of induction”? Psychological Science, 19(6), 585–592.",
     "Rohrer, D., Dedrick, R. F., & Burgess, K. (2014). The benefit of interleaved mathematics practice is not limited to superficially similar kinds of problems. Psychonomic Bulletin & Review, 21(5), 1323–1330.",
     "Rohrer, D., Dedrick, R. F., & Stershic, S. (2015). Interleaved practice improves mathematics learning. Journal of Educational Psychology, 107(3), 900–908.",
     "Rohrer, D., & Taylor, K. (2007). The shuffling of mathematics problems improves learning. Instructional Science, 35, 481–498.",
+    "Rohrer, D., Dedrick, R. F., Hartwig, M. K., & Cheung, C.-N. (2020). A randomized controlled trial of interleaved mathematics practice. Journal of Educational Psychology, 112(1), 40–52.",
     "Samani, J., & Pan, S. C. (2021). Interleaved practice enhances memory and problem-solving ability in undergraduate physics. npj Science of Learning, 6, Article 32.",
   ],
 };

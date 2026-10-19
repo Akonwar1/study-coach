@@ -1,7 +1,7 @@
 // Draws the "strength of evidence" ratings: a ranked panel for the library and a per-question breakdown for a method page.
 
 import { button, el } from "./dom.js";
-import { CRITERIA, MAX_SCORE, RATING_RULES, evidenceFor, rankByEvidence } from "./evidence-strength.js";
+import { CRITERIA, DUNLOSKY_CODES, MAX_SCORE, RATING_RULES, evidenceFor, rankByEvidence } from "./evidence-strength.js";
 
 function ratingPill(rating) {
   return el("span", { className: `rating-pill rating-${rating.toLowerCase()}`, text: rating });
@@ -11,6 +11,13 @@ function scoreBar(total) {
   const fill = el("span", { className: "barchart-fill tone-a" });
   fill.style.width = `${(total / MAX_SCORE) * 100}%`;
   return el("div", { className: "barchart-track", attrs: { role: "img", "aria-label": `${total} of ${MAX_SCORE} points` } }, [fill]);
+}
+
+
+/** Dunlosky et al.'s ratings for the three questions that match ours, in words. */
+function describeGrid(grid) {
+  const word = (code) => code.split("-").map((letter) => DUNLOSKY_CODES[letter]).join(", then ");
+  return `For ${grid.technique.toLowerCase()} they rated: materials ${grid.materials} (${word(grid.materials)}), retention and tasks ${grid.tasks} (${word(grid.tasks)}), real classrooms ${grid.classes} (${word(grid.classes)}).`;
 }
 
 function renderRubric() {
@@ -85,7 +92,7 @@ export function renderEvidenceBreakdown(methodId) {
       ...evidence.cautions.map((caution) => el("li", { text: caution.text })),
       ...(evidence.variation ? [el("li", { text: `Results vary a lot between studies: I² = ${evidence.variation.percent}% for ${evidence.variation.technique} (Donoghue & Hattie, 2021). The average hides big swings.` })] : []),
     ]),
-    el("p", { className: "barchart-source", text: `Outside check: Dunlosky et al. (2013) rated this technique ${evidence.dunlosky.toLowerCase()}. How the scores work is explained under “How strong is the evidence for each method?” in the Method library.` }),
+    el("p", { className: "barchart-source", text: `Outside check: Dunlosky et al. (2013) rated this technique ${evidence.dunlosky.toLowerCase()}.${evidence.dunloskyGrid ? ` ${describeGrid(evidence.dunloskyGrid)}` : ""} How the scores work is explained under “How strong is the evidence for each method?” in the Method library.` }),
   ]);
 }
 

@@ -11,6 +11,8 @@
   --manila: #b0791e;
   --danger: #b8433a;
   --danger-soft: #fbeae8;
+  --good: #23744a;
+  --good-soft: #e1f2e8;
   --shadow-card: 0 1px 2px rgba(32, 28, 46, 0.07), 0 6px 16px rgba(32, 28, 46, 0.06);
   --font-display: "Fraunces", Georgia, "Iowan Old Style", serif;
   --font-body: "Work Sans", -apple-system, "Segoe UI", sans-serif;
@@ -31,6 +33,8 @@
     --manila: #e0a94c;
     --danger: #e8837a;
     --danger-soft: #341c1a;
+    --good: #72d39b;
+    --good-soft: #17301f;
     --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.45), 0 6px 18px rgba(0, 0, 0, 0.35);
   }
 }
@@ -504,6 +508,41 @@ details summary { cursor: pointer; font-weight: 600; min-height: 32px; font-size
 .dots { display: flex; flex-wrap: wrap; gap: 5px; }
 .dot { width: 14px; height: 14px; border-radius: 50%; background: var(--line); }
 .dot.filled { background: var(--accent); }
+
+/* strength-of-evidence ratings */
+.evidence-panel { margin-bottom: 16px; padding: 4px 16px 12px; background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--manila); border-radius: 12px; }
+.evidence-panel summary { font-size: 16px; color: var(--accent-strong); }
+.evidence-panel-body p, .evidence-panel-body li { font-size: 14px; line-height: 1.5; }
+.rubric { margin: 8px 0; padding-left: 20px; display: flex; flex-direction: column; gap: 6px; }
+.rubric-scale { color: var(--ink-soft); }
+.rating-rules { list-style: none; margin: 10px 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.rating-note { color: var(--ink-soft); }
+.rating-list { list-style: none; margin: 14px 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr)); gap: 12px; }
+.rating-row { display: flex; flex-direction: column; gap: 8px; padding: 12px; background: var(--surface-2); border: 1px solid var(--line); border-radius: 8px; }
+.rating-row .btn { align-self: flex-start; min-height: 40px; padding: 6px 14px; font-size: 14px; }
+.rating-row .barchart-track { height: 10px; border-radius: 999px; }
+.rating-row .barchart-fill { border-radius: 999px; }
+.rating-head { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; }
+.rating-head h4 { margin: 0; font-size: 17px; flex: 1 1 auto; }
+.rating-score { font-family: var(--font-mono); font-size: 13px; color: var(--ink-soft); }
+.rating-supports { margin: 0; flex: 1; }
+.rating-tag { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; }
+.rating-tag-label { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-soft); }
+.rating-tag-note { flex: 1 1 100%; margin: 0; font-size: 13px; line-height: 1.4; color: var(--ink-soft); }
+.rating-near { margin: 0; padding: 8px 10px; border-radius: 8px; font-size: 13px; line-height: 1.45; background: color-mix(in srgb, var(--manila) 14%, var(--surface)); border-left: 3px solid var(--manila); }
+.rating-checks, .cautions { margin: 6px 0 0; padding-left: 20px; display: flex; flex-direction: column; gap: 6px; }
+.rating-check { margin: 0; font-family: var(--font-mono); font-size: 12px; color: var(--ink-soft); }
+.rating-pill { display: inline-block; padding: 3px 12px; border-radius: 999px; border: 1px solid; font-size: 13px; font-weight: 700; }
+.rating-strong { color: var(--good); background: var(--good-soft); border-color: var(--good); }
+.rating-moderate { color: var(--manila); background: color-mix(in srgb, var(--manila) 14%, var(--surface)); border-color: var(--manila); }
+.rating-thin { color: var(--danger); background: var(--danger-soft); border-color: var(--danger); }
+.evidence-breakdown { display: flex; flex-direction: column; gap: 10px; }
+.criteria { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+.criterion { padding: 12px 14px; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; }
+.criterion-head { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; }
+.criterion-head h4 { margin: 0; font-size: 16px; }
+.criterion-meaning { flex: 1 1 200px; font-size: 13px; color: var(--ink-soft); }
+.criterion p { margin: 6px 0 0; font-size: 14px; line-height: 1.5; }
 
 .timeline { list-style: none; margin: 0; padding: 0 0 0 16px; border-left: 3px solid var(--accent); display: flex; flex-direction: column; gap: 16px; }
 .timeline li { position: relative; }

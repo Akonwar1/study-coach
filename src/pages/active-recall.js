@@ -68,12 +68,17 @@ export default {
       title: "Dunlosky et al. (2013): the ten-technique review",
       text: "This review judged each technique on how well it works across materials, students and tests. Practice testing was one of only two techniques rated “high utility”. Highlighting and re-reading, which many students rely on, were rated “low”.",
     },
+    {
+      title: "Yang et al. (2021): quizzing in real classrooms",
+      text: "Most testing experiments were run in labs, so Yang and colleagues pooled studies done in actual classrooms: 222 independent studies with 48,478 students and 573 effect sizes. Quizzing raised achievement by g = 0.499 on average, a medium effect. The size depended on things like what the control group did instead, whether students saw the right answers afterwards, and how many times they were tested. We read the abstract and the publisher’s record, not the full paper.",
+    },
   ],
   limits: [
     { heading: "It does not help if the test is minutes away", text: "At the 5-minute test, the re-readers did better: 81% vs 75% in Roediger and Karpicke’s first experiment and 83% vs 71% in the second. Recalling pays off over days and weeks, not for the next ten minutes." },
     { heading: "It feels worse while you do it", text: "The group that learned least was the most confident. Recall is harder than re-reading and can feel like it is going badly. Expect that, and judge by what you can recall afterwards." },
     { heading: "Without feedback, mistakes can stay", text: "Testing alone helped in the experiments above, but the meta-analysis found about twice the benefit when people saw the right answers afterwards (g = 0.73 vs 0.39)." },
     { heading: "You need something to recall", text: "Students in these experiments read the passage once before they were first tested. If you have not understood the material yet, recall will mostly show you that. Learn it first, with a method like Feynman or Self-Explanation, then test yourself." },
+    { heading: "Reviews differ on how big the effect is", text: "Rowland found g = 0.50, Yang and colleagues’ classroom review found g = 0.499 and Donoghue and Hattie found d = 0.74. All agree that testing helps, but the true size is uncertain. Rowland also found that published studies showed larger effects than unpublished ones (the unpublished ones were smaller but still reliable), which can be a sign that some null results never reach print, and noted that lab research on testing has almost always used undergraduate students." },
   ],
   practice: {
     visual: { name: "flow", labels: ["Study once", "Close it", "Recall", "Check", "Re-test"] },
@@ -82,9 +87,11 @@ export default {
   sources: [
     "Abbott, E. E. (1909), Gates, A. I. (1917) and Spitzer, H. F. (1939): early testing-effect experiments, as cited in Rowland (2014).",
     "Adesope, O. O., Trevisan, D. A., & Sundararajan, N. (2017). Rethinking the use of tests: A meta-analysis of practice testing. Review of Educational Research, 87(3), 659–701.",
+    "Donoghue, G. M., & Hattie, J. A. C. (2021). A meta-analysis of ten learning techniques. Frontiers in Education, 6, Article 581216.",
     "Dunlosky, J., Rawson, K. A., Marsh, E. J., Nathan, M. J., & Willingham, D. T. (2013). Improving students’ learning with effective learning techniques. Psychological Science in the Public Interest, 14(1), 4–58.",
     "Karpicke, J. D., & Blunt, J. R. (2011). Retrieval practice produces more learning than elaborative studying with concept mapping. Science, 331(6018), 772–775.",
     "Roediger, H. L., III, & Karpicke, J. D. (2006). Test-enhanced learning: Taking memory tests improves long-term retention. Psychological Science, 17(3), 249–255.",
     "Rowland, C. A. (2014). The effect of testing versus restudy on retention: A meta-analytic review of the testing effect. Psychological Bulletin, 140(6), 1432–1463.",
+    "Yang, C., Luo, L., Vadillo, M. A., Yu, R., & Shanks, D. R. (2021). Testing (quizzing) boosts classroom learning: A systematic and meta-analytic review. Psychological Bulletin, 147(4), 399–435.",
   ],
 };

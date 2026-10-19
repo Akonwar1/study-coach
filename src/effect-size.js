@@ -59,9 +59,11 @@ export function renderEffectExplainer() {
       el("ul", {}, [
         el("li", { text: "The “ahead of about X of 100” reading assumes scores form a rough bell curve, so treat it as an approximation." }),
         el("li", { text: "Small, medium and large are Cohen’s rough labels, not verdicts. Whether a gap matters depends on what it costs you." }),
+        el("li", { text: "Cohen’s labels were not made for education. Kraft (2020) argues that effects Cohen would call small can be large compared with what real school programmes achieve, and that they ignore a study’s costs and how well it scales. Most numbers on these pages come from short lab-style studies, so do not expect the same gap on a real exam." }),
         el("li", { text: "A negative number means the comparison group did better." }),
         el("li", { text: "An average across many studies can hide big differences between them. It describes groups, not any one learner." }),
       ]),
+      el("p", { className: "barchart-source", text: "Kraft, M. A. (2020). Interpreting effect sizes of education interventions. Educational Researcher, 49(4), 241–253." }),
     ]),
   ]);
 }

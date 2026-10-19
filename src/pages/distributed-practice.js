@@ -90,12 +90,17 @@ export default {
       title: "Cepeda et al. (2006) and Donovan & Radosevich (1999): the earlier reviews",
       text: "Cepeda and colleagues pooled 839 comparisons from 317 experiments in 184 articles, all on verbal recall. Donovan and Radosevich pooled 63 studies with 112 effect sizes and found an average effect of 0.46, which varied with the task and the length of the gaps. Both found that spacing generally helped.",
     },
+    {
+      title: "Mawson & Kang (2025): spacing in real classrooms",
+      text: "Mawson and Kang pooled applied research from classrooms: 22 reports with 31 effect sizes and more than 3,000 students. Distributed practice beat massed practice by d = 0.54 (95% range 0.31 to 0.77). Results varied a lot between studies (I² = 92%), larger effects went with longer gaps before the test, and no study in the review tested more than 42 days later. A funnel-plot test showed asymmetry, which the authors put down to small studies rather than unpublished results.",
+    },
   ],
   limits: [
     { heading: "There is no one right schedule", text: "The best gap depends on how long you need to remember something. The numbers above are for trivia facts and a particular set of delays; for your course, they are a starting point. The 2008 study also found that a gap that was too short cost much more than one that was too long." },
     { heading: "For a test next week, it is worth less", text: "In Cepeda’s 2008 experiment, the best gap bought about 10% more recall for a test a week away, compared with 111% more for a test 70 days away. The further off the test, the more it pays to start early." },
     { heading: "Small studies sit next to big ones", text: "Bahrick’s study had four people, and Rohrer and Taylor’s first experiment had 66 undergraduates. The large meta-analyses agree with them in direction, but the size of the benefit varied a lot between studies." },
     { heading: "Mostly facts and procedures", text: "Most of this research measured memory for facts, word pairs and practice problems. Spreading out study is a strong default, but these studies do not show how much it helps deep understanding." },
+    { heading: "In real classrooms the average is lower", text: "Across all studies Donoghue and Hattie found d = 0.85. In the classroom studies Mawson and Kang pooled, the average was d = 0.54. The two analyses used different studies, so they are not strictly comparable, but for a real exam the lower figure is the safer one to expect." },
   ],
   practice: {
     visual: { name: "study-calendar", show: "sessions" },
@@ -110,6 +115,7 @@ export default {
     "Dunlosky, J., Rawson, K. A., Marsh, E. J., Nathan, M. J., & Willingham, D. T. (2013). Improving students’ learning with effective learning techniques. Psychological Science in the Public Interest, 14(1), 4–58.",
     "Ebbinghaus, H. (1885). Über das Gedächtnis. Leipzig: Duncker & Humblot.",
     "Kornell, N. (2009). Optimising learning using flashcards: Spacing is more effective than cramming. Applied Cognitive Psychology, 23(9), 1297–1317.",
+    "Mawson, R. D., & Kang, S. H. K. (2025). The distributed practice effect on classroom learning: A meta-analytic review of applied research. Behavioral Sciences, 15(6), 771.",
     "Rohrer, D., & Taylor, K. (2007). The shuffling of mathematics problems improves learning. Instructional Science, 35, 481–498.",
   ],
 };

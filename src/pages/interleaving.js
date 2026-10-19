@@ -88,7 +88,7 @@ export default {
     },
     {
       title: "Brunmair & Richter (2019): what the whole literature says",
-      text: "This meta-analysis combined 59 studies with 238 comparisons. The overall benefit was moderate (Hedges’ g = 0.42). It differed a lot by material, and for words blocking did better than mixing. For expository text and tastes, the results were not clearly different from zero.",
+      text: "This meta-analysis combined 59 studies with 238 comparisons. The overall benefit was moderate (Hedges’ g = 0.42). It differed a lot by material, and for words blocking did better than mixing. For expository text and tastes, the results were not clearly different from zero. A check for missing studies suggested some may be absent: adjusting for them lowered the average to g = 0.29, still clearly positive. A separate test found no sign of p-hacking.",
       chart: {
         title: "Benefit of interleaving by type of material (Hedges’ g; about 0.5 is medium, below 0 means mixing did worse)",
         groups: [{ label: "", bars: [
@@ -106,12 +106,17 @@ export default {
       text: "Pooling 104 comparisons of interleaved practice, they found d = 0.47, and noted that the evidence base is still fairly small.",
       chart: techniqueChart("interleaved"),
     },
+    {
+      title: "Samani & Pan (2021): a university physics course",
+      text: "Students in two sections of an introductory physics course did homework for eight weeks, with problems either interleaved or grouped by topic. On two surprise tests of new, harder problems, the interleaved group recalled more relevant information and solved more problems correctly, even though students found interleaving harder and believed they had learned less from it. We read the abstract only.",
+    },
   ],
   limits: [
     { heading: "It can backfire with words", text: "For studies of word learning, blocking did better than mixing (g = −0.39), and for expository text and tastes the results were unclear (Brunmair & Richter, 2019). In one study, college students learning French vocabulary did just as well when words were grouped by category as when mixed; in another, mixing did not help high school students learn comma rules (Dunlosky, 2013)." },
     { heading: "Most of the strong results are about problem types", text: "The clearest benefits are for telling kinds of problem or category apart: mathematics, painters, categories of pictures. Do not expect the same for memorising a list of definitions." },
     { heading: "The first experiments were small and narrow", text: "Rohrer and Taylor had 18 college students in their second experiment, tested on the same kinds of problems they practised, with procedures, not concepts. The authors say it is not known whether the benefit holds for transfer to new problems or for conceptual tasks. The later classroom studies address part of this." },
     { heading: "It slows you down at first", text: "Mixed practice gave lower scores during practice in these studies. If you judge your studying by how well the practice session goes, mixing will look like a mistake." },
+    { heading: "Some studies may be missing", text: "Brunmair and Richter’s check for unpublished results suggested 23 studies were missing, and adjusting for them lowered the average from g = 0.42 to 0.29. The benefit stayed clearly positive, but the first figure is probably a little generous. Results also varied a lot between studies (I² = 77%)." },
   ],
   practice: {
     visual: { name: "blocked-versus-mixed" },
@@ -121,9 +126,11 @@ export default {
     "Brunmair, M., & Richter, T. (2019). Similarity matters: A meta-analysis of interleaved learning and its moderators. Psychological Bulletin. https://doi.org/10.1037/bul0000209",
     "Donoghue, G. M., & Hattie, J. A. C. (2021). A meta-analysis of ten learning techniques. Frontiers in Education, 6, Article 581216.",
     "Dunlosky, J. (2013). Strengthening the student toolbox: Study strategies to boost learning. American Educator, Fall 2013.",
+    "Dunlosky, J., Rawson, K. A., Marsh, E. J., Nathan, M. J., & Willingham, D. T. (2013). Improving students’ learning with effective learning techniques. Psychological Science in the Public Interest, 14(1), 4–58.",
     "Kornell, N., & Bjork, R. A. (2008). Learning concepts and categories: Is spacing the “enemy of induction”? Psychological Science, 19(6), 585–592.",
     "Rohrer, D., Dedrick, R. F., & Burgess, K. (2014). The benefit of interleaved mathematics practice is not limited to superficially similar kinds of problems. Psychonomic Bulletin & Review, 21(5), 1323–1330.",
     "Rohrer, D., Dedrick, R. F., & Stershic, S. (2015). Interleaved practice improves mathematics learning. Journal of Educational Psychology, 107(3), 900–908.",
     "Rohrer, D., & Taylor, K. (2007). The shuffling of mathematics problems improves learning. Instructional Science, 35, 481–498.",
+    "Samani, J., & Pan, S. C. (2021). Interleaved practice enhances memory and problem-solving ability in undergraduate physics. npj Science of Learning, 6, Article 32.",
   ],
 };

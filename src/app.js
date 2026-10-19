@@ -3,6 +3,7 @@ import { GOAL_RANGE_TEXT, buildEntry, cleanEntries, loggingThreshold, parseGoalH
 import { renderHistoryScreen } from "./history-view.js";
 import { renderMethodPage } from "./method-page.js";
 import { METHOD_PAGES, hasMethodPage } from "./method-pages.js";
+import { renderEvidencePanel, renderEvidenceTag } from "./evidence-view.js";
 import { FILTER_GROUPS, NO_FILTERS, describeFit, filterMethods, hasActiveFilters } from "./library.js";
 import { METHODS } from "./methods.js";
 import { ALL_QUESTIONS, SUBJECT_QUESTION } from "./questions.js";
@@ -172,6 +173,12 @@ function renderHowTo(method) {
   ];
 }
 
+/** The evidence rating tag with its one-line note, or nothing for a method without a rating. */
+function evidenceTag(method) {
+  const tag = renderEvidenceTag(method.id);
+  return tag ? [tag] : [];
+}
+
 /** A "Read the full story" button if this method has an in-depth page, otherwise nothing. */
 function readMoreLink(method) {
   return hasMethodPage(method.id) ? [button("Read the full story", { onClick: () => openMethodPage(method.id) })] : [];
@@ -186,6 +193,7 @@ function renderResultCard({ method, reasons }, rank) {
     el("h3", { text: method.name }),
     el("p", { className: "method-tagline", text: method.tagline }),
     el("span", { className: "duration", text: `about ${method.minutes} min per session` }),
+    ...evidenceTag(method),
     el("p", { text: method.def }),
     el("ul", { className: "reasons" }, reasons.map((reason) => el("li", { text: reason }))),
     ...renderHowTo(method),
@@ -377,6 +385,7 @@ function renderLibraryCard(method) {
       ...method.tags.helps.map((tag) => el("li", { className: "tag helps", text: tag })),
       ...method.tags.how.map((tag) => el("li", { className: "tag how", text: tag })),
     ]),
+    ...evidenceTag(method),
     el("details", {}, [
       el("summary", { text: "Details and steps" }),
       el("p", { text: method.def }),
@@ -406,6 +415,7 @@ function renderLibrary() {
   show(
     el("section", { className: "library" }, [
       el("h2", { text: "Method library" }),
+      renderEvidencePanel({ methods: METHODS, hasPage: hasMethodPage, onOpen: openMethodPage }),
       el("div", { className: "library-filters" }, [...FILTER_GROUPS.map(renderFilterSelect), renderSubjectPicker()]),
       el("div", { className: "library-status" }, [
         el("p", { className: "library-count", text: `Showing ${matches.length} of ${METHODS.length} methods`, attrs: { role: "status" } }),

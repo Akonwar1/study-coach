@@ -1,6 +1,7 @@
 import { renderBarChart } from "./charts.js";
 import { button, el } from "./dom.js";
 import { renderEffectExplainer } from "./effect-size.js";
+import { renderEvidenceBreakdown, renderEvidenceTag } from "./evidence-view.js";
 import { renderGlance } from "./glance.js";
 import { renderVisual } from "./visuals.js";
 
@@ -46,6 +47,7 @@ function renderPractice(practice) {
  * onBack() leaves the page; onStart() begins a guided session for this method.
  */
 export function renderMethodPage({ method, page, onBack, onStart }) {
+  const breakdown = renderEvidenceBreakdown(method.id);
   const explainer = usesEffectSizes(page) ? renderEffectExplainer() : null;
   const sections = [
     { id: "glance", title: "At a glance", children: [renderGlance(page.glance), ...(explainer ? [explainer] : [])] },
@@ -53,6 +55,7 @@ export function renderMethodPage({ method, page, onBack, onStart }) {
       el("li", {}, [el("span", { className: "timeline-when", text: item.when }), el("p", { text: item.text })])))] },
     { id: "how", title: "How it works", children: page.how.map(labelledParagraph) },
     { id: "evidence", title: "The evidence", children: [...(explainer ? [explainerPointer(explainer)] : []), ...page.evidence.map(renderEvidence)] },
+    ...(breakdown ? [{ id: "strength", title: "How strong is the evidence?", children: [breakdown] }] : []),
     { id: "limits", title: "Where it falls short", children: page.limits.map(labelledParagraph) },
     { id: "practice", title: "In practice", children: [...renderPractice(page.practice), el("div", { className: "card-action" }, [button("Start guided session", { primary: true, onClick: onStart })])] },
     { id: "sources", title: "Sources", children: [el("ul", { className: "sources" }, page.sources.map((source) => el("li", { text: source })))] },
@@ -69,6 +72,7 @@ export function renderMethodPage({ method, page, onBack, onStart }) {
     el("p", { className: "badge", text: "Method deep dive" }),
     el("h2", { text: method.name }),
     el("p", { className: "method-tagline", text: method.tagline }),
+    ...(renderEvidenceTag(method.id) ? [renderEvidenceTag(method.id)] : []),
     el("p", { className: "page-lede", text: method.def }),
     el("div", { className: "card-action" }, [button("Start guided session", { primary: true, onClick: onStart })]),
     el("nav", { className: "chips", attrs: { "aria-label": "Sections on this page" } }, jumps),

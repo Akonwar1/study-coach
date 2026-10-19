@@ -88,6 +88,10 @@ export default {
       title: "Dunlosky et al. (2013): the ten-technique review",
       text: "Distributed practice, the general idea behind spaced repetition, was rated “high utility”, one of only two techniques given that rating.",
     },
+    {
+      title: "Latimier et al. (2021): spacing out retrieval practice",
+      text: "Latimier, Peyre and Ramus pooled 29 studies in which the same retrieval practice was spread out over time. That is the closest published match to reviewing flashcards on a schedule, since it combines testing yourself with spacing. We could read only the abstract-level record, which gives the number of studies, so no effect size is quoted here.",
+    },
   ],
   limits: [
     { heading: "There is no single right schedule", text: "The best gap depends on how long you want to remember. This app’s Leitner boxes (every day, every 3 days, every week) are a simple stand-in, not a number the research gives." },
@@ -102,8 +106,10 @@ export default {
   sources: [
     "Cepeda, N. J., Pashler, H., Vul, E., Wixted, J. T., & Rohrer, D. (2006). Distributed practice in verbal recall tasks: A review and quantitative synthesis. Psychological Bulletin, 132(3), 354–380.",
     "Cepeda, N. J., Vul, E., Rohrer, D., Wixted, J. T., & Pashler, H. (2008). Spacing effects in learning: A temporal ridgeline of optimal retention. Psychological Science, 19(11), 1095–1102.",
+    "Donoghue, G. M., & Hattie, J. A. C. (2021). A meta-analysis of ten learning techniques. Frontiers in Education, 6, Article 581216.",
     "Dunlosky, J., Rawson, K. A., Marsh, E. J., Nathan, M. J., & Willingham, D. T. (2013). Improving students’ learning with effective learning techniques. Psychological Science in the Public Interest, 14(1), 4–58.",
     "Ebbinghaus, H. (1885). Über das Gedächtnis. Leipzig: Duncker & Humblot.",
+    "Latimier, A., Peyre, H., & Ramus, F. (2021). A meta-analytic review of the benefit of spacing out retrieval practice episodes on retention. Educational Psychology Review, 33, 959–987.",
     "Leitner, S. (1972). So lernt man lernen. Freiburg: Herder.",
     "Murre, J. M. J., & Dros, J. (2015). Replication and analysis of Ebbinghaus’ forgetting curve. PLOS ONE, 10(7), e0120644.",
     "Pimsleur, P. (1967). A memory schedule. Modern Language Journal, 51(2), 73–75.",

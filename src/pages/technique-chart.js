@@ -18,7 +18,7 @@ const TECHNIQUES = [
 /** `highlightId` is one of the ids above; that technique's bar is drawn in the accent colour. */
 export function techniqueChart(highlightId) {
   return {
-    title: "Average effect size of ten techniques in one large meta-analysis (Cohen’s d; higher is a bigger advantage)",
+    title: "Average effect size of ten techniques in one large meta-analysis (Cohen’s d; higher is a bigger advantage, about 0.5 is medium)",
     groups: [{
       label: "",
       bars: TECHNIQUES.map((technique) => ({

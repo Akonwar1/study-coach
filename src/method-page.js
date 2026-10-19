@@ -1,5 +1,6 @@
 import { renderBarChart } from "./charts.js";
 import { button, el } from "./dom.js";
+import { renderEffectExplainer } from "./effect-size.js";
 import { renderGlance } from "./glance.js";
 import { renderVisual } from "./visuals.js";
 
@@ -20,6 +21,20 @@ function renderEvidence(entry) {
   ]);
 }
 
+// Pages that quote effect sizes (d or g) get the "What do d and g mean?" box.
+function usesEffectSizes(page) {
+  return /Cohen|Hedges|\b[dg] = /.test(JSON.stringify(page)) || page.glance.some((stat) => stat.kind === "effect");
+}
+
+function explainerPointer(explainer) {
+  const link = el("button", { className: "link-button", text: "What do d and g mean?", attrs: { type: "button" } });
+  link.addEventListener("click", () => {
+    explainer.open = true;
+    explainer.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+  return el("p", { className: "explainer-pointer" }, ["Numbers written d or g below are effect sizes. ", link]);
+}
+
 function renderPractice(practice) {
   const diagram = renderVisual(practice.visual);
   if (!diagram) return [];
@@ -31,12 +46,13 @@ function renderPractice(practice) {
  * onBack() leaves the page; onStart() begins a guided session for this method.
  */
 export function renderMethodPage({ method, page, onBack, onStart }) {
+  const explainer = usesEffectSizes(page) ? renderEffectExplainer() : null;
   const sections = [
-    { id: "glance", title: "At a glance", children: [renderGlance(page.glance)] },
+    { id: "glance", title: "At a glance", children: [renderGlance(page.glance), ...(explainer ? [explainer] : [])] },
     { id: "history", title: "Where it came from", children: [el("ol", { className: "timeline" }, page.history.map((item) =>
       el("li", {}, [el("span", { className: "timeline-when", text: item.when }), el("p", { text: item.text })])))] },
     { id: "how", title: "How it works", children: page.how.map(labelledParagraph) },
-    { id: "evidence", title: "The evidence", children: page.evidence.map(renderEvidence) },
+    { id: "evidence", title: "The evidence", children: [...(explainer ? [explainerPointer(explainer)] : []), ...page.evidence.map(renderEvidence)] },
     { id: "limits", title: "Where it falls short", children: page.limits.map(labelledParagraph) },
     { id: "practice", title: "In practice", children: [...renderPractice(page.practice), el("div", { className: "card-action" }, [button("Start guided session", { primary: true, onClick: onStart })])] },
     { id: "sources", title: "Sources", children: [el("ul", { className: "sources" }, page.sources.map((source) => el("li", { text: source })))] },

@@ -90,7 +90,7 @@ export default {
       title: "Brunmair & Richter (2019): what the whole literature says",
       text: "This meta-analysis combined 59 studies with 238 comparisons. The overall benefit was moderate (Hedges’ g = 0.42). It differed a lot by material, and for words blocking did better than mixing. For expository text and tastes, the results were not clearly different from zero.",
       chart: {
-        title: "Benefit of interleaving by type of material (Hedges’ g)",
+        title: "Benefit of interleaving by type of material (Hedges’ g; about 0.5 is medium, below 0 means mixing did worse)",
         groups: [{ label: "", bars: [
           { label: "All studies", value: 0.42, tone: "a", valueText: "0.42" },
           { label: "Paintings and other visual categories", value: 0.67, tone: "a", valueText: "0.67" },

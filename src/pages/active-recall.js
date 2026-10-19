@@ -52,7 +52,7 @@ export default {
       title: "Rowland (2014): combining the studies",
       text: "A meta-analysis pools many experiments to see what is true on average. This one combined 159 comparisons from 61 studies of testing versus restudying. The average effect, in a measure called Hedges’ g (the gap between the groups in units of how much people normally vary), was 0.50, with a plausible range of 0.42 to 0.58. By convention, 0.5 is a medium effect. Adesope and colleagues’ later meta-analysis of practice testing reported a similar medium-to-large effect (g = 0.61).",
       chart: {
-        title: "Size of the testing effect (Hedges’ g; higher is a bigger advantage over restudying)",
+        title: "Size of the testing effect (Hedges’ g; higher is a bigger advantage over restudying, about 0.5 is medium)",
         groups: [
           { label: "", bars: [
             { label: "All 159 comparisons", value: 0.5, tone: "a", valueText: "0.50" },

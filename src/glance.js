@@ -1,7 +1,8 @@
 // The "At a glance" cards at the top of a method page. Each card shows one result in the form that suits it:
 //
 //   compare  two or three results side by side as bars: { items: [{ name, value, tone? }], max, unit?, decimals? }
-//   effect   an effect size on a small / medium / large scale: { value | range: [low, high], symbol }
+//   effect   an effect size on a small / medium / large scale: { value | range: [low, high], symbol: "d" | "g" }
+//            (the card also says in plain words how many of 100 comparison learners the average learner beat)
 //   dots     "26 of 30" as a row of dots: { filled, total }
 //   number   one big figure: { value, unit? }
 //   badge    a word or short phrase, such as a rating: { value }
@@ -10,6 +11,7 @@
 // Everything is plain HTML so it reads well on a phone and follows the light and dark themes.
 
 import { el } from "./dom.js";
+import { EFFECT_NAMES, learnersBeaten } from "./effect-size.js";
 
 const KIND_LABEL = {
   compare: "Side by side",
@@ -52,9 +54,14 @@ function renderEffect(stat) {
     node.style.left = share(mark.at, EFFECT_SCALE_MAX);
     return node;
   });
+  const beatenLow = learnersBeaten(low);
+  const beatenHigh = learnersBeaten(high);
+  const beaten = beatenLow === beatenHigh ? `${beatenLow}` : `${beatenLow} to ${beatenHigh}`;
+  const name = EFFECT_NAMES[stat.symbol] ?? stat.symbol;
   return el("div", { className: "glance-effect" }, [
-    el("p", { className: "glance-big", text: `${stat.symbol} = ${display}` }),
-    el("div", { className: "gauge", attrs: { role: "img", "aria-label": `${stat.symbol} = ${display} on a scale from 0 to ${EFFECT_SCALE_MAX}; 0.2 to 0.5 is small, 0.5 to 0.8 medium, above 0.8 large` } }, [
+    el("p", { className: "glance-big" }, [display, el("span", { className: "glance-unit", text: ` ${name}` })]),
+    el("p", { className: "glance-plain", text: `In plain terms: the average learner using the method did better than about ${beaten} out of 100 who did not.` }),
+    el("div", { className: "gauge", attrs: { role: "img", "aria-label": `${name} = ${display} on a scale from 0 to ${EFFECT_SCALE_MAX}; 0.2 to 0.5 is small, 0.5 to 0.8 medium, above 0.8 large` } }, [
       el("span", { className: "gauge-zone zone-small" }),
       el("span", { className: "gauge-zone zone-medium" }),
       el("span", { className: "gauge-zone zone-large" }),

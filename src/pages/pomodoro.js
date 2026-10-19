@@ -1,7 +1,7 @@
 export default {
   glance: [
     { kind: "number", value: "24 + 6", unit: "minutes", text: "the Pomodoro-style schedule tested against students choosing their own breaks, with 87 university students over a day of study", source: "Biwer et al., 2023" },
-    { kind: "compare", items: [{ name: "Energy (vigor)", value: 0.36, tone: "a" }, { name: "Less tiredness", value: 0.35, tone: "a" }], max: 1, decimals: 2, text: "average effect of breaks of 10 minutes or less, across 22 samples and 2,335 people (Cohen’s d)", source: "Albulescu et al., 2022" },
+    { kind: "compare", items: [{ name: "Energy (vigor)", value: 0.36, tone: "a" }, { name: "Less tiredness", value: 0.35, tone: "a" }], max: 1, decimals: 2, text: "average effect of breaks of 10 minutes or less, across 22 samples and 2,335 people (Cohen’s d; about 0.2 is small, 0.5 is medium)", source: "Albulescu et al., 2022" },
     { kind: "effect", symbol: "d", value: 0.16, text: "average effect of those breaks on task performance, which was too small to rule out chance", source: "Albulescu et al., 2022" },
     { kind: "number", value: "Late 1980s", text: "when Francesco Cirillo, then a university student, began timing his study with a tomato-shaped kitchen timer", source: "Cirillo" },
   ],

@@ -28,7 +28,7 @@ export default {
       title: "Wammes, Meade & Fernandes (2016): the drawing effect",
       text: "In the first experiment, people saw a list of 15 easy-to-draw words, such as “apple”, and for each one either drew it or wrote it out. After a filler task they recalled as many words as they could. In two versions of that experiment, with 30 and 25 people, drawn words were recalled better than written ones (d = 1.51 and d = 0.96); 26 of the 30 people in the first version remembered more drawn than written words. Further experiments found the benefit with shorter drawing time and longer lists, and even when drawing and writing were done in separate lists by different people.",
       chart: {
-        title: "Size of the advantage from learning with pictures (Cohen’s d)",
+        title: "Size of the advantage from learning with pictures (Cohen’s d; about 0.5 is medium, 0.8 is large)",
         groups: [{ label: "", bars: [
           { label: "Words and graphics vs. words alone (median of 13 comparisons)", value: 1.35, tone: "a", valueText: "1.35" },
           { label: "Drawing vs. writing words, first experiment (30 people)", value: 1.51, tone: "a", valueText: "1.51" },

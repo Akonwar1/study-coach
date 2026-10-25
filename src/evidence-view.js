@@ -97,8 +97,8 @@ export function renderEvidenceBreakdown(methodId) {
 }
 
 /**
- * A small "Evidence: Moderate" tag with the main problem with the evidence in one line, for cards and page headers.
- * Every method has such a note, including the Strong ones, because none of the evidence is without caveats.
+ * A small "Evidence: Moderate" tag for cards and page headers: what the evidence backs, then the main caveat, one line each.
+ * Every method has both, including the Strong ones, because none of the evidence is without caveats.
  */
 export function renderEvidenceTag(methodId) {
   const evidence = evidenceFor(methodId);
@@ -106,6 +106,7 @@ export function renderEvidenceTag(methodId) {
   return el("div", { className: "rating-tag" }, [
     el("span", { className: "rating-tag-label", text: "Evidence" }),
     ratingPill(evidence.rating),
-    el("p", { className: "rating-tag-note", text: `Note: ${evidence.note.text}` }),
+    el("p", { className: "rating-tag-line rating-tag-backed" }, [el("strong", { text: "Backed by: " }), evidence.backed]),
+    el("p", { className: "rating-tag-line rating-tag-note" }, [el("strong", { text: "Caveat: " }), evidence.note.text]),
   ]);
 }

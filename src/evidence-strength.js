@@ -105,6 +105,7 @@ export function describeNearCutoffs(scores) {
 export const EVIDENCE = {
   "active-recall": {
     supports: "Testing yourself leaves you remembering more, days and weeks later, than re-reading does.",
+    backed: "Testing yourself beat re-reading on tests days and weeks later, in labs and in 222 classroom studies.",
     dunlosky: "High",
     dunloskyGrid: { technique: "Practice testing", materials: "P", tasks: "P", classes: "P" },
     note: { text: "Reviews put the size of the effect anywhere from g = 0.50 to d = 0.74.", studies: ["Rowland", "Donoghue"] },
@@ -125,6 +126,7 @@ export const EVIDENCE = {
   },
   "distributed-practice": {
     supports: "Spreading the same study time over several sessions beats doing it all at once.",
+    backed: "Spreading study over several sessions beat cramming in reviews pooling hundreds of comparisons, with tests up to years later.",
     dunlosky: "High",
     dunloskyGrid: { technique: "Distributed practice", materials: "P", tasks: "P-I", classes: "P-I" },
     note: { text: "Smaller in real classrooms (d = 0.54 against 0.85), and it helped clearly in only two of nine real STEM courses.", studies: ["Mawson", "Donoghue", "Bego"] },
@@ -145,6 +147,7 @@ export const EVIDENCE = {
   },
   "spaced-repetition": {
     supports: "The idea behind it, spacing your reviews, is well supported. This app's exact box intervals were not tested, and widening gaps were not shown to beat even ones.",
+    backed: "Spacing out your reviews is well supported: Cepeda et al. pooled 839 comparisons of spacing.",
     dunlosky: "High (for spacing, its core idea)",
     dunloskyGrid: { technique: "Distributed practice, its core idea", materials: "P", tasks: "P-I", classes: "P-I" },
     note: { text: "The idea is well supported, but widening the gaps, as the boxes do, was not shown to beat even gaps.", studies: ["Latimier"] },
@@ -165,6 +168,7 @@ export const EVIDENCE = {
   },
   "elaborative-interrogation": {
     supports: "Asking “why is this true?” helps you remember facts, especially if you already know something about the topic.",
+    backed: "Asking “why is this true?” helped memory across 254 pooled comparisons (d = 0.56).",
     dunlosky: "Moderate",
     dunloskyGrid: { technique: "Elaborative interrogation", materials: "P", tasks: "I", classes: "I" },
     note: { text: "Helps facts more than deep understanding, and no classroom tests are shown.", studies: ["Donoghue"] },
@@ -184,6 +188,7 @@ export const EVIDENCE = {
   },
   "self-explanation": {
     supports: "Explaining each step to yourself helps you understand and use what you studied, across many tasks and ages.",
+    backed: "Two separate meta-analyses found the same medium benefit (g = 0.55 and d = 0.54).",
     dunlosky: "Moderate",
     dunloskyGrid: { technique: "Self-explanation", materials: "P", tasks: "P-I", classes: "I" },
     note: { text: "Weaker evidence for classroom effects and for long-term retention.", studies: ["Rittle-Johnson"] },
@@ -204,6 +209,7 @@ export const EVIDENCE = {
   },
   interleaving: {
     supports: "Mixing problem types helps you tell them apart and choose the right method, mainly for maths-style problems and visual categories.",
+    backed: "Mixing problem types beat practising one type at a time in real seventh-grade classes, on tests a month or more later.",
     dunlosky: "Moderate",
     dunloskyGrid: { technique: "Interleaved practice", materials: "Q", tasks: "P-I", classes: "P-I" },
     note: { text: "The average may be overstated (g = 0.42 falls to 0.29 after adjusting), and it reverses for words.", studies: ["Brunmair"] },
@@ -223,6 +229,7 @@ export const EVIDENCE = {
   },
   "dual-coding": {
     supports: "Pictures and diagrams alongside words can help, strongly for things with a shape. Drawing your own diagram from a text helped comprehension in one of two experiments, at a cost in time.",
+    backed: "Words with a good diagram beat words alone in Mayer’s comparisons (median d = 1.35, with expert-made graphics).",
     dunlosky: "Low (for imagery use, a close relative)",
     dunloskyGrid: { technique: "Imagery use for text learning, a close relative", materials: "Q", tasks: "Q-I", classes: "I" },
     note: { text: "The strong results used expert-made graphics; drawing your own from a text helped in one of two experiments.", studies: ["Mayer", "Zhang"] },
@@ -241,6 +248,7 @@ export const EVIDENCE = {
   },
   feynman: {
     supports: "The ingredients (expecting to teach, teaching, recalling from memory) have support. The four-step routine itself has not been tested as a package.",
+    backed: "Each ingredient is supported: recalling from memory, preparing to teach, and teaching.",
     dunlosky: "Not reviewed",
     dunloskyGrid: null,
     note: { text: "The four-step routine has never been tested, only its parts.", studies: ["Nestojko", "Kobayashi"] },
@@ -259,6 +267,7 @@ export const EVIDENCE = {
   },
   sq3r: {
     supports: "Its Recite step is the likely active ingredient, and that is testing yourself. Tests of SQ3R as a whole have found no edge over students' own methods.",
+    backed: "Its Recite step is testing yourself, which has strong support.",
     dunlosky: "Not reviewed",
     dunloskyGrid: null,
     note: { text: "Direct tests found no edge over students’ own study methods.", studies: ["Kasson", "Jairam"] },
@@ -277,6 +286,7 @@ export const EVIDENCE = {
   },
   pomodoro: {
     supports: "A small, reliable lift in energy and less tiredness. No clear evidence that it makes you learn more.",
+    backed: "Short breaks gave a small, reliable lift in energy and less tiredness.",
     dunlosky: "Not reviewed",
     dunloskyGrid: null,
     note: { text: "Helps energy and tiredness, not clearly learning, and no study compared it with no breaks.", studies: ["Albulescu", "Biwer"] },
@@ -295,6 +305,7 @@ export const EVIDENCE = {
   },
   "try-first": {
     supports: "Guessing answers before you study makes you learn those answers better, but only those; it does not lift the rest of the material.",
+    backed: "Guessing answers before studying improved memory for those answers (g = 0.54 across 97 comparisons).",
     dunlosky: "Not reviewed",
     note: { text: "Helps only the material you ask about (g = 0.54 against 0.04 for everything else), and testing after studying did better.", studies: ["St. Hilaire", "Latimier"] },
     dunloskyGrid: null,
@@ -315,6 +326,7 @@ export const EVIDENCE = {
   },
   "worked-examples": {
     supports: "Studying solved maths problems, then solving similar ones, beat comparison groups without examples by a medium margin. Almost all the evidence is mathematics.",
+    backed: "Studying solved problems beat groups without examples across 55 mathematics studies (g = 0.48).",
     dunlosky: "Not reviewed",
     note: { text: "Almost all the evidence is mathematics, studies disagreed enormously (I² = 94%), and examples with explain-each-step prompts did worse.", studies: ["Barbieri"] },
     dunloskyGrid: null,
@@ -335,6 +347,7 @@ export const EVIDENCE = {
   },
   "problem-first": {
     supports: "Trying problems before being taught improved conceptual understanding and transfer (g = 0.36) but not procedural skill (g = −0.03), mostly in maths and physics.",
+    backed: "Trying problems before being taught improved conceptual understanding and transfer (g = 0.36 across 166 comparisons).",
     dunlosky: "Not reviewed",
     note: { text: "Helps conceptual understanding, not procedural skill, and leaned towards instruction first for children in grades 2 to 5.", studies: ["Sinha"] },
     dunloskyGrid: null,

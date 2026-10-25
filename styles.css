@@ -528,7 +528,8 @@ details summary { cursor: pointer; font-weight: 600; min-height: 32px; font-size
 .rating-supports { margin: 0; flex: 1; }
 .rating-tag { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; }
 .rating-tag-label { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-soft); }
-.rating-tag-note { flex: 1 1 100%; margin: 0; font-size: 13px; line-height: 1.4; color: var(--ink-soft); }
+.rating-tag-line { flex: 1 1 100%; margin: 0; font-size: 13px; line-height: 1.4; color: var(--ink-soft); }
+.rating-tag-backed strong { color: var(--good); }
 .rating-near { margin: 0; padding: 8px 10px; border-radius: 8px; font-size: 13px; line-height: 1.45; background: color-mix(in srgb, var(--manila) 14%, var(--surface)); border-left: 3px solid var(--manila); }
 .rating-checks, .cautions { margin: 6px 0 0; padding-left: 20px; display: flex; flex-direction: column; gap: 6px; }
 .rating-check { margin: 0; font-family: var(--font-mono); font-size: 12px; color: var(--ink-soft); }

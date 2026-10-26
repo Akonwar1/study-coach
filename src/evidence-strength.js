@@ -108,7 +108,7 @@ export const EVIDENCE = {
     backed: "Testing yourself beat re-reading on tests days and weeks later, in labs and in 222 classroom studies.",
     dunlosky: "High",
     dunloskyGrid: { technique: "Practice testing", materials: "P", tasks: "P", classes: "P" },
-    note: { text: "Reviews put the size of the effect anywhere from g = 0.50 to d = 0.74.", studies: ["Rowland", "Donoghue"] },
+    note: { text: "How big the benefit is depends on the review: the average tester ended up ahead of about 69 to 77 of every 100 re-readers.", studies: ["Rowland", "Donoghue"] },
     variation: { percent: 86, technique: "practice testing" },
     cautions: [
       { text: "Reviews give different sizes for the same effect: g = 0.50 (Rowland), g = 0.499 (Yang et al.) and d = 0.74 (Donoghue & Hattie).", studies: ["Rowland", "Yang", "Donoghue"] },
@@ -129,7 +129,7 @@ export const EVIDENCE = {
     backed: "Spreading study over several sessions beat cramming in reviews pooling hundreds of comparisons, with tests up to years later.",
     dunlosky: "High",
     dunloskyGrid: { technique: "Distributed practice", materials: "P", tasks: "P-I", classes: "P-I" },
-    note: { text: "Smaller in real classrooms (d = 0.54 against 0.85), and it helped clearly in only two of nine real STEM courses.", studies: ["Mawson", "Donoghue", "Bego"] },
+    note: { text: "Smaller in real classrooms (ahead of about 71 of 100 learners, against 80 of 100 in labs), and it helped clearly in only two of nine real STEM courses.", studies: ["Mawson", "Donoghue", "Bego"] },
     variation: { percent: 83, technique: "distributed practice" },
     cautions: [
       { text: "In real classrooms the average was d = 0.54 (Mawson & Kang, 2025), against 0.85 across all studies (Donoghue & Hattie, 2021).", studies: ["Mawson", "Donoghue"] },
@@ -168,7 +168,7 @@ export const EVIDENCE = {
   },
   "elaborative-interrogation": {
     supports: "Asking “why is this true?” helps you remember facts, especially if you already know something about the topic.",
-    backed: "Asking “why is this true?” helped memory across 254 pooled comparisons (d = 0.56).",
+    backed: "Asking “why is this true?” helped memory across 254 pooled comparisons: the average learner ended up ahead of about 71 of 100 who studied the usual way.",
     dunlosky: "Moderate",
     dunloskyGrid: { technique: "Elaborative interrogation", materials: "P", tasks: "I", classes: "I" },
     note: { text: "Helps facts more than deep understanding, and no classroom tests are shown.", studies: ["Donoghue"] },
@@ -188,7 +188,7 @@ export const EVIDENCE = {
   },
   "self-explanation": {
     supports: "Explaining each step to yourself helps you understand and use what you studied, across many tasks and ages.",
-    backed: "Two separate meta-analyses found the same medium benefit (g = 0.55 and d = 0.54).",
+    backed: "Two separate meta-analyses found the same medium benefit: the average learner ended up ahead of about 71 of 100 who studied the usual way.",
     dunlosky: "Moderate",
     dunloskyGrid: { technique: "Self-explanation", materials: "P", tasks: "P-I", classes: "I" },
     note: { text: "Weaker evidence for classroom effects and for long-term retention.", studies: ["Rittle-Johnson"] },
@@ -212,7 +212,7 @@ export const EVIDENCE = {
     backed: "Mixing problem types beat practising one type at a time in real seventh-grade classes, on tests a month or more later.",
     dunlosky: "Moderate",
     dunloskyGrid: { technique: "Interleaved practice", materials: "Q", tasks: "P-I", classes: "P-I" },
-    note: { text: "The average may be overstated (g = 0.42 falls to 0.29 after adjusting), and it reverses for words.", studies: ["Brunmair"] },
+    note: { text: "The average may be overstated: after adjusting, ahead of 66 of 100 learners shrinks to ahead of 61 of 100. It also reverses for words.", studies: ["Brunmair"] },
     variation: { percent: 88, technique: "interleaved practice" },
     cautions: [
       { text: "After adjusting for possibly missing studies, the average falls from g = 0.42 to 0.29, still positive (Brunmair & Richter, 2019).", studies: ["Brunmair"] },
@@ -229,7 +229,7 @@ export const EVIDENCE = {
   },
   "dual-coding": {
     supports: "Pictures and diagrams alongside words can help, strongly for things with a shape. Drawing your own diagram from a text helped comprehension in one of two experiments, at a cost in time.",
-    backed: "Words with a good diagram beat words alone in Mayer’s comparisons (median d = 1.35, with expert-made graphics).",
+    backed: "Words with a good diagram beat words alone in Mayer’s comparisons (with expert-made graphics, the typical learner ended up ahead of about 91 of 100 who studied the usual way).",
     dunlosky: "Low (for imagery use, a close relative)",
     dunloskyGrid: { technique: "Imagery use for text learning, a close relative", materials: "Q", tasks: "Q-I", classes: "I" },
     note: { text: "The strong results used expert-made graphics; drawing your own from a text helped in one of two experiments.", studies: ["Mayer", "Zhang"] },
@@ -305,9 +305,9 @@ export const EVIDENCE = {
   },
   "try-first": {
     supports: "Guessing answers before you study makes you learn those answers better, but only those; it does not lift the rest of the material.",
-    backed: "Guessing answers before studying improved memory for those answers (g = 0.54 across 97 comparisons).",
+    backed: "Guessing answers before studying improved memory for those answers across 97 comparisons: the average guesser ended up ahead of about 71 of 100 who studied the usual way.",
     dunlosky: "Not reviewed",
-    note: { text: "Helps only the material you ask about (g = 0.54 against 0.04 for everything else), and testing after studying did better.", studies: ["St. Hilaire", "Latimier"] },
+    note: { text: "Helps only the material you ask about (ahead of 71 of 100 learners on it, but only 52 of 100, no real gain, on everything else), and testing after studying did better.", studies: ["St. Hilaire", "Latimier"] },
     dunloskyGrid: null,
     variation: null,
     cautions: [
@@ -326,9 +326,9 @@ export const EVIDENCE = {
   },
   "worked-examples": {
     supports: "Studying solved maths problems, then solving similar ones, beat comparison groups without examples by a medium margin. Almost all the evidence is mathematics.",
-    backed: "Studying solved problems beat groups without examples across 55 mathematics studies (g = 0.48).",
+    backed: "Studying solved problems beat groups without examples across 55 mathematics studies: the average learner ended up ahead of about 68 of 100 who studied the usual way.",
     dunlosky: "Not reviewed",
-    note: { text: "Almost all the evidence is mathematics, studies disagreed enormously (I² = 94%), and examples with explain-each-step prompts did worse.", studies: ["Barbieri"] },
+    note: { text: "Almost all the evidence is mathematics, studies disagreed a lot (about 94% of the differences between them were real, not chance), and examples with explain-each-step prompts did worse.", studies: ["Barbieri"] },
     dunloskyGrid: null,
     variation: null,
     cautions: [
@@ -347,7 +347,7 @@ export const EVIDENCE = {
   },
   "problem-first": {
     supports: "Trying problems before being taught improved conceptual understanding and transfer (g = 0.36) but not procedural skill (g = −0.03), mostly in maths and physics.",
-    backed: "Trying problems before being taught improved conceptual understanding and transfer (g = 0.36 across 166 comparisons).",
+    backed: "Trying problems before being taught improved conceptual understanding and transfer across 166 comparisons: the average learner ended up ahead of about 64 of 100 who studied the usual way.",
     dunlosky: "Not reviewed",
     note: { text: "Helps conceptual understanding, not procedural skill, and leaned towards instruction first for children in grades 2 to 5.", studies: ["Sinha"] },
     dunloskyGrid: null,

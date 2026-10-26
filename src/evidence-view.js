@@ -96,17 +96,42 @@ export function renderEvidenceBreakdown(methodId) {
   ]);
 }
 
+const RATING_MEANING = {
+  Strong: "Well established: many studies agree",
+  Moderate: "Good support, with some gaps",
+  Thin: "Promising, but fewer studies so far",
+};
+const RATING_LEVEL = { Strong: 3, Moderate: 2, Thin: 1 };
+
+/** Three bars, filled up to the rating, so strength reads as a level and not as a grade. */
+function levelMeter(rating) {
+  const level = RATING_LEVEL[rating];
+  const bars = [1, 2, 3].map((position) => el("span", { className: `meter-bar${position <= level ? " on" : ""}` }));
+  return el("span", { className: `level-meter rating-${rating.toLowerCase()}`, attrs: { role: "img", "aria-label": `${level} of 3` } }, bars);
+}
+
+function evidenceLine(className, title, text) {
+  return el("p", { className: `rating-tag-line ${className}` }, [el("strong", { text: `${title}: ` }), text]);
+}
+
 /**
- * A small "Evidence: Moderate" tag for cards and page headers: what the evidence backs, then the main caveat, one line each.
- * Every method has both, including the Strong ones, because none of the evidence is without caveats.
+ * The evidence summary for cards and page headers: the rating as a level with a plain-words meaning, then what the
+ * research shows and what to keep in mind. Every method has both, including the Strong ones, because none of the
+ * evidence is without limits.
  */
 export function renderEvidenceTag(methodId) {
   const evidence = evidenceFor(methodId);
   if (!evidence) return null;
   return el("div", { className: "rating-tag" }, [
-    el("span", { className: "rating-tag-label", text: "Evidence" }),
-    ratingPill(evidence.rating),
-    el("p", { className: "rating-tag-line rating-tag-backed" }, [el("strong", { text: "Backed by: " }), evidence.backed]),
-    el("p", { className: "rating-tag-line rating-tag-note" }, [el("strong", { text: "Caveat: " }), evidence.note.text]),
+    el("div", { className: "rating-tag-head" }, [
+      el("div", { className: "rating-tag-scale" }, [
+        el("span", { className: "rating-tag-label", text: "Strength of evidence" }),
+        levelMeter(evidence.rating),
+      ]),
+      ratingPill(evidence.rating),
+      el("span", { className: "rating-tag-meaning", text: RATING_MEANING[evidence.rating] }),
+    ]),
+    evidenceLine("rating-tag-backed", "What the research shows", evidence.backed),
+    evidenceLine("rating-tag-note", "Worth knowing", evidence.note.text),
   ]);
 }

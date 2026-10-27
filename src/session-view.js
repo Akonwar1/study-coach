@@ -150,6 +150,7 @@ export function renderSession({ method, steps, subject, subjectLabel, session, o
     el("h2", { text: step.title }),
     ...(visual ? [el("div", { className: "visual-wrap" }, [visual.node])] : []),
     el("p", { className: "instruction", text: step.instruction }),
+    ...(step.mindset ? [el("div", { className: "step-note mindset" }, [el("p", { className: "mindset-label", text: "How to think about it" }), el("p", { text: step.mindset })])] : []),
     ...(step.example ? [el("p", { className: "step-note example", text: `Example: ${step.example}` })] : []),
     ...(step.tip ? [el("p", { className: "step-note tip", text: `Tip: ${step.tip}` })] : []),
     ...timerBlock,

@@ -270,6 +270,9 @@ button { font: inherit; color: inherit; cursor: pointer; }
 
 .step-note { margin: 0 0 12px; padding: 10px 14px; border-left: 3px solid var(--accent); background: var(--accent-soft); border-radius: 6px; font-size: 15px; line-height: 1.5; }
 .step-note.tip { border-left-color: var(--ink-soft); }
+.step-note.mindset { background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--accent); }
+.step-note.mindset p { margin: 0; }
+.step-note.mindset .mindset-label { margin-bottom: 4px; font-size: 13px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--ink-soft); }
 
 /* ---------- visuals ---------- */
 .visual-wrap { margin: 0 0 16px; padding: 12px; background: var(--surface); border: 1px solid var(--line); border-radius: 6px; }

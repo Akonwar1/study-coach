@@ -1,11 +1,11 @@
 // Adjusts a method's guided steps to the subject the student is studying.
 //
-// In methods.js, a step's `instruction`, `example` and `tip` may each be a plain string, or an object
+// In methods.js, a step's `instruction`, `mindset`, `example` and `tip` may each be a plain string, or an object
 // keyed by subject id with a `default` fallback: { default: "...", quantitative: "...", humanities: "..." }.
 // resolveSteps turns those into plain strings for one subject. It is the single place steps are
 // produced, so a later version could generate steps with an AI service and return the same shape.
 
-const TAILORED_FIELDS = ["instruction", "example", "tip"];
+const TAILORED_FIELDS = ["instruction", "mindset", "example", "tip"];
 
 function pick(value, subject) {
   if (value === null || typeof value !== "object") return value;

@@ -10,7 +10,7 @@
 // session:      guided walkthrough, a list of { title, instruction, minutes (0 = no timer), example?, tip? };
 //               mindset? is the mental side of the step: how to think while doing it, shown under the instruction;
 //               instruction, example, tip and mindset can vary by subject; see tailor.js
-//               visual?: { name, highlight? } shows a diagram from visuals.js above the step’s text
+//               visual: { name } names the step's picture, drawn by a scene in src/scenes/ and shown above the step’s text
 
 export const METHODS = [
   {
@@ -134,7 +134,9 @@ export const METHODS = [
     session: [
       {
         title: "Gather what to memorise",
+        visual: { name: "sr-gather" },
         instruction: "Spaced repetition is for things you have to remember outright: terms, definitions, formulas, dates, vocabulary. Pick 10–15 items from your notes. If something needs understanding, not memorising (like why a proof works), save it for a method like Feynman. You’ll need index cards, or an app like Anki.",
+        mindset: "Choose by asking what would hurt to forget. Daily review costs a little time every day, so it makes sense to spend it on things you need to produce on demand and to leave out anything you only find interesting. You can always add cards later, a few at a time.",
         example: {
           default: "Definitions, dates, names, and formulas from this week’s notes.",
           quantitative: "Formulas, the conditions they apply under, and key definitions.",
@@ -148,8 +150,9 @@ export const METHODS = [
       },
       {
         title: "Make one card per fact",
-        visual: { name: "flashcard" },
+        visual: { name: "sr-card" },
         instruction: "Write one question on the front of each card and the answer on the back. One fact per card, and make the front a question you must recall, not something you can recognise. Keep answers short, a line at most.",
+        mindset: "A card is a question you will have to answer from nothing. Write the front so it makes you produce the answer, and check a draft by asking whether you could get by on recognising the back. If you could, make the front harder. One fact per card also helps later: when you miss a card, you know exactly which fact slipped.",
         example: {
           default: "Front: “What caused X?” Back: one-line answer.",
           quantitative: "Front: “Derivative of sin x?” Back: “cos x.”",
@@ -163,20 +166,24 @@ export const METHODS = [
       },
       {
         title: "Go through the pile once",
-        visual: { name: "leitner" },
+        visual: { name: "sr-sort" },
         instruction: "Take each card, say the answer out loud before flipping, then check. Make two piles: got it, and missed it. Be honest. “Sort of” goes in missed.",
+        mindset: "Say the answer and commit to it before you flip. The pause between seeing the front and turning the card is where the memory gets worked, and a half answer such as “something about the gradient” counts as a miss. Being strict here keeps the boxes honest, because they only help if they reflect what you actually remembered.",
         minutes: 5,
       },
       {
         title: "Set the review dates",
-        visual: { name: "leitner" },
+        visual: { name: "sr-boxes" },
         instruction: "Use three boxes, or the scheduling in your app. Box 1 is reviewed daily, Box 2 every 3 days, Box 3 weekly. Every new card starts in Box 1: cards you missed today stay there and come back tomorrow, and cards you got right move up to Box 2. From then on, a right answer moves a card up one box and a miss drops it back to Box 1. Write the next review date on each pile.",
+        mindset: "The schedule is a bet on when you will have forgotten a card a little, so that remembering it takes some effort. A card that drops back to Box 1 is the system noticing it is still shaky and giving it more attention. The exact gaps matter less than coming back regularly, after some forgetting.",
         tip: "Done when every card is in a box with a date. In an app, it does this for you; just check the next review dates look right.",
         minutes: 3,
       },
       {
         title: "Put it on your calendar",
+        visual: { name: "sr-daily" },
         instruction: "Add a daily 5–10 minute reminder labelled “review cards”. Short and regular beats long and rare. Each day, review whatever is due, and add new cards slowly, about 10 a day.",
+        mindset: "A review you actually do each day is worth more than a long one you plan and skip. Tie it to something you already do daily, and keep the number of new cards low enough that the daily pile never feels like a burden. If you fall behind, do the cards that are due first and pause new ones.",
         minutes: 0,
       },
     ],
@@ -208,8 +215,9 @@ export const METHODS = [
     session: [
       {
         title: "Pick a topic that has structure",
-        visual: { name: "diagram-types" },
+        visual: { name: "dc-shape" },
         instruction: "Dual coding works best on material with a shape: a process, a sequence, parts of a whole, a comparison, or cause and effect. Choose one such topic, about one page of material. If your material is plain facts with no shape, use Spaced Repetition instead. Have blank paper and a pen ready.",
+        mindset: "Ask what shape the material has: steps, parts, a comparison or causes. The drawing will be built from that shape, so naming it tells you what to draw. If you can’t say what the shape is, you may not yet know how the pieces relate, and the reading step is where you find out.",
         example: {
           default: "A process, a timeline, or a system with parts.",
           quantitative: "A free-body diagram of a block on a ramp, or how a function’s graph changes as you adjust a parameter.",
@@ -223,33 +231,38 @@ export const METHODS = [
       },
       {
         title: "Read it in words only",
-        visual: { name: "flow", labels: ["Read", "Draw", "Label", "Compare", "Explain"], highlight: 0 },
+        visual: { name: "dc-read" },
         instruction: "Read or listen to the material once, in words. Don’t draw yet. As you go, note the key items (the steps, parts, or things being compared) and how they connect.",
+        mindset: "As you read, look for the pieces and the links between them: what the items are and how each one connects to the next. You are collecting the material for a drawing, so the connections matter as much as the items. Keep the pen down for now, so that the drawing later has to come from your memory.",
         minutes: 5,
       },
       {
         title: "Redraw it from memory",
-        visual: { name: "diagram-types" },
+        visual: { name: "dc-redraw" },
         instruction: "Close the source and draw the topic from memory. Choose the picture to match the shape: a flowchart or cycle for a process, a timeline for a sequence, a labelled diagram for parts, a table for a comparison, a concept map (circles and arrows) for ideas. It doesn’t have to be pretty. Boxes and arrows are fine.",
+        mindset: "Drawing makes you choose things that words let you skip: what comes first, what sits next to what, which way an arrow points. Each choice tests whether you understand the structure. Leave a gap empty when you blank and move on, because the gap shows you where to look later.",
         tip: "Blank on part of it? Leave a gap. The gaps tell you what to study.",
         minutes: 8,
       },
       {
         title: "Label it in your own words",
-        visual: { name: "flow", labels: ["Read", "Draw", "Label", "Compare", "Explain"], highlight: 2 },
+        visual: { name: "dc-label" },
         instruction: "Label every part of your drawing in your own words, not the source’s. On each arrow, write what it means: “leads to”, “causes”, “is made of”. If you can’t label something, mark it with a question mark.",
+        mindset: "A label in your own words shows you know what a part is, beyond where it sits. The arrow labels matter most, since “causes”, “leads to” and “is made of” are the relationships you will be asked about. A question mark is a useful label too: it marks where your understanding stops.",
         minutes: 4,
       },
       {
         title: "Compare and fix",
-        visual: { name: "flow", labels: ["Read", "Draw", "Label", "Compare", "Explain"], highlight: 3 },
+        visual: { name: "dc-compare" },
         instruction: "Open the source and compare. With a different-coloured pen, correct anything missing or wrong, and fill in the question marks.",
+        mindset: "Look for where your picture differs from the source, and ask why it differs. Differences in structure matter most: an arrow pointing the other way, a step in the wrong place, two things joined that the source keeps apart. Those point to a misunderstanding, while a missing word is a smaller problem. The second pen colour shows how many fixes you needed.",
         minutes: 4,
       },
       {
         title: "Explain your picture",
-        visual: { name: "flow", labels: ["Read", "Draw", "Label", "Compare", "Explain"], highlight: 4 },
+        visual: { name: "dc-explain" },
         instruction: "Using only your sketch, explain the topic out loud from start to finish. Where the picture fails you, you have a gap to review next. Done when your sketch alone is enough to explain the whole topic. Keep it for review.",
+        mindset: "Explaining from the sketch alone tests whether the drawing holds the whole idea. When you lose your place, the picture is missing something, so add it. Keep the sketch for review: if you can talk through the topic from it a week from now, it has done its job.",
         minutes: 4,
       },
     ],
@@ -281,8 +294,9 @@ export const METHODS = [
     session: [
       {
         title: "Name one concept",
-        visual: { name: "flow", labels: ["Name it", "Explain simply", "Find gaps", "Back to source", "Simplify"], highlight: 0 },
+        visual: { name: "fy-name" },
         instruction: "Write the name of a single concept at the top of a blank page. Pick something small enough to explain in a few minutes. Not “Chapter 4” but one idea inside it. Decide who you’re explaining it to: a friend in a different major, or a smart 12-year-old.",
+        mindset: "Small is the aim. A concept you can explain in a few minutes is one where you can find the gaps, and a whole chapter hides them. Your listener sets the standard: someone who doesn’t know the jargon means you have to understand the idea well enough to say it without the jargon.",
         example: {
           default: "One idea from your course, such as “what a variable is.”",
           quantitative: "Why the derivative measures slope, or what an eigenvector is.",
@@ -296,27 +310,31 @@ export const METHODS = [
       },
       {
         title: "Explain it simply",
-        visual: { name: "flow", labels: ["Name it", "Explain simply", "Find gaps", "Back to source", "Simplify"], highlight: 1 },
+        visual: { name: "fy-explain" },
         instruction: "Write your explanation below the title in plain words, as if to your listener. No jargon; if you must use a technical term, explain it. Say it out loud as you write, or record a voice memo. Include an example or analogy if you can.",
+        mindset: "Write as if your listener will interrupt with “what does that mean?”. Each time you reach for a technical word, check whether you could say what it means. Stalling is what a gap feels like from the inside, and finding one now costs far less than finding it in an exam.",
         tip: "Stalling, going vague, or saying “basically” and “you know”? That’s the sign of a gap. Keep going; you’ll find them next.",
         minutes: 8,
       },
       {
         title: "Find the gaps",
-        visual: { name: "flow", labels: ["Name it", "Explain simply", "Find gaps", "Back to source", "Simplify"], highlight: 2 },
+        visual: { name: "fy-gaps" },
         instruction: "Read your explanation back. Circle every place you stalled, guessed, hand-waved, or used a technical term without explaining it. These circles are the whole point: they’re what you don’t yet understand.",
+        mindset: "Read it back as if someone else wrote it. Be hard on words like “basically”, “sort of” and “you know”, since they often cover a spot where you didn’t know the details. Each circle is something you can now fix, so a page with many circles is a good result: the method found what you didn’t know.",
         minutes: 3,
       },
       {
         title: "Go back to the source",
-        visual: { name: "flow", labels: ["Name it", "Explain simply", "Find gaps", "Back to source", "Simplify"], highlight: 3 },
+        visual: { name: "fy-source" },
         instruction: "Look up only the circled spots in your notes, textbook, or lectures. Read until you understand each one, then write the answer in your own words, not copied. If you still don’t get one, make a note to ask someone.",
+        mindset: "Go to the source with a specific question for each circle. Reading with a question in mind is quicker than rereading everything. Write the answer in your own words, because copying it leaves you unable to tell whether you understood it. If a circle still doesn’t make sense, that is worth knowing, and worth asking someone about.",
         minutes: 8,
       },
       {
         title: "Simplify and re-explain",
-        visual: { name: "flow", labels: ["Name it", "Explain simply", "Find gaps", "Back to source", "Simplify"], highlight: 4, loop: "Still stuck on a part? Go round again for it." },
+        visual: { name: "fy-simplify" },
         instruction: "Write the explanation again from scratch, using what you just learned. Make it shorter and simpler, and add an analogy if you don’t have one. Done when you can explain it smoothly with no circles. If new circles appear, repeat steps 4–5 for them.",
+        mindset: "Try to say it shorter. Shortening forces you to decide what the core of the idea is, which is a different skill from remembering the details. An analogy checks that you understand how the parts relate: if you can map the idea onto something familiar, you have the structure. New circles appearing is normal, since you are now going deeper.",
         minutes: 5,
       },
     ],
@@ -348,8 +366,9 @@ export const METHODS = [
     session: [
       {
         title: "Pick facts that have a reason",
-        visual: { name: "flow", labels: ["Pick a fact", "Ask why", "Answer it", "Check source"], highlight: 0 },
+        visual: { name: "ei-roots" },
         instruction: "This method works on facts that have a “why”, such as causes, rules, and mechanisms. If a fact is arbitrary (a vocabulary word, a date), skip it and use Spaced Repetition. Choose 5 facts or claims from your notes that have a reason behind them. Write each on its own line, leaving space below.",
+        mindset: "A fact is worth questioning when something produces it, such as a cause, a rule or a mechanism. Asking why of a fact with no reason only produces invented answers. To test a candidate, ask it: if an answer comes to mind, even a poor one, it is a good choice.",
         example: {
           default: "A claim with a cause behind it.",
           quantitative: "Why the area of a circle is πr², or why a negative times a negative is positive.",
@@ -363,32 +382,38 @@ export const METHODS = [
       },
       {
         title: "Ask “why is that true?”",
-        visual: { name: "flow", labels: ["Pick a fact", "Ask why", "Answer it", "Check source"], highlight: 1 },
+        visual: { name: "ei-ask" },
         instruction: "Take the first fact. Under it, write the question: “Why is this true?” or “Why would this be the case?” Don’t look at your notes yet.",
+        mindset: "Write the question before you look at anything. It turns the fact into a claim that has a reason, and it makes you commit to the question before an answer is in front of you. Leave the question open for a moment before you answer.",
         minutes: 1,
       },
       {
         title: "Answer from what you already know",
-        visual: { name: "flow", labels: ["Pick a fact", "Ask why", "Answer it", "Check source"], highlight: 2 },
+        visual: { name: "ei-know" },
         instruction: "Answer in your own words using what you already know, not the text. A guess is fine; connecting ideas together is the point. Aim for a sentence or two that has a “because” in it. If you really have no idea, write what you do know about the topic.",
+        mindset: "The goal is to link the new fact to things you already know, so an answer with a “because” counts even if it turns out wrong. Think about what else you know that touches this fact and how the two fit together. “What would break if it weren’t true?” helps when you are stuck. A wrong answer that you correct afterwards often sticks better than one you only read.",
         tip: "“It’s just a rule” isn’t an answer. Try “what would break if it weren’t true?”",
         minutes: 3,
       },
       {
         title: "Check the source",
-        visual: { name: "flow", labels: ["Pick a fact", "Ask why", "Answer it", "Check source"], highlight: 3 },
+        visual: { name: "ei-check" },
         instruction: "Look up the explanation in your notes or textbook. Compare it to your answer: mark what you got right, and fix what was wrong or too vague. Add anything the source explains that you missed.",
+        mindset: "Compare honestly. Mark whether your reason matches the source’s, and look at how it differs when it doesn’t. “Too vague” is a real kind of wrong: if your answer would fit a dozen other facts, it doesn’t yet explain this one. Add any piece the source gives that you missed.",
         minutes: 2,
       },
       {
         title: "Repeat for the other facts",
-        visual: { name: "flow", labels: ["Pick a fact", "Ask why", "Answer it", "Check source"], highlight: 0, loop: "Do this loop for each fact." },
+        visual: { name: "ei-repeat" },
         instruction: "Do the same for the remaining facts: ask why, answer from memory, then check. Give each about 2 minutes, and move on after that even if you’re unsure.",
+        mindset: "Use the same loop each time and keep to about two minutes. Moving on when you are unsure is part of the method: you find out which facts were weak at the end. Watch for answers that all sound the same. If every “because” is the same, you may be matching patterns when you should be thinking.",
         minutes: 9,
       },
       {
         title: "Pick the weak spot",
+        visual: { name: "ei-weak" },
         instruction: "Circle the fact you explained worst. Tomorrow, start there. If several were weak, the whole topic needs a method for understanding, such as Feynman or Self-Explanation.",
+        mindset: "Pick the one you explained worst without arguing with yourself about it. Starting tomorrow with the weakest fact is where the next session does the most good. If several were weak, the problem is bigger than any one fact, and a method for building understanding will serve you better.",
         minutes: 0,
       },
     ],
@@ -420,8 +445,9 @@ export const METHODS = [
     session: [
       {
         title: "Gather your material",
-        visual: { name: "flow", labels: ["Gather", "Chunk it", "Explain", "Fix stars", "Redo", "Try new"], highlight: 0 },
+        visual: { name: "se-material" },
         instruction: "Self-explanation means talking through why each piece of something works, not just reading it. Pick one thing to practise on, about a page or less, and choose the case that matches what you have. A worked solution (a solved problem with the steps shown): you’ll explain each step. A problem with no solution to read: you’ll solve it yourself in the next step, then explain your own moves. An essay, article, or textbook passage: you’ll explain each paragraph or claim. Have a pen and scratch paper ready.",
+        mindset: "Pick something just beyond your comfort. If every line is obvious, explaining it teaches you little, because the learning happens where you have to work out why. Decide now which of the three cases you have, so the next steps are clear.",
         example: {
           default: "Worked solution: a solved problem from lecture. No solution: a homework problem you haven’t done yet. Passage: three paragraphs from a reading.",
           quantitative: "A solved integral from lecture, a physics problem you haven’t finished yet, or the proof of a theorem from your textbook.",
@@ -435,8 +461,9 @@ export const METHODS = [
       },
       {
         title: "Break it into chunks",
-        visual: { name: "flow", labels: ["Gather", "Chunk it", "Explain", "Fix stars", "Redo", "Try new"], highlight: 1 },
+        visual: { name: "se-chunks" },
         instruction: "A chunk is one small piece you can explain on its own. Worked solution: each line or move is a chunk; if it isn’t numbered, mark where each new move starts. No solution: solve the problem now on scratch paper, writing each move on its own line; those lines are your chunks. Essay or passage: each paragraph is a chunk, or each separate claim if paragraphs are long. Aim for 4 to 10 chunks, and cover or fold everything except the first chunk.",
+        mindset: "A chunk is the size at which you can ask “why” once and get one answer. Too big and the answer goes vague. Too small and you spend time on nothing. Covering the rest removes the temptation to read ahead, so each chunk has to make sense from what came before it.",
         example: {
           default: "Essay paragraph chunks: “Armies became loyal to generals, not the state” / “Land reform failed” / “Senators blocked change.”",
           quantitative: "Chunks of “Solve 2x + 6 = 14”: “subtract 6 from both sides” / “divide both sides by 2” / “check by plugging x = 4 back in.”",
@@ -449,8 +476,9 @@ export const METHODS = [
       },
       {
         title: "Explain each chunk out loud",
-        visual: { name: "explain-questions" },
+        visual: { name: "se-explain" },
         instruction: "For each chunk, say out loud or write one or two sentences covering: what it says or does, why it’s true or allowed, and how it connects to the chunk before it (for the first chunk, how it sets up what follows). Problem step: what changed, why that move is allowed, and how it moves you toward the answer. Essay: what the claim is, what supports it, and how it leads to the next paragraph. Then uncover the next chunk and repeat. Put a star by any chunk where you can’t answer all three.",
+        mindset: "Say what it says, why it is true, and how it connects. The “why” is the hard question and the one worth the time, and “because the book says so” means you haven’t explained it yet. Saying how it connects makes you hold the whole line of thought together. A star is a good result: it marks exactly where to work.",
         example: {
           default: "Problem step: “I subtracted 6 from both sides. That’s allowed because doing the same thing to both sides keeps an equation true. It gets the x-term alone.” Essay: “The author claims armies became loyal to generals. The evidence is that soldiers were paid by generals, so it leads into the next paragraph about civil war.”",
           quantitative: "“I subtracted 6 from both sides. That’s allowed because doing the same thing to both sides keeps an equation true. It gets the x-term alone, which is what I need to solve for it.”",
@@ -464,22 +492,25 @@ export const METHODS = [
       },
       {
         title: "Work out the starred chunks",
-        visual: { name: "flow", labels: ["Gather", "Chunk it", "Explain", "Fix stars", "Redo", "Try new"], highlight: 3 },
+        visual: { name: "se-starred" },
         instruction: "Each star is something you only thought you understood. Find the rule, definition, or background behind it in your notes, textbook, or lecture slides. Then explain that chunk again in your own words until you can say all three parts.",
+        mindset: "Each star is something you thought you understood. Go to the source with a specific question: what rule or definition would make this chunk make sense? Then explain it again in full, and don’t count it as fixed until you can give all three parts. If you are still stuck after a few minutes, a written question for someone else is a good outcome.",
         tip: "Still stuck after a few minutes? Write your question down and bring it to office hours or a classmate; that’s better than rereading.",
         minutes: 5,
       },
       {
         title: "Redo it without the source",
-        visual: { name: "flow", labels: ["Gather", "Chunk it", "Explain", "Fix stars", "Redo", "Try new"], highlight: 4 },
+        visual: { name: "se-redo" },
         instruction: "Hide the material. Problem: solve it again from scratch, narrating each move and why. Essay or passage: explain the argument from start to finish in your own words, out loud, chunk by chunk, without looking. If you get stuck, note exactly where, peek at only that chunk, and keep going.",
+        mindset: "Now the thinking has to come from you. Narrate your reasoning, including why you chose each move. A stumble shows where your understanding is still held up by the page. Peeking at just that chunk is fine, and then you carry on.",
         tip: "Done when: you can get through the whole thing and explain every chunk without looking.",
         minutes: 5,
       },
       {
         title: "Try something similar",
-        visual: { name: "flow", labels: ["Gather", "Chunk it", "Explain", "Fix stars", "Redo", "Try new"], highlight: 5 },
+        visual: { name: "se-twin" },
         instruction: "Find one new problem or passage like the first, with different numbers, details, or topic, and explain it the same way. If you can explain every chunk, you’ve got it. If not, note which kind of chunk tripped you and start tomorrow’s session there.",
+        mindset: "A new problem or passage tests whether you learned the reasoning or only that one example. Matching surface details can make you feel you know it, so look for what stays the same underneath. The chunk that trips you is where tomorrow starts.",
         minutes: 0,
       },
     ],
@@ -512,7 +543,9 @@ export const METHODS = [
     session: [
       {
         title: "Choose a chapter",
+        visual: { name: "sq-choose" },
         instruction: "Pick one chapter or section of dense reading, about 5–8 pages at most. For a longer chapter, do it in parts. Have a blank sheet of paper ready for your questions and answers.",
+        mindset: "Choose a size you can finish with attention. A short section read well beats a long one half read, and you can come back for the rest. With your question sheet ready, you will read as someone looking for answers.",
         example: {
           default: "A textbook chapter or a section of an article.",
           quantitative: "One textbook section on a single topic, including its worked examples.",
@@ -526,14 +559,16 @@ export const METHODS = [
       },
       {
         title: "Survey",
-        visual: { name: "flow", labels: ["Survey", "Question", "Read", "Recite", "Review"], highlight: 0 },
+        visual: { name: "sq-survey" },
         instruction: "Skim the headings, captions, bold terms, any summary or learning goals, and the end-of-chapter questions. Don’t read paragraphs yet; build a map in your head. For something without headings, such as a research paper, read the abstract, the first sentence of each paragraph, and the conclusion.",
+        mindset: "You are building a map before you travel. By the end of three minutes you should be able to say roughly what the chapter covers, how it is organised and what its main ideas are. Details can wait, since they have somewhere to go once the map exists. If you can’t build a map, start with the summary and the end questions.",
         minutes: 3,
       },
       {
         title: "Question",
-        visual: { name: "flow", labels: ["Survey", "Question", "Read", "Recite", "Review"], highlight: 1 },
+        visual: { name: "sq-question" },
         instruction: "Turn each heading into a question on your paper, leaving space under it for your answer. Make it a question you’d like answered, starting with what, why, or how.",
+        mindset: "Turning a heading into a question changes your job from “get through this” to “find this out”. Choose questions you would like answered, since wanting the answer helps you read for it. A question you can’t answer yet is the right kind, because it makes the answer stand out when you reach it.",
         example: {
           default: "“Causes of the war” becomes “What caused the war?”",
           quantitative: "“Conservation of energy” becomes “What is conserved, and when does it not hold?”",
@@ -546,27 +581,31 @@ export const METHODS = [
       },
       {
         title: "Read one section",
-        visual: { name: "flow", labels: ["Survey", "Question", "Read", "Recite", "Review"], highlight: 2, loop: "Read, then recite, one section at a time." },
+        visual: { name: "sq-read" },
         instruction: "Read the first section looking only for the answer to its question. Don’t take notes yet, and don’t highlight. When you reach the end of the section, stop.",
+        mindset: "Read with one aim: finding the answer to the section’s question. Notes and highlighting tend to turn reading into copying at this stage, so they wait. Stopping at the end of the section matters, because the next step needs the answer still fresh and needs you to produce it.",
         tip: "If you can’t find the answer, the question may be wrong. Rewrite it.",
         minutes: 7,
       },
       {
         title: "Recite",
-        visual: { name: "flow", labels: ["Survey", "Question", "Read", "Recite", "Review"], highlight: 3, loop: "Read, then recite, one section at a time." },
+        visual: { name: "sq-recite" },
         instruction: "Close the book and answer the question in your own words, out loud first, then jot a short answer in the space under the question. If you can’t, reread just that section. This step is the most important: it’s active recall built into your reading.",
+        mindset: "Say the answer without looking, as if explaining it to someone. Struggling to say it tells you something real: you read the words but didn’t take in the idea, so reread just that section. This step does the work. The memory is built when you pull the answer out, so don’t skip it when you feel you understood the page.",
         minutes: 3,
       },
       {
         title: "Repeat for the other sections",
-        visual: { name: "flow", labels: ["Survey", "Question", "Read", "Recite", "Review"], highlight: 2, loop: "Read, then recite, one section at a time." },
+        visual: { name: "sq-repeat" },
         instruction: "Go through the remaining sections: read, then recite, one at a time. Stop when your time is up and note where you stopped, so you can pick up tomorrow.",
+        mindset: "Keep the same rhythm: read for the question, then answer it without the book. The rhythm makes a long chapter manageable, because each piece is complete before the next begins. If time runs out, stopping at a clean point beats rushing a section, and a note of where you stopped lets you start tomorrow without hunting.",
         minutes: 18,
       },
       {
         title: "Review",
-        visual: { name: "flow", labels: ["Survey", "Question", "Read", "Recite", "Review"], highlight: 4 },
+        visual: { name: "sq-review" },
         instruction: "Cover your answers and look only at your questions. Answer all of them again from memory. Mark any you missed and revisit those tomorrow. Done when you can answer every question without the text.",
+        mindset: "Review is a quiz you give yourself from the questions alone. Answering all of them from memory shows what has stayed and what hasn’t, and the ones you miss are tomorrow’s start. A question you miss may be one you only half understood when you recited it, so treat a miss as a good catch.",
         minutes: 5,
       },
     ],
@@ -598,7 +637,9 @@ export const METHODS = [
     session: [
       {
         title: "Choose 2–3 topics that get confused",
+        visual: { name: "il-venn" },
         instruction: "Pick two or three related topics or problem types, ideally ones you tend to mix up. Then collect 3–4 practice items for each, from your homework, textbook, or old exams, and make sure you have the answers or solutions to check against. If you only have one chapter of material, mix different problem types from within it.",
+        mindset: "Choose topics you tend to confuse, because the benefit comes from learning to tell them apart. As well as solving each type, you practise recognising which type you are looking at. Blocked practice skips that skill, and exams don’t.",
         example: {
           default: "Related topics you can confuse with each other.",
           quantitative: "Integration by parts, substitution, and partial fractions.",
@@ -612,25 +653,31 @@ export const METHODS = [
       },
       {
         title: "Shuffle them together",
-        visual: { name: "blocked-versus-mixed" },
+        visual: { name: "il-shuffle" },
         instruction: "Put all the items into one pile and shuffle, or write them in a list in random order. Never put more than two of the same type in a row. Don’t sort them by type, even though it’s tempting.",
+        mindset: "The urge to sort the pile by type is an urge to make it easier. Mixing means that for each item you have to work out what is being asked before you can start, and that is the skill you are here to build. Keep the order random, even when a run of similar items would feel natural.",
         minutes: 3,
       },
       {
         title: "Work the mixed set",
-        visual: { name: "blocked-versus-mixed" },
+        visual: { name: "il-signpost" },
         instruction: "Go through the items in the shuffled order. For each one, first decide which type it is and why, then solve it. It will feel harder and slower than blocked practice. That is working. Don’t go back and group them.",
+        mindset: "For each item, name the type and say why before you solve it. It will feel slower and less smooth than working one topic at a time, and your sense of progress will be lower. In studies, people who practised mixed sets did worse during practice and better on a test later, so the discomfort is part of the method.",
         tip: "If you’re stuck on identifying the type, that’s the skill you’re training. Write down your guess and carry on.",
         minutes: 20,
       },
       {
         title: "Check your answers",
+        visual: { name: "il-diagnose" },
         instruction: "Mark each item against your answers or solutions. For each miss, note whether you picked the wrong type or the right type and made a mistake solving it. These are different problems with different fixes.",
+        mindset: "For each miss, work out which kind of mistake it was: picking the wrong type, or choosing the right type and slipping while solving. They have different fixes. A wrong type means you need to compare the topics, and a slip means you need more practice with that type’s steps. Sorting your misses this way takes a minute and tells you what to do next.",
         minutes: 5,
       },
       {
         title: "Review the confusions",
+        visual: { name: "il-clue" },
         instruction: "Write one line for each pair of topics you mixed up: how you tell them apart. Use that list as tomorrow’s warm-up. Done when you can say, for each pair, the clue that tells you which is which.",
+        mindset: "Write the clue that separates each pair in one line. Spelling the clue out turns a feeling that two topics look alike into something you can use in an exam. If you can’t write the clue, that pair is where to work tomorrow.",
         minutes: 2,
       },
     ],
@@ -662,8 +709,9 @@ export const METHODS = [
     session: [
       {
         title: "Set up one task",
-        visual: { name: "pomodoro-cycle" },
+        visual: { name: "pm-task" },
         instruction: "Choose the single thing you’ll work on for 25 minutes. Make it specific and finishable in one round, such as “do problems 1–5” rather than “study”. If the task is big, write the first small piece. Then clear the area: phone in another room or silent and face down, close extra tabs, and fill your water.",
+        mindset: "A task you can start without thinking is worth more than an ambitious one. The goal is for the timer to start with no further decisions. If you are dreading it, shrink it until the dread goes: “open the file and write the first line” is a fair task. Setting up the room now means you don’t have to rely on willpower during the 25 minutes.",
         example: {
           default: "A specific piece of work, such as “read pages 40–50 and write 3 questions.”",
           quantitative: "“Do problems 1–5 from the homework.”",
@@ -677,21 +725,24 @@ export const METHODS = [
       },
       {
         title: "Focus",
-        visual: { name: "pomodoro-cycle", highlight: "focus" },
+        visual: { name: "pm-focus" },
         instruction: "Work only on that task. If something else pops into your head, jot it on a scrap of paper and go straight back. Don’t switch tasks, check messages, or stop to look something up. If you finish early, review what you just did.",
+        mindset: "Treat the 25 minutes as a promise to one task. The urge to check something is normal and passes. Writing the thought on a scrap of paper lets your mind drop it, because it is recorded and can wait. If you want to stop at minute ten, notice that and keep going, since the urge often comes early, before you have settled into the work.",
         tip: "Want to quit at minute 10? That’s normal. Stay until the timer ends.",
         minutes: 25,
       },
       {
         title: "Break",
-        visual: { name: "pomodoro-cycle", highlight: "break" },
+        visual: { name: "pm-break" },
         instruction: "Stand up and step away from your screen. Stretch, get water, look out a window. Don’t check your phone: scrolling doesn’t rest your attention.",
+        mindset: "A break is meant to rest your attention, so choose something that asks nothing of it: stand, stretch, look at something far away. Scrolling feels like a rest but keeps your attention busy, and the next round starts with less in the tank. Short breaks are part of how the method lets you keep going for hours.",
         minutes: 5,
       },
       {
         title: "Check in",
-        visual: { name: "pomodoro-cycle", highlight: "longbreak" },
+        visual: { name: "pm-checkin" },
         instruction: "What did you get done? Note it, and decide what the next round will be. If there’s more to do, finish this session and press “Study again” to start another round. After four rounds, take a longer break of 15–30 minutes. Done when your task is finished or you’ve done four rounds.",
+        mindset: "Ask what you actually got done, without judging it. The answer tells you how long this kind of task takes you, which makes your next plan more accurate. If you did less than you hoped, shrink the next task. If you finished early, you now know more about your pace. Four rounds and then a long break gives you a rhythm you can repeat.",
         minutes: 0,
       },
     ],
@@ -724,12 +775,16 @@ export const METHODS = [
     session: [
       {
         title: "Find your deadline",
+        visual: { name: "dp-deadline" },
         instruction: "Write down the exam or due date and count the days or weeks between now and then. Also note how many study sessions you realistically have per week, and on which days. If you only have a few days, spread what you have rather than cramming into one.",
+        mindset: "Work backwards from the date. Counting the days between now and then makes it real, and shows how many sessions you can have. Be honest about the sessions you will really keep: a smaller plan that you follow is better than a large one you drop.",
         minutes: 2,
       },
       {
         title: "List what you need to know",
+        visual: { name: "dp-list" },
         instruction: "Write every topic you must know by the deadline as specific items, not “study chapter 3” but its subtopics. Use your syllabus, lecture notes, or the exam’s coverage list. Mark the ones you find hardest.",
+        mindset: "Breaking “chapter 3” into specific items turns a vague worry into a list you can tick off. Each item should be something you could be asked, so write it as something you need to be able to do or say. Marking the hardest ones is honesty with yourself, and it shapes where the sessions go.",
         example: {
           default: "Topics, chapters, and skills from the syllabus.",
           quantitative: "Problem types, formulas, and proofs you’ll need.",
@@ -743,21 +798,24 @@ export const METHODS = [
       },
       {
         title: "Assign topics to sessions",
-        visual: { name: "study-calendar", show: "sessions" },
+        visual: { name: "dp-assign" },
         instruction: "Spread the topics across every remaining week, not just the last one. Aim for several short sessions a week instead of one long one. Put the hardest topics earliest, so you have time to revisit them. Write the topic next to each date.",
+        mindset: "Starting early is the idea. Each topic gets time to be partly forgotten before you see it again, and that is when a review does the most. Putting hard topics first gives them the most chances to come round again. A plan of many short sessions looks less impressive than one long night, and it tends to work better for long-term memory.",
         tip: "Three weeks and three sessions a week gives you about nine sessions. Give hard topics two of them.",
         minutes: 8,
       },
       {
         title: "Add review sessions",
-        visual: { name: "study-calendar", show: "reviews" },
+        visual: { name: "dp-review" },
         instruction: "Each time you finish a topic, schedule a short revisit to it a few days later, and again about a week after that. Mix older topics into later sessions instead of leaving them behind. Add one session near the end for a full practice test, if possible.",
+        mindset: "A review revisits something you have partly forgotten, so it should take some effort to bring back. If a review feels too easy, you may have placed it too soon. Mixing older topics into later sessions keeps them alive, and a practice test near the end shows where you stand while there is still time to act.",
         minutes: 5,
       },
       {
         title: "Put it on your calendar",
-        visual: { name: "study-calendar", show: "all" },
+        visual: { name: "dp-calendar" },
         instruction: "Enter each session as an event with its topic and length. Keep sessions to 30–45 minutes, and shorter as the date nears; don’t compress by merging sessions. Done when every session is in your calendar. Then pick a method from this app for the first one.",
+        mindset: "A session in your calendar is a decision you have already made. Leaving it for the day means deciding again each time. Keep sessions short enough that you will really show up, and shortening them as the date nears is fine. Choose your first method now, so session one starts with nothing left to decide.",
         minutes: 3,
       },
     ],
@@ -791,15 +849,17 @@ export const METHODS = [
     session: [
       {
         title: "Pick a section and skim it",
-        visual: { name: "flow", labels: ["Skim", "Ask", "Guess", "Study", "Check"], highlight: 0 },
+        visual: { name: "tf-skim" },
         instruction: "Choose one section you haven’t studied yet, about 5–10 pages or one lecture’s notes. Skim the headings, bold terms, figures and any questions at the end. Don’t read it yet.",
+        mindset: "You are looking for the shape of what you don’t yet know. Skim to get names and questions into your head before you have answers. Material you already know well gives you nothing to guess about, so choose something new. Hold off on reading it, since the point is to meet the questions before the answers.",
         tip: "Already know it well? Pick something newer. This works best on material you can’t answer yet.",
         minutes: 3,
       },
       {
         title: "Write 6–10 questions",
-        visual: { name: "flow", labels: ["Skim", "Ask", "Guess", "Study", "Check"], highlight: 1 },
+        visual: { name: "tf-questions" },
         instruction: "From what you skimmed, write 6–10 specific questions the section should answer: what, which, how many, why. Aim for the facts and terms you could be tested on. Cover every part you care about, because only the questions you write get the boost.",
+        mindset: "Your questions are the hooks the section will hang on. Specific questions work best: “what does a stack do?” gives your mind a target. Only what you ask about gets the boost, so ask about everything you care about, including things that seem obvious.",
         example: {
           default: "“What is the main cause of X?” “Which term means Y?”",
           quantitative: "“What does the determinant tell you about a matrix?” “What are the units of torque?”",
@@ -813,27 +873,32 @@ export const METHODS = [
       },
       {
         title: "Guess every answer",
-        visual: { name: "flow", labels: ["Skim", "Ask", "Guess", "Study", "Check"], highlight: 2 },
+        visual: { name: "tf-guess" },
         instruction: "Write a guess next to every question, in a few words. Take a real guess even if you have no idea, and don’t look anything up. A wrong guess is fine and still helps. In the research, learners who were asked to guess gained far more than learners who only read the questions.",
+        mindset: "A guess is a small bet that you will check later. Being wrong is useful, because the right answer then arrives to correct something you committed to. Guess even when you have no idea: an honest “I think it is something like…” prepares you to notice the answer. The questions you most want to skip are the ones to guess.",
         tip: "Tempted to skip the ones you have no clue about? Those are the ones to guess.",
         minutes: 4,
       },
       {
         title: "Study to find the answers",
-        visual: { name: "flow", labels: ["Skim", "Ask", "Guess", "Study", "Check"], highlight: 3 },
+        visual: { name: "tf-study" },
         instruction: "Now read or watch the section as you normally would, but hunt for your answers. When you find one, tick the question and write the real answer beside your guess. Keep going until you’ve covered the whole section, not just the answers.",
+        mindset: "Read as someone hunting. Each question on your list is waiting for an answer, and the guess beside it makes the real answer easier to notice. Keep reading the whole section, since the answers are only part of it and the rest gives them context.",
         tip: "If a question isn’t answered anywhere, circle it. It might need another source.",
         minutes: 15,
       },
       {
         title: "Check your guesses",
-        visual: { name: "flow", labels: ["Skim", "Ask", "Guess", "Study", "Check"], highlight: 4 },
+        visual: { name: "tf-check" },
         instruction: "Go back through your list. Mark each guess right or wrong, and for every wrong one, say the correct answer out loud. Note which questions the section never answered.",
+        mindset: "Say the right answer out loud for every miss. Hearing yourself say it gives the correction somewhere to land. A question the section never answered tells you where another source is needed. Count the right guesses if you like, but a low count is no failure: the guesses did their work either way.",
         minutes: 3,
       },
       {
         title: "Cover the gaps",
+        visual: { name: "tf-cover" },
         instruction: "Your questions only boost what they ask about. Skim the section for important ideas you wrote no question for, and add questions for them. Then plan to test yourself on the whole section tomorrow without your notes (that’s Active Recall, which beat testing before studying in one experiment). Done when every important idea has a question.",
+        mindset: "Your questions only lift what they asked about, so now look for what you missed. Scanning for ideas with no question finds your blind spots. Testing yourself tomorrow without notes is the step that makes the knowledge last, and the questions were preparation for it.",
         minutes: 0,
       },
     ],
@@ -866,8 +931,9 @@ export const METHODS = [
     session: [
       {
         title: "Collect solved examples",
-        visual: { name: "flow", labels: ["Collect", "Study", "Solve a twin", "Check", "Fade"], highlight: 0 },
+        visual: { name: "we-collect" },
         instruction: "Pick one type of problem you’re learning. Gather 4–6 problems of that type that come with full, correct solutions: worked examples from the textbook, solved problems from lecture, or an answer key that shows the steps. Set two aside as practice problems and hide their solutions.",
+        mindset: "Collecting examples first is a decision to learn from correct solutions before you try your own. Choose examples of one type so that what repeats across them stands out. Setting two aside gives you a fair test later, and keeping their solutions hidden keeps it fair.",
         example: {
           default: "Worked examples from the textbook or lecture.",
           quantitative: "Worked integrals using substitution, or solved projectile-motion problems.",
@@ -881,34 +947,40 @@ export const METHODS = [
       },
       {
         title: "Study one solved example",
-        visual: { name: "flow", labels: ["Collect", "Study", "Solve a twin", "Check", "Fade"], highlight: 1 },
+        visual: { name: "we-study" },
         instruction: "Read one solution through once, then go back and follow each step, making sure you can see how it follows from the one before. Don’t try to solve it from scratch yet. Studying a correct solution is the point.",
+        mindset: "Your job is to follow the reasoning one step at a time and see why each step follows from the one before. “Why this step now?” is the question to keep asking. You don’t need to write explanations. Let the solution teach you how a good one is built, and leave solving it yourself for the next step.",
         tip: "You don’t need to write out an explanation for every step. In one meta-analysis, adding explain-each-step prompts to examples did worse than studying the examples alone.",
         minutes: 7,
       },
       {
         title: "Solve a twin problem",
-        visual: { name: "flow", labels: ["Collect", "Study", "Solve a twin", "Check", "Fade"], highlight: 2 },
+        visual: { name: "we-twin" },
         instruction: "Straight away, solve a problem of the same type with different numbers or details. Keep the solved example in view and look back at it whenever you’re stuck. Write out your full working.",
+        mindset: "Using the example as a guide is the intended way to do this step. Look back at it as often as you need, and notice what changes between the example and your problem and what stays the same. The parts that stay the same are the method. Writing out your full working lets you see later where something went off.",
         tip: "Copying the example’s steps for a different problem is exactly what this step is for.",
         minutes: 8,
       },
       {
         title: "Check and fix",
-        visual: { name: "flow", labels: ["Collect", "Study", "Solve a twin", "Check", "Fade"], highlight: 3 },
+        visual: { name: "we-fix" },
         instruction: "Compare your solution with the answer. Find the first step where yours goes wrong and say what happened. Then redo from that step.",
+        mindset: "Find the first step that goes wrong, since everything after it follows from that mistake. Naming what happened (the wrong rule, an arithmetic slip, a skipped step) tells you what to practise. Redoing from that step keeps the effort on the weak spot.",
         minutes: 3,
       },
       {
         title: "Fade the help",
-        visual: { name: "flow", labels: ["Collect", "Study", "Solve a twin", "Check", "Fade"], highlight: 4 },
+        visual: { name: "we-fade" },
         instruction: "Take a new solved example and cover the last step or two. Finish it yourself, then check. On the next one, cover more, down to only the first step. Finish with one of your practice problems and no help at all.",
+        mindset: "Each stage asks a little more of you than the one before. Covering the last step first lets you finish something that is already mostly done. If you can’t finish a covered example, going back a level is the method working as designed. The final problem with no help is your test.",
         tip: "If you can’t finish a covered example, go back one level and uncover a step.",
         minutes: 9,
       },
       {
         title: "Plan the next session",
+        visual: { name: "we-next" },
         instruction: "Done when you can solve a new problem of this type with no example in view. Once you can, stop using examples for this type and move to mixed practice (Interleaving). If you can’t yet, repeat from step 2 with a different example.",
+        mindset: "The finish line is solving a new problem with nothing in view. Until you can, examples are still useful. Once you can, they have done their job, and that is the signal to move to mixed practice, where you also have to recognise which method a problem needs.",
         minutes: 0,
       },
     ],
@@ -942,8 +1014,9 @@ export const METHODS = [
     session: [
       {
         title: "Pick a problem you can’t solve yet",
-        visual: { name: "flow", labels: ["Pick", "Attempt", "Note gaps", "Learn", "Compare", "Practise"], highlight: 0 },
+        visual: { name: "pf-pick" },
         instruction: "Choose a problem on an idea you haven’t been taught yet, such as the first problem of the next chapter or problem set. It should allow more than one approach. Don’t read the explanation yet.",
+        mindset: "You are choosing a problem that will stump you, and that is the aim. Pick one that allows several approaches, because the exploring is what you are here for. Resist reading the explanation: it would make the problem feel obvious and you would lose the chance to notice what you were missing.",
         example: {
           default: "A problem on a topic you haven’t covered yet.",
           quantitative: "“Find a fair way to measure how spread out these numbers are,” before you learn variance.",
@@ -957,33 +1030,38 @@ export const METHODS = [
       },
       {
         title: "Attempt it in more than one way",
-        visual: { name: "flow", labels: ["Pick", "Attempt", "Note gaps", "Learn", "Compare", "Practise"], highlight: 1 },
+        visual: { name: "pf-attempt" },
         instruction: "Work on it with what you already know. Come up with at least two different approaches, even if you suspect they’re wrong, and write each one down. Getting stuck is expected. The aim is to explore, not to be right.",
+        mindset: "Treat each attempt as an experiment. You are finding out what your current knowledge can and can’t do. Wrong approaches are worth writing down, since you will use them in step 5. Getting stuck is part of the method. Drawing the problem, simplifying it or guessing a rule are all ways to keep going.",
         tip: "Stuck for ten minutes? Try a simpler version, draw it, or guess a rule and test it. Don’t look up the method yet.",
         minutes: 12,
       },
       {
         title: "Note what each attempt missed",
-        visual: { name: "flow", labels: ["Pick", "Attempt", "Note gaps", "Learn", "Compare", "Practise"], highlight: 2 },
+        visual: { name: "pf-missed" },
         instruction: "For each attempt, write what it got wrong or couldn’t handle, and what you wish you knew. These notes are the questions the lesson will answer.",
+        mindset: "Be specific about what each attempt couldn’t handle and what you wish you knew. Those notes become the questions the lesson answers, so you will read the lesson looking for something. A vague note like “it didn’t work” helps less than a precise one like “it couldn’t cope with the two groups being different sizes”.",
         minutes: 3,
       },
       {
         title: "Learn the idea properly",
-        visual: { name: "flow", labels: ["Pick", "Attempt", "Note gaps", "Learn", "Compare", "Practise"], highlight: 3 },
+        visual: { name: "pf-learn" },
         instruction: "Now read the explanation or watch the lesson. Look for the answers to the gaps you wrote down, and mark the places where the proper method does something your attempts didn’t.",
+        mindset: "Read like someone who has just failed at the problem and wants to know the trick. Look for the places where the proper method does something your attempts didn’t. Those are the ideas you needed, and having struggled first gives you somewhere to put them.",
         minutes: 12,
       },
       {
         title: "Compare with your attempts",
-        visual: { name: "flow", labels: ["Pick", "Attempt", "Note gaps", "Learn", "Compare", "Practise"], highlight: 4 },
+        visual: { name: "pf-compare" },
         instruction: "Go back to each attempt and say why it failed, or how it differs from the proper method. In the research, teaching that built on students’ own attempts did better than teaching that ignored them.",
+        mindset: "Go through each attempt and say why it fell short or how it relates to the proper method. Some may turn out to be partly right, which is worth noticing. This comparison is where the idea attaches to your own thinking.",
         minutes: 5,
       },
       {
         title: "Practise the method",
-        visual: { name: "flow", labels: ["Pick", "Attempt", "Note gaps", "Learn", "Compare", "Practise"], highlight: 5 },
+        visual: { name: "pf-practise" },
         instruction: "Use the proper method to redo the original problem, then solve two more like it. Trying first did not improve procedural skill in the research, so this practice has to be on purpose. Done when you can say what the method is for, not only how to run it.",
+        mindset: "Trying first builds understanding of why the method works, and in the research it did not improve procedural skill, so the practice has to be deliberate. Redo the original problem with the method and notice how much simpler it feels. You are done when you can say what the method is for, in addition to how to run it.",
         minutes: 5,
       },
     ],

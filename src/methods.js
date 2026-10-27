@@ -35,6 +35,7 @@ export const METHODS = [
     session: [
       {
         title: "Choose and size your material",
+        visual: { name: "recall-choose" },
         instruction: "Pick one small chunk to learn: about 1–2 pages of notes or textbook, or 3–5 key ideas. Smaller is better; you can always do another round. Get a blank sheet of paper, a pen, and a second pen in a different colour. If you have practice questions or flashcards for this material, set them aside; you’ll use them in step 4 instead of the blank page.",
         mindset: "The aim of this session is to be able to produce this material with nothing in front of you. Recognising it when you see it is a lower bar. Rereading builds recognition, and it feels like knowing because the page looks familiar, but a test makes you supply the answer yourself. Keep that target in mind as you choose: ask what you would have to write or say from this material, and pick a chunk you could realistically rebuild from memory by the end of the session.",
         example: {
@@ -50,7 +51,7 @@ export const METHODS = [
       },
       {
         title: "Study it once",
-        visual: { name: "flow", labels: ["Study once", "Close it", "Recall", "Check", "Re-test"], highlight: 0 },
+        visual: { name: "recall-study" },
         instruction: "Read or watch the material one time, carefully. Don’t highlight and don’t re-read; the point is to understand it well enough that you have something to recall. Notice headings and bold terms, since they’ll help you structure your recall.",
         mindset: "Read the way you would if someone were about to ask you questions about it. What you are building is an outline you can rebuild later: the main ideas, how they connect, and which details belong under which idea. A page that reads smoothly makes it easy to believe you know it, but following along while you read and producing the material afterwards are different things, so don’t judge how well you have learned it by how easy the reading felt.",
         tip: "If you read it and it makes no sense, recall won’t work yet. Pause this session and try Feynman or Self-Explanation first.",
@@ -58,14 +59,14 @@ export const METHODS = [
       },
       {
         title: "Close it completely",
-        visual: { name: "flow", labels: ["Study once", "Close it", "Recall", "Check", "Re-test"], highlight: 1 },
+        visual: { name: "recall-close" },
         instruction: "Close the book or turn your notes face down, and put your phone away. Everything is out of sight before you start. Retrieval only works if you can’t peek.",
         mindset: "You will probably feel an urge to check just one thing. Decide before you start that you won’t. Not being able to remember something is uncomfortable, but the effort of pulling it out of memory is what strengthens it, so getting stuck here doesn’t mean you are doing it wrong.",
         minutes: 0,
       },
       {
         title: "Recall it from memory",
-        visual: { name: "flow", labels: ["Study once", "Close it", "Recall", "Check", "Re-test"], highlight: 2 },
+        visual: { name: "recall-write" },
         instruction: "Write down everything you can remember, with no looking. Don’t worry about order or neatness. Keep going even when it gets hard; that struggle is what makes the memory stick. Use the recall style that fits your subject. If you have practice questions or flashcards, answer them out loud or in writing instead.",
         mindset: {
           default: "When you hit a blank, try coming at it from another angle: what was the heading, what came just before or after, what was an example, what question would a test ask about this? Write in your own words. If you can only produce the page’s exact sentences, you may have memorised the wording without understanding the idea. Put a “?” next to anything you are guessing. A wrong guess that you correct later tends to be remembered better than an answer you only read.",
@@ -85,20 +86,21 @@ export const METHODS = [
       },
       {
         title: "Check against the source",
-        visual: { name: "flow", labels: ["Study once", "Close it", "Recall", "Check", "Re-test"], highlight: 3 },
+        visual: { name: "recall-check" },
         instruction: "Reopen your notes. With the different-coloured pen, add what you missed and correct what you got wrong. Count how many you got right, so you can compare next time. Don’t just read your notes again.",
         mindset: "Use this step to find out what you know, not to score yourself. Sort each miss into one of three kinds: blank (you had nothing), partial (you had a fragment), or confident but wrong (you were sure and it was wrong). The confident mistakes are the most useful to find, because people correct a wrong belief more reliably when the right answer surprises them. For each miss, ask why it happened: you never took it in, you mixed it up with something similar, or you didn’t understand it. The answer tells you what to do next. Your count will probably be lower than you hoped the first time, which is normal.",
         minutes: 5,
       },
       {
         title: "Re-test the gaps",
-        visual: { name: "flow", labels: ["Study once", "Close it", "Recall", "Check", "Re-test"], highlight: 4 },
+        visual: { name: "recall-retest" },
         instruction: "Close the notes again. Write or say only the things you missed or got wrong, from memory. Repeat the check if you still miss some. Done when you can recall every item you missed the first time.",
         mindset: "For something you keep missing, link it to something before you test again: a thing you already know, an example, or the reason it has to be true. Repeating the answer until it sticks works less well. Also keep in mind that recalling something a few minutes after seeing it is much easier than recalling it tomorrow, so passing here only tells you it is in short-term memory. The next review is the real check.",
         minutes: 5,
       },
       {
         title: "Schedule your next review",
+        visual: { name: "recall-schedule" },
         instruction: "Put a reminder in your calendar to redo steps 3–5 for this chunk tomorrow, using only the gaps from today. Add a second reminder for about a week later. Without these, most of what you just learned will fade.",
         mindset: "Some forgetting between sessions is expected. Pulling something up after it has faded a bit tends to strengthen memory more than going over it while it is fresh, so if tomorrow feels harder than today, that is normal and doesn’t mean today’s session was wasted. Tomorrow, begin with questions instead of your notes. Write two or three questions about this chunk now, so you can start by testing yourself and not by rereading.",
         minutes: 0,

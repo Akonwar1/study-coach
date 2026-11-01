@@ -44,9 +44,10 @@ function renderPractice(practice) {
 
 /**
  * The in-depth page for one method. `page` is its entry in method-pages.js.
- * onBack() leaves the page; onStart() begins a guided session for this method.
+ * onBack() leaves the page; onStart() begins a guided session for this method;
+ * personalizer (optional) is a list of nodes offering to fit the session to the student's situation, shown under the first start button.
  */
-export function renderMethodPage({ method, page, onBack, onStart }) {
+export function renderMethodPage({ method, page, onBack, onStart, personalizer = [] }) {
   const breakdown = renderEvidenceBreakdown(method.id);
   const explainer = usesEffectSizes(page) ? renderEffectExplainer() : null;
   const sections = [
@@ -76,6 +77,7 @@ export function renderMethodPage({ method, page, onBack, onStart }) {
       ...(renderEvidenceTag(method.id) ? [renderEvidenceTag(method.id)] : []),
       el("p", { className: "page-lede", text: method.def }),
       el("div", { className: "card-action" }, [button("Start guided session", { primary: true, onClick: onStart })]),
+      ...personalizer,
     ]),
     el("nav", { className: "chips", attrs: { "aria-label": "Sections on this page" } }, jumps),
     ...sections.map((item) => item.node),

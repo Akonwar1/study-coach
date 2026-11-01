@@ -9,11 +9,13 @@ import { renderIcon } from "./icons.js";
 import { describeAnswers, describeSituation, explainRecommendation } from "./explain.js";
 import { FILTER_GROUPS, NO_FILTERS, describeFit, filterMethods, hasActiveFilters } from "./library.js";
 import { METHODS } from "./methods.js";
+import { makePlan, personalizableQuestions } from "./plan.js";
+import { renderPersonalizer } from "./personalize-view.js";
+import { renderPlanPreview } from "./plan-view.js";
 import { ALL_QUESTIONS, SUBJECT_QUESTION } from "./questions.js";
 import { recommend, validateAnswers } from "./recommend.js";
 import { isComplete, isResumable, nextStep, pauseTimer, startSession, upgradeSession } from "./session.js";
 import { renderSession, stopTicking } from "./session-view.js";
-import { resolveSteps } from "./tailor.js";
 import {
   addHistoryEntry, clearActiveSession, deleteHistoryEntry, loadActiveSession, loadHistory, loadWeeklyGoal, saveActiveSession, saveWeeklyGoal,
 } from "./storage.js";
@@ -40,6 +42,7 @@ let stepIndex = 0; // which question we're on; ALL_QUESTIONS.length means "show 
 let errorMessage = "";
 let activeSession = null; // the guided session on screen, or null
 let finishedEntry = null; // the session just ended, for the "well done" screen
+let finishedThreshold = 0; // the timer minutes that session needed to be logged when ended early
 let finishedLogged = false; // whether finishedEntry was added to the history (an early finish only is if enough was done)
 let saveFailed = false;
 let goalError = "";
@@ -72,7 +75,7 @@ function renderResumeBanner(session) {
   const method = methodById(session.methodId);
   return el("div", { className: "banner" }, [
     el("p", { className: "banner-title", text: `Session in progress: ${method.name}` }),
-    el("p", { className: "banner-detail", text: `You were on step ${session.stepIndex + 1} of ${method.session.length}.` }),
+    el("p", { className: "banner-detail", text: `You were on step ${session.stepIndex + 1} of ${session.plan.steps.length}.` }),
     el("div", { className: "banner-actions" }, [
       button("Resume", { primary: true, onClick: () => openSession(session) }),
       button("Discard", {
@@ -221,7 +224,7 @@ function renderResultCard(result, rank, results) {
   const { method } = result;
   const isTop = rank === 0;
   const explanation = explainRecommendation(answers, result, rank, results[0]);
-  const startAction = button("Start guided session", { primary: true, onClick: () => beginSession(method) });
+  const startAction = button("Start guided session", { primary: true, onClick: () => beginSession(method, answers) });
 
   return el("article", { className: `result-card${isTop ? " top" : ""}` }, [
     el("p", { className: "badge", text: isTop ? "Start with this" : "Also worth trying" }),
@@ -233,6 +236,7 @@ function renderResultCard(result, rank, results) {
       el("h4", { text: "Why this fits you" }),
       el("ul", { className: "why-rows" }, [...explanation.rows.map((row) => renderWhyRow(row)), ...renderProvenRow(method)]),
     ]),
+    renderPlanPreview(method, makePlan(method, answers)),
     renderHowItWorks(method),
     el("div", { className: "card-action" }, [startAction, ...readMoreLink(method)]),
   ]);
@@ -280,10 +284,11 @@ function renderResults() {
 function logStoppedSession(session) {
   const method = methodById(session.methodId);
   const now = Date.now();
-  if (shouldLogStopped(method, session, now)) addHistoryEntry(buildEntry({ method, session, now, completed: false }));
+  if (shouldLogStopped(session, now)) addHistoryEntry(buildEntry({ method, session, now, completed: false }));
 }
 
-function beginSession(method) {
+/** Starts a guided session. `situation` is what the plan is tailored to: the quiz answers, or just a subject when there are none. */
+function beginSession(method, situation = { subject: answers.subject }) {
   if (methodPageId) {
     // Starting from a method page: leave the page for good, so exiting the session lands on the tab, not the page.
     methodPageId = null;
@@ -291,7 +296,7 @@ function beginSession(method) {
   }
   const replaced = savedSession(); // starting fresh replaces a session that was left unfinished
   if (replaced) logStoppedSession(replaced);
-  openSession(startSession(method, Date.now(), answers.subject));
+  openSession(startSession(method, Date.now(), situation.subject, makePlan(method, situation)));
 }
 
 function openSession(session) {
@@ -309,7 +314,7 @@ function updateSession(session) {
 function advanceSession() {
   const method = methodById(activeSession.methodId);
   const moved = nextStep(activeSession, Date.now());
-  if (isComplete(method, moved)) finishSession(method, moved, true);
+  if (isComplete(moved)) finishSession(method, moved, true);
   else updateSession(moved);
 }
 
@@ -317,7 +322,8 @@ function advanceSession() {
 function finishSession(method, session, completed) {
   const now = Date.now();
   finishedEntry = buildEntry({ method, session, now, completed });
-  finishedLogged = completed || shouldLogStopped(method, session, now);
+  finishedLogged = completed || shouldLogStopped(session, now);
+  finishedThreshold = loggingThreshold(session.plan.steps);
   saveFailed = finishedLogged ? !addHistoryEntry(finishedEntry) : false;
   clearActiveSession();
   activeSession = null;
@@ -341,7 +347,6 @@ function renderSessionScreen() {
   const subject = SUBJECT_QUESTION.options.find((option) => option.id === activeSession.subject);
   const screen = renderSession({
     method,
-    steps: resolveSteps(method, activeSession.subject),
     subject: activeSession.subject,
     subjectLabel: subject && subject.id !== "other" ? subject.label : "",
     session: activeSession,
@@ -358,13 +363,12 @@ function renderSessionScreen() {
 }
 
 function describeEnding(entry) {
-  const method = methodById(entry.methodId);
   if (entry.completed !== false) {
     return { badge: "Session complete", heading: `Nice work. You finished ${entry.methodName}.`, saved: "Saved to your recent sessions." };
   }
   const saved = finishedLogged
     ? "Saved to your history as stopped early."
-    : `Not added to your history: it logs an early finish once about ${loggingThreshold(method)} minutes of timers are done.`;
+    : `Not added to your history: it logs an early finish once about ${finishedThreshold} minutes of timers are done.`;
   return { badge: "Session ended", heading: `You ended ${entry.methodName} early.`, saved };
 }
 
@@ -429,6 +433,31 @@ function renderSubjectPicker() {
   ]);
 }
 
+const personalizing = new Map(); // method id -> the personalizing panel's state, kept so redrawing the library does not lose it
+
+/** The panel's state for a method, started from the quiz answers it can use and started over if those answers change. */
+function personalizingState(method) {
+  const seed = Object.fromEntries(personalizableQuestions(method).filter((id) => answers[id]).map((id) => [id, answers[id]]));
+  const seededFrom = JSON.stringify(seed);
+  let state = personalizing.get(method.id);
+  if (state?.seededFrom !== seededFrom) {
+    state = { choices: seed, fromQuiz: Object.keys(seed).length > 0, seededFrom };
+    personalizing.set(method.id, state);
+  }
+  return state;
+}
+
+/** The optional “fit it to my situation” offer for a method the student picked themselves, or nothing if it cannot adjust. */
+function personalizer(method) {
+  const panel = renderPersonalizer({
+    method,
+    state: personalizingState(method),
+    getSituation: () => ({ subject: answers.subject }),
+    onStart: (situation) => beginSession(method, situation),
+  });
+  return panel ? [panel] : [];
+}
+
 function renderLibraryCard(method) {
   const fit = describeFit(method);
   return el("article", { className: "library-card", attrs: { "data-rating": evidenceFor(method.id)?.rating ?? "Unrated" } }, [
@@ -449,6 +478,7 @@ function renderLibraryCard(method) {
       el("p", { className: "library-fit" }, [el("strong", { text: "Suits: " }), fit.material]),
       ...renderHowTo(method),
     ]),
+    ...personalizer(method),
     el("div", { className: "library-card-actions" }, [
       button("Start guided session", { primary: true, onClick: () => beginSession(method) }),
       ...readMoreLink(method),
@@ -565,6 +595,7 @@ function renderMethodPageScreen() {
     page: METHOD_PAGES[methodPageId],
     onBack: leaveMethodPage,
     onStart: () => beginSession(method),
+    personalizer: personalizer(method),
   }));
 }
 

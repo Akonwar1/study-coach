@@ -1,12 +1,16 @@
 // Guided study sessions: pure functions over plain objects, so they can be saved as JSON and tested.
 //
-// session  = { methodId, subject, startedAt, stepIndex, timers, statuses }
+// session  = { methodId, subject, startedAt, stepIndex, plan, timers, statuses }
+// plan     = the steps this session follows (see plan.js), saved with the session so resuming and History use the
+//            steps the student was actually given, even if the method's own steps change later.
 // timers   = one entry per step, so jumping between steps never loses a step's clock:
 //            null (step has no timer) or { remainingMs, endsAt }
 //            endsAt is null while paused, or the timestamp when the running timer reaches zero.
 // statuses = one entry per step: "todo", "done" or "skipped".
 // Storing endsAt (not a ticking counter) keeps the clock right when the tab is hidden or reopened.
 // Only the step on screen can have a running timer: leaving a step pauses it.
+
+import { makePlan, validatePlan } from "./plan.js";
 
 const MINUTE_MS = 60_000;
 const STATUSES = ["todo", "done", "skipped"];
@@ -19,19 +23,21 @@ function timerForStep(step) {
   return step.minutes > 0 ? { remainingMs: step.minutes * MINUTE_MS, endsAt: null } : null;
 }
 
-export function startSession(method, now, subject = "other") {
+/** Starts a session on a plan; without one, on the method's standard steps for the subject. */
+export function startSession(method, now, subject = "other", plan = makePlan(method, { subject })) {
   return {
     methodId: method.id,
     subject,
     startedAt: now,
     stepIndex: 0,
-    timers: method.session.map(timerForStep),
-    statuses: method.session.map(() => "todo"),
+    plan,
+    timers: plan.steps.map(timerForStep),
+    statuses: plan.steps.map(() => "todo"),
   };
 }
 
-export function isComplete(method, session) {
-  return session.stepIndex >= method.session.length;
+export function isComplete(session) {
+  return session.stepIndex >= session.plan.steps.length;
 }
 
 function withStep(list, index, value) {
@@ -74,14 +80,14 @@ export function pauseTimer(session, now) {
 }
 
 /** Puts the current step's clock back to its full time, paused, so the step can be redone. */
-export function resetTimer(method, session) {
-  const reset = timerForStep(method.session[session.stepIndex]);
+export function resetTimer(session) {
+  const reset = timerForStep(session.plan.steps[session.stepIndex]);
   return { ...session, timers: withStep(session.timers, session.stepIndex, reset) };
 }
 
 /** Moves to any step. The step you leave keeps its clock, paused; the step you arrive at keeps its own. */
-export function goToStep(method, session, index, now) {
-  if (!Number.isInteger(index) || index < 0 || index >= method.session.length || index === session.stepIndex) return session;
+export function goToStep(session, index, now) {
+  if (!Number.isInteger(index) || index < 0 || index >= session.plan.steps.length || index === session.stepIndex) return session;
   return { ...pauseTimer(session, now), stepIndex: index };
 }
 
@@ -97,20 +103,27 @@ export function skipStep(session, now) {
   return { ...paused, statuses: withStep(paused.statuses, session.stepIndex, "skipped"), stepIndex: session.stepIndex + 1 };
 }
 
-export function previousStep(method, session, now) {
-  return goToStep(method, session, session.stepIndex - 1, now);
+export function previousStep(session, now) {
+  return goToStep(session, session.stepIndex - 1, now);
 }
 
-/** Sessions saved before each step had its own clock kept one timer for the step on screen; convert them. */
+/**
+ * Brings sessions saved by older versions up to date: before each step had its own clock a session kept one timer for
+ * the step on screen, and before plans existed it had no plan, so it gets the method's standard steps.
+ */
 export function upgradeSession(method, session) {
-  if (!session || typeof session !== "object" || !method || Array.isArray(session.timers) || !("timer" in session)) return session;
+  if (!session || typeof session !== "object" || !method) return session;
+  if (!("timer" in session) && session.plan) return session;
   const { timer, ...rest } = session;
+  const plan = rest.plan ?? makePlan(method, { subject: session.subject ?? "other" });
   const index = session.stepIndex;
-  if (!Number.isInteger(index) || index < 0 || index >= method.session.length) return session;
+  if (!Number.isInteger(index) || index < 0 || index >= plan.steps.length) return session;
+  if (!("timer" in session)) return { ...rest, plan };
   return {
     ...rest,
-    timers: method.session.map((step, i) => (i === index ? timer : timerForStep(step))),
-    statuses: method.session.map((step, i) => (i < index ? "done" : "todo")),
+    plan,
+    timers: plan.steps.map((step, i) => (i === index ? timer : timerForStep(step))),
+    statuses: plan.steps.map((step, i) => (i < index ? "done" : "todo")),
   };
 }
 
@@ -136,8 +149,10 @@ export function isResumable(session, methods) {
   if (!method || !hasWalkthrough(method)) return false;
   if (session.subject !== undefined && typeof session.subject !== "string") return false;
   if (!Number.isFinite(session.startedAt)) return false;
-  if (!Number.isInteger(session.stepIndex) || session.stepIndex < 0 || session.stepIndex >= method.session.length) return false;
+  if (validatePlan(session.plan) !== null) return false;
+  const stepCount = session.plan.steps.length;
+  if (!Number.isInteger(session.stepIndex) || session.stepIndex < 0 || session.stepIndex >= stepCount) return false;
   const { timers, statuses } = session;
-  if (!Array.isArray(timers) || timers.length !== method.session.length || !timers.every(isValidTimer)) return false;
-  return Array.isArray(statuses) && statuses.length === method.session.length && statuses.every((status) => STATUSES.includes(status));
+  if (!Array.isArray(timers) || timers.length !== stepCount || !timers.every(isValidTimer)) return false;
+  return Array.isArray(statuses) && statuses.length === stepCount && statuses.every((status) => STATUSES.includes(status));
 }

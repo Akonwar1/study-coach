@@ -1,6 +1,7 @@
 import { button, el } from "./dom.js";
 import { describeFit } from "./library.js";
 import { formatClock, goToStep, isTimerRunning, pauseTimer, previousStep, remainingMs, resetTimer, skipStep, startTimer, stepRemainingMs } from "./session.js";
+import { renderAdjustedNotes } from "./plan-view.js";
 import { renderStepStrip, renderVisual } from "./visuals.js";
 
 const APP_TITLE = "Study Coach";
@@ -81,21 +82,22 @@ function renderFinishEarly(onFinishEarly) {
 
 /**
  * Shows one step of a guided session and returns the screen's element.
- * `steps` are the method's steps already tailored to the subject (see tailor.js).
+ * The steps come from the session's own plan (see plan.js), already tailored to the student's subject and answers.
  * onUpdate(session) is called with every change so the caller can save and redraw;
  * onNext() moves on (the caller decides when the session is finished); onFinishEarly() ends it now;
  * onReadMore() (optional) opens the method's in-depth page; onLeave() goes home with the session saved.
  */
-export function renderSession({ method, steps, subject, subjectLabel, session, onUpdate, onNext, onFinishEarly, onReadMore, onLeave }) {
+export function renderSession({ method, subject, subjectLabel, session, onUpdate, onNext, onFinishEarly, onReadMore, onLeave }) {
   stopTicking();
   const now = Date.now();
+  const steps = session.plan.steps;
   const step = steps[session.stepIndex];
   const visual = step.visual ? renderVisual(step.visual, { subject }) : null;
   const fractions = steps.map((s, index) => {
     const left = stepRemainingMs(session, index, now);
     return left === null ? 0 : 1 - left / (s.minutes * MINUTE_MS);
   });
-  const goTo = (index) => onUpdate(goToStep(method, session, index, Date.now()));
+  const goTo = (index) => onUpdate(goToStep(session, index, Date.now()));
   const strip = renderStepStrip(steps, session.stepIndex, { statuses: session.statuses, fractions, onPick: goTo });
   const isLastStep = session.stepIndex === steps.length - 1;
 
@@ -109,7 +111,7 @@ export function renderSession({ method, steps, subject, subjectLabel, session, o
     },
   });
   const reset = el("button", { className: "link-btn compact", text: "Reset timer", attrs: { type: "button" } });
-  reset.addEventListener("click", () => onUpdate(resetTimer(method, session)));
+  reset.addEventListener("click", () => onUpdate(resetTimer(session)));
 
   function refreshTimer() {
     const left = remainingMs(session, Date.now());
@@ -136,7 +138,7 @@ export function renderSession({ method, steps, subject, subjectLabel, session, o
     tickHandle = setInterval(refreshTimer, 500);
   }
 
-  const back = button("Back", { disabled: session.stepIndex === 0, onClick: () => onUpdate(previousStep(method, session, Date.now())) });
+  const back = button("Back", { disabled: session.stepIndex === 0, onClick: () => onUpdate(previousStep(session, Date.now())) });
   const next = button(isLastStep ? "Finish session" : "Next step", { primary: true, onClick: onNext });
   const skip = el("button", { className: "link-btn", text: "Skip this step", attrs: { type: "button" } });
   skip.addEventListener("click", () => onUpdate(skipStep(session, Date.now())));
@@ -148,6 +150,7 @@ export function renderSession({ method, steps, subject, subjectLabel, session, o
     strip.node,
     el("div", { className: "session-panels" }, [renderAboutPanel(method, onReadMore), renderStepsPanel(steps, session, goTo)]),
     el("h2", { text: step.title }),
+    ...renderAdjustedNotes(step),
     ...(visual ? [el("div", { className: "visual-wrap" }, [visual.node])] : []),
     el("p", { className: "instruction", text: step.instruction }),
     ...(step.mindset ? [el("div", { className: "step-note mindset" }, [el("p", { className: "mindset-label", text: "How to think about it" }), el("p", { text: step.mindset })])] : []),

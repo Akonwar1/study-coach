@@ -12,7 +12,10 @@
 //               lead sentence of the recommendation, so it needs one entry for each of fit.struggle, plus "none" unless requiresStruggle;
 //               fitsMaterial and fitsTask say why the method suits each material and task in fit, one entry per id
 // requiresStruggle: only recommend when the student reports one of its struggles
-// session:      guided walkthrough, a list of { title, instruction, minutes (0 = no timer), example?, tip? };
+// adapt:        optional rules that reshape the steps for the student's answers (deadline, problem, task); see plan.js.
+//               Each rule has `when`, `because` (the full reason, shown on the changed step), `summary` (a few words, shown on the
+//               result card) and `do`. Steps a rule points at need an `id`
+// session:      guided walkthrough, a list of { id?, title, instruction, minutes (0 = no timer), example?, tip? };
 //               mindset? is the mental side of the step: how to think while doing it, shown under the instruction;
 //               instruction, example, tip and mindset can vary by subject; see tailor.js
 //               visual: { name } names the step's picture, drawn by a scene in src/scenes/ and shown above the step’s text
@@ -52,6 +55,7 @@ export const METHODS = [
     },
     session: [
       {
+        id: "choose",
         title: "Choose and size your material",
         visual: { name: "recall-choose" },
         instruction: "Pick one small chunk to learn: about 1–2 pages of notes or textbook, or 3–5 key ideas. Smaller is better; you can always do another round. Get a blank sheet of paper, a pen, and a second pen in a different colour. If you have practice questions or flashcards for this material, set them aside; you’ll use them in step 4 instead of the blank page.",
@@ -68,6 +72,7 @@ export const METHODS = [
         minutes: 0,
       },
       {
+        id: "study",
         title: "Study it once",
         visual: { name: "recall-study" },
         instruction: "Read or watch the material one time, carefully. Don’t highlight and don’t re-read; the point is to understand it well enough that you have something to recall. Notice headings and bold terms, since they’ll help you structure your recall.",
@@ -76,6 +81,7 @@ export const METHODS = [
         minutes: 5,
       },
       {
+        id: "close",
         title: "Close it completely",
         visual: { name: "recall-close" },
         instruction: "Close the book or turn your notes face down, and put your phone away. Everything is out of sight before you start. Retrieval only works if you can’t peek.",
@@ -83,6 +89,7 @@ export const METHODS = [
         minutes: 0,
       },
       {
+        id: "recall",
         title: "Recall it from memory",
         visual: { name: "recall-write" },
         instruction: "Write down everything you can remember, with no looking. Don’t worry about order or neatness. Keep going even when it gets hard; that struggle is what makes the memory stick. Use the recall style that fits your subject. If you have practice questions or flashcards, answer them out loud or in writing instead.",
@@ -103,6 +110,7 @@ export const METHODS = [
         minutes: 5,
       },
       {
+        id: "check",
         title: "Check against the source",
         visual: { name: "recall-check" },
         instruction: "Reopen your notes. With the different-coloured pen, add what you missed and correct what you got wrong. Count how many you got right, so you can compare next time. Don’t just read your notes again.",
@@ -110,6 +118,7 @@ export const METHODS = [
         minutes: 5,
       },
       {
+        id: "retest",
         title: "Re-test the gaps",
         visual: { name: "recall-retest" },
         instruction: "Close the notes again. Write or say only the things you missed or got wrong, from memory. Repeat the check if you still miss some. Done when you can recall every item you missed the first time.",
@@ -117,11 +126,140 @@ export const METHODS = [
         minutes: 5,
       },
       {
+        id: "schedule",
         title: "Schedule your next review",
         visual: { name: "recall-schedule" },
         instruction: "Put a reminder in your calendar to redo steps 3–5 for this chunk tomorrow, using only the gaps from today. Add a second reminder for about a week later. Without these, most of what you just learned will fade.",
         mindset: "Some forgetting between sessions is expected. Pulling something up after it has faded a bit tends to strengthen memory more than going over it while it is fresh, so if tomorrow feels harder than today, that is normal and doesn’t mean today’s session was wasted. Tomorrow, begin with questions instead of your notes. Write two or three questions about this chunk now, so you can start by testing yourself and not by rereading.",
         minutes: 0,
+      },
+    ],
+    adapt: [
+      {
+        when: { horizon: ["soon"] },
+        because: "With 2 days or less, a review a long way out would come after your deadline, so the re-tests move to tonight and tomorrow.",
+        summary: "Re-tests move to tonight and tomorrow.",
+        do: [
+          {
+            op: "set",
+            step: "schedule",
+            fields: {
+              title: "Plan tonight’s and tomorrow’s re-tests",
+              instruction: "Skip the long-gap reminders, because your deadline comes first. Set two reminders: one for tonight, a few hours from now or just before bed, and one for tomorrow before your deadline. Each time, close your notes and start with the gaps from today, written or said from memory, then check them against the source. Spend any time left on the next chunk.",
+              mindset: "Short gaps still help. Coming back after a few hours or a night means the material has faded a little and you have to dig it up again, which is the useful part. Don’t swap the re-tests for rereading the night before: it feels easier because it lets you off the digging. Write two or three questions about this chunk now, so tonight’s re-test can start with questions and not with your notes.",
+            },
+          },
+        ],
+      },
+      {
+        when: { horizon: ["week"] },
+        because: "With 3 days to 2 weeks left, a review a week from now could land after your deadline, so the last review is set before it.",
+        summary: "The last review is set before your deadline.",
+        do: [
+          {
+            op: "set",
+            step: "schedule",
+            fields: {
+              instruction: "Put a reminder in your calendar to redo steps 3–5 for this chunk tomorrow, using only the gaps from today. Add a second reminder two or three days after that, but no later than the day before your deadline. Without these, most of what you just learned will fade.",
+            },
+          },
+        ],
+      },
+      {
+        when: { horizon: ["long"] },
+        because: "With more than 2 weeks left, there is room to keep widening the gaps between reviews.",
+        summary: "The gaps between reviews keep widening.",
+        do: [
+          {
+            op: "set",
+            step: "schedule",
+            fields: {
+              instruction: "Put a reminder in your calendar to redo steps 3–5 for this chunk tomorrow, using only the gaps from today. Add a second reminder for about a week later and a third about two weeks after that, then keep widening the gaps until your deadline. Without these, most of what you just learned will fade.",
+            },
+          },
+        ],
+      },
+      {
+        when: { horizon: ["none"] },
+        because: "With no deadline, you can keep widening the gaps for as long as you want to remember the material.",
+        summary: "The gaps between reviews keep widening.",
+        do: [
+          {
+            op: "set",
+            step: "schedule",
+            fields: {
+              instruction: "Put a reminder in your calendar to redo steps 3–5 for this chunk tomorrow, using only the gaps from today. Add a second reminder for about a week later and a third about a month after that, then keep widening the gaps for as long as you want to remember it. Without these, most of what you just learned will fade.",
+            },
+          },
+        ],
+      },
+      {
+        when: { struggle: ["focus"] },
+        because: "You said you drift off, so every timer is cut to 3 minutes: a short block with a clear end is easier to stay in.",
+        summary: "Every timer is cut to 3 minutes.",
+        do: [
+          { op: "capMinutes", max: 3 },
+          { op: "append", step: "choose", text: "Make the chunk smaller than usual so it fits the shorter timers: about half a page, or two or three key ideas." },
+          { op: "append", step: "close", text: "Put your phone in another room or out of reach, not just face down." },
+        ],
+      },
+      {
+        when: { struggle: ["start"] },
+        because: "You said you can’t get started, so the session opens with a 2-minute step that asks almost nothing, and the chunk is smaller.",
+        summary: "Opens with a 2-minute first step and a smaller chunk.",
+        do: [
+          {
+            op: "insert",
+            at: "start",
+            step: {
+              id: "just-open",
+              title: "Open it and write one line",
+              visual: { name: "recall-choose" },
+              instruction: "Set the 2-minute timer. All you have to do is open the material and write its title, and one thing you already know about it, at the top of the blank page. When the timer ends you may stop. If you want to keep going, the next step is ready.",
+              mindset: "The only aim here is to begin. Don’t judge what you write. Starting is the hard part, and a tiny first step takes away the decision of whether to do the whole session.",
+              minutes: 2,
+            },
+          },
+          { op: "append", step: "choose", text: "Make the chunk smaller than you think you need: half a page, or three ideas, is enough to start." },
+        ],
+      },
+      {
+        when: { struggle: ["unsure"] },
+        because: "You said everything looks familiar, so a prediction step comes before you recall, to show how much you actually know.",
+        summary: "A prediction step shows how much you really know.",
+        do: [
+          {
+            op: "insert",
+            after: "close",
+            step: {
+              id: "predict",
+              title: "Predict your score",
+              visual: { name: "recall-close" },
+              instruction: "Before you write anything, put a number on it: how many of the key items in this chunk do you expect to get right? Write that number at the top of the blank page. You will compare it with your real count in the check step.",
+              mindset: "Feeling ready and being able to do it are different things, and a number written down in advance makes the difference visible. If the real count comes in lower, that is not a failure; it is the information this session is for.",
+              minutes: 0,
+            },
+          },
+          { op: "append", step: "check", text: "Compare your count with the prediction you wrote down. A big gap means the material felt more familiar than it was." },
+        ],
+      },
+      {
+        when: { task: ["explain"] },
+        because: "You’ll have to explain it in your own words, so recall means saying it as an explanation, not reciting it.",
+        summary: "Recall becomes an explanation, not a recital.",
+        do: [
+          { op: "append", step: "recall", text: "Because you will have to explain this, say or write it as if you were teaching a friend, in your own words, including why each part is true. A list of terms is not enough." },
+          { op: "append", step: "check", text: "As you check, mark the places where you had the words but not the reason." },
+        ],
+      },
+      {
+        when: { task: ["apply"] },
+        because: "You’ll have to solve new problems, so recall includes using the material, not only remembering it.",
+        summary: "Recall includes solving a problem you haven’t seen.",
+        do: [
+          { op: "append", step: "recall", text: "Because you will have to use this on new problems, don’t stop at writing it down: make up or find one problem you haven’t seen and solve it from memory." },
+          { op: "append", step: "check", text: "Check your solution as well as your notes: a right fact used the wrong way is a gap too." },
+        ],
       },
     ],
     fit: {

@@ -1,4 +1,4 @@
-// Small line icons for the quiz questions, recommendation rows, History tiles and the finish screen. The markup below is fixed text written here, never built from user input.
+// Small line icons for the quiz questions, recommendation rows, plan previews, History tiles and the finish screen. The markup below is fixed text written here, never built from user input.
 
 const PATHS = {
   struggle: '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/>',
@@ -11,6 +11,7 @@ const PATHS = {
   week: '<rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/>',
   streak: '<path d="M13 3L5 14h6l-1 7 8-11h-6z"/>',
   done: '<circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.7 2.7L16 9.5"/>',
+  plan: '<circle cx="6" cy="6" r="2"/><circle cx="18" cy="18" r="2"/><path d="M8 6h6a3 3 0 0 1 0 6h-4a3 3 0 0 0 0 6h6"/>',
   proven: '<path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z"/><path d="M9 12l2 2 4-4"/>',
 };
 

@@ -6,6 +6,7 @@
 // `completed` means the session was finished.
 
 import { SUBJECT_QUESTION } from "./questions.js";
+import { plannedMinutes } from "./plan.js";
 import { elapsedMinutes, stepRemainingMs } from "./session.js";
 
 const MINUTE_MS = 60_000;
@@ -17,33 +18,29 @@ const MAX_GOAL_HOURS = 100;
 
 // ---------- building entries ----------
 
-export function plannedMinutes(method) {
-  return method.session.reduce((total, step) => total + step.minutes, 0);
-}
-
-/** Timer minutes a stopped session must have reached to be worth logging; depends on how long the method is. */
-export function loggingThreshold(method) {
-  return Math.max(MIN_LOG_THRESHOLD_MINUTES, Math.round(plannedMinutes(method) * LOG_THRESHOLD_SHARE));
+/** Timer minutes a stopped session must have reached to be worth logging; depends on how long the plan is. */
+export function loggingThreshold(steps) {
+  return Math.max(MIN_LOG_THRESHOLD_MINUTES, Math.round(plannedMinutes(steps) * LOG_THRESHOLD_SHARE));
 }
 
 /** Minutes of timer progress so far: steps marked done count at their planned length, the rest at whatever their timers have run. */
-export function timerProgressMinutes(method, session, now) {
-  return method.session.reduce((total, step, index) => {
+export function timerProgressMinutes(session, now) {
+  return session.plan.steps.reduce((total, step, index) => {
     if (session.statuses[index] === "done") return total + step.minutes;
     const left = stepRemainingMs(session, index, now);
     return total + (left === null ? 0 : (step.minutes * MINUTE_MS - left) / MINUTE_MS);
   }, 0);
 }
 
-export function shouldLogStopped(method, session, now) {
-  return timerProgressMinutes(method, session, now) >= loggingThreshold(method);
+export function shouldLogStopped(session, now) {
+  return timerProgressMinutes(session, now) >= loggingThreshold(session.plan.steps);
 }
 
 export function buildEntry({ method, session, now, completed }) {
-  const cap = Math.max(1, plannedMinutes(method) * MAX_WALL_CLOCK_FACTOR);
+  const cap = Math.max(1, plannedMinutes(session.plan.steps) * MAX_WALL_CLOCK_FACTOR);
   const minutes = completed
     ? Math.min(elapsedMinutes(session, now), cap)
-    : Math.max(1, Math.round(timerProgressMinutes(method, session, now)));
+    : Math.max(1, Math.round(timerProgressMinutes(session, now)));
   return {
     methodId: method.id,
     methodName: method.name,
@@ -52,8 +49,8 @@ export function buildEntry({ method, session, now, completed }) {
     completedAt: now,
     minutes,
     completed,
-    stepsDone: completed ? method.session.length : session.stepIndex,
-    totalSteps: method.session.length,
+    stepsDone: completed ? session.plan.steps.length : session.stepIndex,
+    totalSteps: session.plan.steps.length,
   };
 }
 

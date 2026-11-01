@@ -16,6 +16,9 @@
 // WORKFLOW for each batch of three or four methods
 //   0. Outline: one line per rule ("Pomodoro, can't get started: opens with a 2-minute block") for the student to cut or approve.
 //      Write no wording until they have.
+//      Standing permission (student, 2026-11-01): a rule that is meaningful, has a reason the student could be told, and fits the app's
+//      goals needs no approval of its own, so it may be added to an approved outline and written. Say what was added. Still dropped or
+//      flagged: a rule that changes nothing real, or that needs a new research claim. The student still reads every rule in step 4.
 //   1. Cases first: the rule's case in tests/adapt/<method-id>.js (see tests/rule-cases.js). Run `npm test` and watch it fail.
 //   2. Rules: src/adapt/<method-id>.js, using the pieces in src/adapt-kit.js. A step a rule points at needs an `id` (all have one).
 //      A step a rule inserts needs a picture that exists (reuse an existing scene name, or add a scene).

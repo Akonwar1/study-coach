@@ -1,0 +1,19 @@
+// Small line icons for the rows on a recommendation card. The markup below is fixed text written here, never built from user input.
+
+const PATHS = {
+  struggle: '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/>',
+  material: '<path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H11v15H5.5A1.5 1.5 0 0 0 4 20.5z"/><path d="M20 5.5A1.5 1.5 0 0 0 18.5 4H13v15h5.5a1.5 1.5 0 0 1 1.5 1.5z"/>',
+  task: '<path d="M4 20l1-4L16 5l3 3L8 19z"/><path d="M14 7l3 3"/>',
+  horizon: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+  subject: '<path d="M12 3l2.2 5.3L20 9l-4.3 3.8L17 18.5 12 15.5 7 18.5l1.3-5.7L4 9l5.8-.7z"/>',
+  proven: '<path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z"/><path d="M9 12l2 2 4-4"/>',
+};
+
+/** An icon for one kind of card row ("struggle", "material", "task", "horizon", "subject" or "proven"), hidden from screen readers. */
+export function renderIcon(kind) {
+  const node = document.createElement("span");
+  node.className = "why-icon";
+  node.setAttribute("aria-hidden", "true");
+  node.innerHTML = `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${PATHS[kind]}</svg>`;
+  return node;
+}

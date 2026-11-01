@@ -3,7 +3,10 @@ import { GOAL_RANGE_TEXT, buildEntry, cleanEntries, loggingThreshold, parseGoalH
 import { renderHistoryScreen } from "./history-view.js";
 import { renderMethodPage } from "./method-page.js";
 import { METHOD_PAGES, hasMethodPage } from "./method-pages.js";
-import { renderEvidencePanel, renderEvidenceTag } from "./evidence-view.js";
+import { renderEvidenceBadge, renderEvidencePanel, renderEvidenceTag } from "./evidence-view.js";
+import { evidenceFor } from "./evidence-strength.js";
+import { renderIcon } from "./icons.js";
+import { describeAnswers, describeSituation, explainRecommendation } from "./explain.js";
 import { FILTER_GROUPS, NO_FILTERS, describeFit, filterMethods, hasActiveFilters } from "./library.js";
 import { METHODS } from "./methods.js";
 import { ALL_QUESTIONS, SUBJECT_QUESTION } from "./questions.js";
@@ -173,6 +176,16 @@ function renderHowTo(method) {
   ];
 }
 
+/** The method's description, steps and source, folded away so a card can be scanned before it is read. */
+function renderHowItWorks(method) {
+  return el("details", { className: "how-it-works" }, [
+    el("summary", { text: "How it works" }),
+    el("p", { text: method.def }),
+    el("ol", { className: "steps" }, method.steps.map((step) => el("li", { text: step }))),
+    el("p", { className: "evidence", text: method.evidence }),
+  ]);
+}
+
 /** The evidence rating tag with its one-line note, or nothing for a method without a rating. */
 function evidenceTag(method) {
   const tag = renderEvidenceTag(method.id);
@@ -184,8 +197,30 @@ function readMoreLink(method) {
   return hasMethodPage(method.id) ? [button("Read the full story", { onClick: () => openMethodPage(method.id) })] : [];
 }
 
-function renderResultCard({ method, reasons }, rank) {
+/** One labelled row: which part of your situation, what you answered, and what this method does for it. */
+function renderWhyRow({ kind, question, answer, text }, extras = []) {
+  return el("li", { className: "why-row", attrs: { "data-kind": question } }, [
+    renderIcon(question),
+    el("div", { className: "why-kind" }, [
+      el("span", { className: "why-category", text: kind }),
+      ...(typeof answer === "string" ? [el("strong", { className: "why-answer", text: answer })] : [answer]),
+    ]),
+    el("div", {}, [el("p", { className: "why-text", text }), ...extras]),
+  ]);
+}
+
+/** The "how well proven" row: the rating, what the research shows, and what to keep in mind. */
+function renderProvenRow(method) {
+  const evidence = evidenceFor(method.id);
+  if (!evidence) return [];
+  const row = { kind: "How well proven", question: "proven", answer: renderEvidenceBadge(method.id), text: evidence.backed };
+  return [renderWhyRow(row, [el("p", { className: "why-caution", text: `Worth knowing: ${evidence.note.text}` })])];
+}
+
+function renderResultCard(result, rank, results) {
+  const { method } = result;
   const isTop = rank === 0;
+  const explanation = explainRecommendation(answers, result, rank, results[0]);
   const startAction = button("Start guided session", { primary: true, onClick: () => beginSession(method) });
 
   return el("article", { className: `result-card${isTop ? " top" : ""}` }, [
@@ -193,17 +228,32 @@ function renderResultCard({ method, reasons }, rank) {
     el("h3", { text: method.name }),
     el("p", { className: "method-tagline", text: method.tagline }),
     el("span", { className: "duration", text: `about ${method.minutes} min per session` }),
-    ...evidenceTag(method),
-    el("p", { text: method.def }),
-    el("ul", { className: "reasons" }, reasons.map((reason) => el("li", { text: reason }))),
-    ...renderHowTo(method),
+    ...(explanation.comparison ? [el("p", { className: "comparison", text: explanation.comparison })] : []),
+    el("section", { className: "why-this-fits" }, [
+      el("h4", { text: "Why this fits you" }),
+      el("ul", { className: "why-rows" }, [...explanation.rows.map((row) => renderWhyRow(row)), ...renderProvenRow(method)]),
+    ]),
+    renderHowItWorks(method),
     el("div", { className: "card-action" }, [startAction, ...readMoreLink(method)]),
+  ]);
+}
+
+/** What the student answered and what is going on, said once for every recommendation below it. */
+function renderSituation() {
+  const { said, diagnosis, timeline } = describeSituation(answers);
+  return el("section", { className: "situation" }, [
+    el("h2", { text: "Your situation" }),
+    el("ul", { className: "answer-chips" }, describeAnswers(answers).map(({ id, answer }) => el("li", { text: answer, attrs: { "data-kind": id } }))),
+    el("p", { className: "said", text: said }),
+    el("p", { text: diagnosis }),
+    ...(timeline ? [el("p", { className: "situation-deadline", text: timeline })] : []),
   ]);
 }
 
 function renderResults() {
   show(
     el("p", { className: "results-intro", text: "Based on your answers, here is where I’d start." }),
+    renderSituation(),
     ...recommend(answers).map(renderResultCard),
     el("div", { className: "nav-row" }, [
       button("Change my answers", {

@@ -110,6 +110,13 @@ function levelMeter(rating) {
   return el("span", { className: `level-meter rating-${rating.toLowerCase()}`, attrs: { role: "img", "aria-label": `${level} of 3` } }, bars);
 }
 
+/** The rating as a level meter and a pill, for a row on a recommendation card. */
+export function renderEvidenceBadge(methodId) {
+  const evidence = evidenceFor(methodId);
+  if (!evidence) return null;
+  return el("span", { className: "evidence-badge" }, [levelMeter(evidence.rating), ratingPill(evidence.rating)]);
+}
+
 function evidenceLine(className, title, text) {
   return el("p", { className: `rating-tag-line ${className}` }, [el("strong", { text: `${title}: ` }), text]);
 }

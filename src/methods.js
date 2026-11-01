@@ -6,8 +6,11 @@
 // fit.subject:  optional; subject ids (from SUBJECT_QUESTION) a method was built for. Leave it out for a general method
 // fit.task:     what the student will have to do with the material (recall, explain, apply); omitted when it does not matter
 // tags:         short labels for the library: what the method helps with, and how it works
-// why:          { intuition, science }: shown in the session's "About this method" panel;
-//               intuition says in plain words what the method does for you, science names the research
+// why:          { intuition, science, helps, fitsMaterial, fitsTask }: intuition and science are shown in the session's "About this method" panel;
+//               intuition says in plain words what the method does for you, science names the research;
+//               helps says, per problem from the quiz (and "none" for a student with no problem), how this method helps; it is the
+//               lead sentence of the recommendation, so it needs one entry for each of fit.struggle, plus "none" unless requiresStruggle;
+//               fitsMaterial and fitsTask say why the method suits each material and task in fit, one entry per id
 // requiresStruggle: only recommend when the student reports one of its struggles
 // session:      guided walkthrough, a list of { title, instruction, minutes (0 = no timer), example?, tip? };
 //               mindset? is the mental side of the step: how to think while doing it, shown under the instruction;
@@ -33,6 +36,19 @@ export const METHODS = [
     why: {
       intuition: "Re-reading feels productive because the page looks familiar, but familiar is not the same as remembered. Pulling an answer out of your own head, even badly, is the real workout: it shows you what you actually know, and each successful pull makes that memory easier to reach next time.",
       science: "This is the testing effect, or retrieval practice. In experiments like Roediger and Karpicke (2006), students who tested themselves remembered more a week later than students who spent the same time re-reading, even though the re-readers felt more confident. Retrieval seems to strengthen the memory and the cues that lead back to it, and a failed attempt followed by the right answer also helps. Dunlosky et al. (2013) rated practice testing “high utility”.",
+      helps: {
+        forget: "It makes pulling the material out of memory the whole session, and each successful pull is what makes it easier to reach next time.",
+        unsure: "It makes you try to recall with the notes closed, so you find out what you can really produce while there is still time to fix the gaps.",
+        none: "It is one of the best-supported all-purpose methods, since trying to recall material beats re-reading it for almost any subject.",
+      },
+      fitsMaterial: {
+        facts: "Facts are exactly what recall tests: you can produce the term or date with nothing in front of you, or you cannot.",
+        concepts: "For ideas, the test is whether you can rebuild the explanation from memory, which is quite different from recognising it.",
+        reading: "A dense chapter is easy to read and forget, so testing yourself on it shows what actually stuck.",
+      },
+      fitsTask: {
+        recall: "If you will have to remember it exactly, practising recalling it is the closest rehearsal for the test.",
+      },
     },
     session: [
       {
@@ -133,6 +149,16 @@ export const METHODS = [
     why: {
       intuition: "Memories fade, and the best moment to refresh one is just as it gets hard to recall. Reviewing too soon is easy and teaches little; waiting too long means starting over. Spacing keeps you in the sweet spot, so each review costs a little effort and buys a longer stretch of remembering.",
       science: "It builds on the spacing effect, first measured by Ebbinghaus in 1885. A large review by Cepeda et al. (2006) found that spreading study out beats cramming it for long-term retention. A retrieval that comes after some forgetting strengthens memory more than one with no forgetting in between, which Bjork calls a “desirable difficulty”. Dunlosky et al. (2013) rated distributed practice “high utility”, and card systems like the Leitner boxes put it into practice.",
+      helps: {
+        forget: "It schedules each review for just before you would forget, so a few minutes now and then keeps the material for weeks instead of days.",
+        none: "Spreading reviews over days and weeks is one of the best-supported ways to remember things, so it helps whether or not anything is going wrong.",
+      },
+      fitsMaterial: {
+        facts: "Facts fade quickly and need no deep understanding, which makes them the ideal material for short, repeated reviews.",
+      },
+      fitsTask: {
+        recall: "Remembering something exactly comes down to repeated retrieval, and spacing makes each retrieval count for more.",
+      },
     },
     session: [
       {
@@ -215,6 +241,17 @@ export const METHODS = [
     why: {
       intuition: "Your brain handles words and pictures through partly separate channels. If you only read, the idea is stored one way; if you also draw it, you build a second route back to it. Drawing also forces you to decide how the pieces connect, which exposes gaps that words let you skate past.",
       science: "Paivio’s dual-coding theory (1971, 1986) proposes separate but linked verbal and visual systems, so information stored in both is easier to retrieve. Research on learning from words plus diagrams, such as Mayer’s work on multimedia learning, supports the pairing. The evidence is strongest when the picture shows real structure (steps, causes, relationships); decorative sketches, or just imagining a picture while reading, have much weaker support.",
+      helps: {
+        forget: "It gives each idea a picture as well as words, so there are two ways back to it when one of them fades.",
+        confused: "Drawing the idea forces you to decide how the parts connect, and a connection you cannot draw is the one you have not understood yet.",
+        none: "It gives you a second route back to the material through a picture, and it is quick to try on anything that can be drawn.",
+      },
+      fitsMaterial: {
+        diagrams: "A process or system is already a picture, so drawing it out shows you which links you cannot yet make.",
+      },
+      fitsTask: {
+        explain: "A diagram you built yourself is something you can talk through when you have to explain it.",
+      },
     },
     session: [
       {
@@ -295,6 +332,18 @@ export const METHODS = [
     why: {
       intuition: "It is easy to feel you understand something because the words are familiar. Trying to explain it simply, with no jargon to hide behind, shows exactly where your understanding runs out. Then you go back to the source, patch that spot, and explain it again.",
       science: "It combines several well-studied effects. Self-explanation (Chi et al., 1994) helps learners who explain material to themselves. The “illusion of explanatory depth” (Rozenblit and Keil, 2002) shows people overrate how well they understand something until they are asked to explain it. And expecting to teach someone improves how well you learn and recall (Nestojko et al., 2014). The technique itself is a routine, not a lab-tested method, but each part has research behind it.",
+      helps: {
+        confused: "It has you explain the idea in plain words to a beginner, so you hit the exact spot where your understanding runs out.",
+        unsure: "It asks you to explain with your notes closed, so what you can say simply counts as known and what you cannot is exposed.",
+        none: "Explaining an idea in plain words is a quick way to check and deepen your understanding of anything you want to really understand.",
+      },
+      fitsMaterial: {
+        concepts: "An idea can only be explained in plain words if you understand it, so explaining it is a direct test of your understanding.",
+        diagrams: "If you cannot describe each part of a system and how it hands over to the next, you have not understood it yet.",
+      },
+      fitsTask: {
+        explain: "It is practice at exactly what you will have to do: put the idea into your own words.",
+      },
     },
     session: [
       {
@@ -368,6 +417,16 @@ export const METHODS = [
     why: {
       intuition: "A fact you can explain connects to other things you know, and connected knowledge is far easier to find again than a loose fact. Asking “why would that be true?” makes you build those connections instead of just storing the sentence.",
       science: "Studies by Pressley, Woloshyn and colleagues in the 1980s and 90s found that students who explained why facts were true remembered more than students who only read them. Dunlosky et al. (2013) rated it “moderate utility”. It works best when you already know something about the topic to connect to, and worse for complete beginners or for facts with no underlying reason, like arbitrary vocabulary.",
+      helps: {
+        confused: "It has you ask why each fact is true and answer from what you already know, which builds the missing link between the fact and everything else.",
+        none: "Asking why each fact is true connects it to what you already know, and connected facts are easier to keep than separate ones.",
+      },
+      fitsMaterial: {
+        facts: "Facts are easier to keep when you know why they are true, and asking why produces that link.",
+      },
+      fitsTask: {
+        explain: "Knowing why a fact is true means you can give reasons in an answer, not only state the fact.",
+      },
     },
     session: [
       {
@@ -448,6 +507,18 @@ export const METHODS = [
     why: {
       intuition: "When you read a worked solution, every step looks obvious, so you nod along and learn little. Saying why each step follows, and what it is for, turns watching into understanding and shows you which steps you could not actually justify.",
       science: "Chi et al. (1989) found that the students who learned most from worked physics examples were the ones who explained the steps to themselves, and Chi et al. (1994) showed that prompting students to do it improved learning. It seems to work by making you notice gaps and wrong beliefs and by linking each step to what you already know. Dunlosky et al. (2013) rated it “moderate utility”.",
+      helps: {
+        confused: "It has you say aloud why each step follows from the last, which exposes the steps you have been following without understanding.",
+        unsure: "It makes you justify each step as you go, so the steps you have only been copying show up before a test does it for you.",
+        none: "Explaining your reasoning step by step turns working through a problem or passage into real understanding, not just reaching the end.",
+      },
+      fitsMaterial: {
+        problems: "In a problem every step has a reason, and explaining each one shows you the steps you were only copying.",
+      },
+      fitsTask: {
+        explain: "Explaining your reasoning as you go is the same skill a short answer or essay tests.",
+        apply: "Explaining each step helps you reuse the method on a problem that looks different from the example.",
+      },
     },
     session: [
       {
@@ -547,6 +618,17 @@ export const METHODS = [
     why: {
       intuition: "Reading cold is passive: your eyes move and little sticks. SQ3R gives you a map first (survey), a reason to read (questions), and a check afterward (recite and review), so you read to find answers and then prove to yourself that you got them.",
       science: "Francis Robinson designed it in 1946 as a structure, not a single effect. Its parts match later research: previewing gives you an overview that helps comprehension, asking questions gives reading a purpose, and reciting from memory is retrieval practice, probably the strongest part. Evidence for the full five-step package is thinner than for its individual parts.",
+      helps: {
+        confused: "It gives the chapter a shape first, by previewing headings and asking questions, so you read looking for answers instead of just words.",
+        start: "It begins with a quick look at the headings, which is a small first step that makes the rest of the chapter feel manageable.",
+        none: "It gives dense reading a routine of previewing, asking questions, reading, reciting and reviewing, so you take in more of what you read.",
+      },
+      fitsMaterial: {
+        reading: "A dense chapter overwhelms you if you read it line by line, so previewing its structure and questions first gives you something to read for.",
+      },
+      fitsTask: {
+        explain: "Reciting each section in your own words rehearses explaining the reading afterwards.",
+      },
     },
     session: [
       {
@@ -642,6 +724,16 @@ export const METHODS = [
     why: {
       intuition: "When you practise one problem type many times in a row, you always know which method to use, so you never practise choosing. In an exam the problems are mixed. Mixing them while you practise feels harder and messier, but it trains the skill the exam really tests: working out which tool fits.",
       science: "Mixed practice forces you to compare problem types, which improves telling them apart, and it spaces out the repeats of each type. In Rohrer and Taylor (2007) and a later classroom study (Rohrer, Dedrick and Stershic, 2015), students who practised math problems mixed beat students who practised them in blocks on later tests, often by a lot, even though blocked practice looked better during practice itself. Dunlosky et al. (2013) rated it “moderate utility”.",
+      helps: {
+        unsure: "It mixes problem types in one session, so you cannot rely on knowing which method is coming, and you find out what you can really choose.",
+        none: "Mixing problem types in one session builds the skill of choosing the right method, which is often the hard part of a test.",
+      },
+      fitsMaterial: {
+        problems: "Problem sets are usually grouped by type, so you always know the method; mixing them practises choosing the method, which is what an exam asks.",
+      },
+      fitsTask: {
+        apply: "New questions do not tell you which method to use, and mixing problem types practises choosing one.",
+      },
     },
     session: [
       {
@@ -715,6 +807,10 @@ export const METHODS = [
     why: {
       intuition: "The hardest part of studying is often starting, and long open-ended sessions invite drifting to your phone. A short fixed timer makes starting feel small (“just 25 minutes”), gives you a finish line, and the break lets you reset before your attention fades.",
       science: "Pomodoro is a time-management routine, not a memory technique, so there is little direct research on it. It leans on better-established ideas: small, well-defined chunks of work lower the barrier to starting, and brief breaks can help people keep their focus on a long task (for example Ariga and Lleras, 2011). Evidence for the 25-and-5 timing itself is mostly self-report, so treat the numbers as adjustable.",
+      helps: {
+        focus: "It turns studying into short timed blocks with a break after each, so the stretch ahead is small and has a clear end.",
+        start: "It asks only for one short block, which makes beginning feel small, and the timer tells you when you are allowed to stop.",
+      },
     },
     session: [
       {
@@ -781,6 +877,10 @@ export const METHODS = [
     why: {
       intuition: "Cramming works for tomorrow and fades by next week. Spreading the same hours over weeks gives your memory time to forget a little and then rebuild, which is what makes it last. Scheduling the sessions in advance means the spacing really happens instead of staying a good intention.",
       science: "This applies the spacing effect (Ebbinghaus, 1885; Cepeda et al., 2006): the same total study time, spread out, beats one massed session for long-term retention. Dunlosky et al. (2013) rated distributed practice “high utility”. Cepeda et al. (2008) also found that the best gap depends on how long you need to remember: roughly 20–40% of the time until a test one week away, shrinking to 5–10% for a test a year away. For an exam a few weeks off, about 20% is a sensible start, so sessions roughly four days apart for an exam three weeks away.",
+      helps: {
+        start: "It splits the work into small sessions across several days, so there is no huge first sitting to face.",
+        forget: "It spreads sessions across several days with gaps between them, which is exactly the coming-back-after-a-gap that slows forgetting.",
+      },
     },
     session: [
       {
@@ -855,6 +955,17 @@ export const METHODS = [
     why: {
       intuition: "Reading a section from the top, everything looks equally important and your attention drifts. If you’ve first written questions and guessed the answers, you read hunting for them, and a wrong guess makes the right answer stand out when you find it. The catch is that it helps what you asked about, not everything else, so your questions have to cover what matters.",
       science: "In prequestion studies, learners guess answers to questions before studying material that contains them. A meta-analysis of 97 comparisons (St. Hilaire, Chan and Ahn, 2024) found g = 0.54 for the material the questions asked about and g = 0.04, effectively nothing, for everything else. The main explanation is attention: guessing makes you look for the answers as you study. In the earlier dissertation version of the analysis, learners who were asked to guess gained far more than learners who only read the questions. One experiment a week later found that testing yourself after studying beat testing before it (Latimier et al., 2019).",
+      helps: {
+        unsure: "It has you guess before you study, so you find out right away what you did not know and read with your attention where it is needed.",
+        none: "It has you guess before you study, which makes you notice the answers when you meet them, and answers you tried to guess are usually remembered better.",
+      },
+      fitsMaterial: {
+        facts: "Guessing a fact before studying it makes you notice the right answer when it arrives.",
+        reading: "Guessing what a chapter will say before you read it focuses your attention on the parts that surprise you.",
+      },
+      fitsTask: {
+        recall: "Guessing and then checking the exact answer helps the exact answer stick.",
+      },
     },
     session: [
       {
@@ -938,6 +1049,16 @@ export const METHODS = [
     why: {
       intuition: "When a type of problem is new to you, most of your effort goes into searching for what to do next, not into learning how a solution is built. A solved example removes that search so you can see the pattern, and a twin problem right afterwards lets you use it while it is fresh. Cognitive load theory predicts that examples matter less as you get skilled, so once you can solve the problems alone, switch to solving them.",
       science: "Worked-example studies compare learning from solved problems with learning by solving problems. Barbieri and colleagues (2023) pooled 55 mathematics studies (181 effects) and found g = 0.48. The effect was medium whether examples were used for first learning or for practice after instruction. Examples that were correct did better than ones containing errors, and examples paired with prompts to explain them did worse than examples without prompts. The idea behind it, cognitive load theory, is that novices have limited working memory and searching for a solution uses it up. Almost all the evidence is mathematics.",
+      helps: {
+        confused: "It shows a fully solved problem with the reasoning for each step, so you can see how an expert gets started instead of staring at a blank one.",
+        none: "Studying solved examples first is a quick way to see how a new type of problem works before you try to solve one yourself.",
+      },
+      fitsMaterial: {
+        problems: "A solved problem shows each step and the reason for it, which you cannot see when you are stuck on the first line.",
+      },
+      fitsTask: {
+        apply: "Seeing a method used in full gives you something to copy and adapt when the question is new.",
+      },
     },
     session: [
       {
@@ -1022,6 +1143,16 @@ export const METHODS = [
     why: {
       intuition: "If you read the explanation first, you never find out what the idea is for. Trying the problem first, especially when you can’t solve it, shows you what is hard and what is missing, so the explanation then answers questions you actually have. It is uncomfortable, and it builds understanding more than speed, so you still need to practise the method afterwards.",
       science: "Problem-first designs (the strongest version is called productive failure) let students attempt a new kind of problem before instruction, then teach the idea building on their attempts. Sinha and Kapur (2021) pooled 53 studies with 166 comparisons against instruction-first designs and found g = 0.36 for conceptual knowledge and transfer, but g = −0.03 for procedural knowledge. The benefit was larger when students produced several solution attempts, when the teaching built on those attempts and when they worked in groups. Instruction first did better for children in grades 2 to 5 and for general skills such as controlling variables.",
+      helps: {
+        confused: "It has you struggle with the problem before the method is shown, so when you see the method you already know what it is for.",
+        none: "Attempting a problem before the lesson makes the explanation land better, since you have already run into the difficulty it solves.",
+      },
+      fitsMaterial: {
+        problems: "Trying a problem before being shown how builds the question that the method then answers.",
+      },
+      fitsTask: {
+        apply: "Working on a problem you have not been taught to solve is the closest rehearsal for a question you have not seen.",
+      },
     },
     session: [
       {

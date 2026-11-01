@@ -158,3 +158,102 @@ export function personalizableQuestions(method) {
   const used = new Set((method.adapt ?? []).flatMap((rule) => Object.keys(rule.when)));
   return QUESTION_IDS.filter((id) => id !== "subject" && used.has(id));
 }
+
+const KNOWN_OPERATIONS = ["set", "append", "insert", "drop", "capMinutes"];
+const MIN_REASON_LENGTH = 20;
+const MIN_SUMMARY_LENGTH = 10;
+const MAX_SUMMARY_WORDS = 12;
+
+function operationProblems(operation, baseIds, insertedIds) {
+  const problems = [];
+  const needsStep = (id) => { if (!baseIds.includes(id)) problems.push(`points at the step “${id}”, which the method does not have`); };
+  switch (operation?.op) {
+    case "set":
+      needsStep(operation.step);
+      if (!operation.fields || typeof operation.fields !== "object") problems.push("“set” has no fields to change");
+      break;
+    case "append":
+      needsStep(operation.step);
+      if (typeof operation.text !== "string" || !operation.text) problems.push("“append” has no text");
+      if (operation.field !== undefined && !["instruction", ...TEXT_FIELDS].includes(operation.field)) problems.push(`“append” names the unknown field “${operation.field}”`);
+      break;
+    case "drop":
+      needsStep(operation.step);
+      break;
+    case "capMinutes":
+      if (!Number.isInteger(operation.max) || operation.max < 1 || operation.max > MAX_STEP_MINUTES) problems.push("a timer cap must be a whole number of minutes, at least 1");
+      break;
+    case "insert": {
+      const { step } = operation;
+      const places = [operation.at === "start", operation.after !== undefined, operation.before !== undefined].filter(Boolean).length;
+      if (places !== 1) problems.push("an inserted step needs exactly one place: at the start, after a step or before a step");
+      if (operation.after !== undefined) needsStep(operation.after);
+      if (operation.before !== undefined) needsStep(operation.before);
+      const error = step && stepError(step, new Set(baseIds));
+      if (!step || error) problems.push(`the inserted step is not valid (${error ?? "missing"})`);
+      else {
+        if (insertedIds.includes(step.id)) problems.push(`another rule already inserts a step called “${step.id}”`);
+        insertedIds.push(step.id);
+        if (!step.visual) problems.push(`the inserted step “${step.id}” has no picture`);
+      }
+      break;
+    }
+    default:
+      problems.push(`uses the unknown operation “${operation?.op}”`);
+  }
+  return problems;
+}
+
+/**
+ * What is wrong with a method's tailoring rules, as readable messages (an empty list means they are fine): unknown
+ * questions or answers, missing or too long wording, steps that do not exist, an inserted step with no picture, and a
+ * rule that changes nothing. Whether a picture name actually exists is for the tests, which can draw it.
+ */
+export function ruleProblems(method) {
+  const rules = method.adapt ?? [];
+  if (rules.length === 0) return [];
+  const problems = method.session.filter((step) => !step.id).map((step) => `${method.id}: the step “${step.title}” has no id, which its rules need`);
+  const baseIds = method.session.map((step) => step.id);
+  const insertedIds = [];
+  const contentOf = (plan) => JSON.stringify(plan.steps.map(({ adjustedFor, ...content }) => content)); // a rule that only marks a step does not change it
+  const standard = contentOf(makePlan({ ...method, adapt: [] }));
+  rules.forEach((candidate, index) => {
+    const found = [];
+    const when = candidate.when;
+    if (!when || typeof when !== "object" || Object.keys(when).length === 0) found.push("has no condition");
+    else {
+      for (const [question, answers] of Object.entries(when)) {
+        const options = ALL_QUESTIONS.find((q) => q.id === question)?.options.map((o) => o.id);
+        if (!options) found.push(`asks about the unknown question “${question}”`);
+        else if (!Array.isArray(answers) || answers.length === 0 || !answers.every((id) => options.includes(id))) found.push(`lists answers that “${question}” does not have`);
+      }
+    }
+    if (typeof candidate.because !== "string" || candidate.because.length < MIN_REASON_LENGTH) found.push("needs a reason of a full sentence");
+    const words = typeof candidate.summary === "string" ? candidate.summary.trim().split(/\s+/).length : 0;
+    if (typeof candidate.summary !== "string" || candidate.summary.length < MIN_SUMMARY_LENGTH || words > MAX_SUMMARY_WORDS) found.push(`needs a summary of ${MAX_SUMMARY_WORDS} words or fewer`);
+    if (!Array.isArray(candidate.do) || candidate.do.length === 0) found.push("has nothing to do");
+    else candidate.do.forEach((operation) => found.push(...operationProblems(operation, baseIds, insertedIds)));
+    if (found.length === 0) {
+      const situation = Object.fromEntries(Object.entries(when).map(([question, answers]) => [question, answers[0]]));
+      if (contentOf(makePlan({ ...method, adapt: [candidate] }, situation)) === standard) found.push("changes nothing");
+    }
+    problems.push(...found.map((text) => `${method.id}, rule ${index + 1} ${JSON.stringify(when)}: ${text}`));
+  });
+  return problems;
+}
+
+/** Two methods must not share a rule's reason or summary: both cards can be on screen together and must not read alike. */
+export function crossMethodProblems(methods) {
+  const owners = new Map();
+  const problems = [];
+  for (const method of methods) {
+    for (const candidate of method.adapt ?? []) {
+      for (const text of [candidate.because, candidate.summary]) {
+        const other = owners.get(text);
+        if (other && other !== method.id) problems.push(`${other} and ${method.id} both say “${text}”`);
+        else owners.set(text, method.id);
+      }
+    }
+  }
+  return problems;
+}

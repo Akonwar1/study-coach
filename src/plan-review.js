@@ -1,0 +1,50 @@
+// For reading a method's tailoring rules without reading code: what each rule changes, shown as before and after,
+// and which answers have no rule yet. Used by plans.html, a tool for the student and Claude; the app itself does not use it.
+import { makePlan, personalizableQuestions } from "./plan.js";
+import { ALL_QUESTIONS } from "./questions.js";
+
+const DIFFED_FIELDS = ["title", "instruction", "mindset", "example", "tip", "minutes"];
+const questionFor = (id) => ALL_QUESTIONS.find((question) => question.id === id);
+
+/**
+ * One entry per rule of the method: when it applies (as the quiz words it), its reason and summary, and what it changes
+ * in the standard plan: fields changed (before and after), steps added and steps dropped.
+ */
+export function describeRules(method) {
+  const standard = makePlan({ ...method, adapt: [] });
+  const standardById = new Map(standard.steps.map((step) => [step.id, step]));
+  return (method.adapt ?? []).map((candidate) => {
+    const situation = Object.fromEntries(Object.entries(candidate.when).map(([question, answers]) => [question, answers[0]]));
+    const tailored = makePlan({ ...method, adapt: [candidate] }, situation);
+    const tailoredById = new Map(tailored.steps.map((step) => [step.id, step]));
+    const changes = [];
+    for (const [id, before] of standardById) {
+      const after = tailoredById.get(id);
+      if (!after) continue;
+      for (const field of DIFFED_FIELDS) {
+        if (before[field] !== after[field]) changes.push({ step: before.title, field, before: before[field], after: after[field] });
+      }
+    }
+    return {
+      when: Object.entries(candidate.when).map(([question, ids]) => ({
+        question,
+        prompt: questionFor(question).prompt,
+        answers: ids.map((id) => questionFor(question).options.find((option) => option.id === id).label),
+      })),
+      because: candidate.because,
+      summary: candidate.summary,
+      changes,
+      added: tailored.steps.filter((step) => !standardById.has(step.id)).map(({ title, minutes, instruction, mindset }) => ({ title, minutes, instruction, mindset })),
+      dropped: standard.steps.filter((step) => !tailoredById.has(step.id)).map(({ title }) => ({ title })),
+    };
+  });
+}
+
+/** For each question the method can adjust to: which answers have a rule and which have none yet, as answer ids in quiz order. */
+export function ruleCoverage(method) {
+  return personalizableQuestions(method).map((question) => {
+    const ids = questionFor(question).options.map((option) => option.id);
+    const covered = ids.filter((id) => method.adapt.some((candidate) => candidate.when[question]?.includes(id)));
+    return { question, covered, missing: ids.filter((id) => !covered.includes(id)) };
+  });
+}

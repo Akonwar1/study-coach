@@ -12,13 +12,15 @@
 //               lead sentence of the recommendation, so it needs one entry for each of fit.struggle, plus "none" unless requiresStruggle;
 //               fitsMaterial and fitsTask say why the method suits each material and task in fit, one entry per id
 // requiresStruggle: only recommend when the student reports one of its struggles
-// adapt:        optional rules that reshape the steps for the student's answers (deadline, problem, task); see plan.js.
-//               Each rule has `when`, `because` (the full reason, shown on the changed step), `summary` (a few words, shown on the
-//               result card) and `do`. Steps a rule points at need an `id`
-// session:      guided walkthrough, a list of { id?, title, instruction, minutes (0 = no timer), example?, tip? };
+// adapt:        optional rules that reshape the steps for the student's answers (deadline, problem, task). They are not written
+//               here: src/adapt/<method-id>.js holds them (see src/adapt/index.js) and the end of this file attaches them
+// session:      guided walkthrough, a list of { id, title, instruction, minutes (0 = no timer), example?, tip? };
+//               every step has an `id`, unique within its method, which a method's tailoring rules point at;
 //               mindset? is the mental side of the step: how to think while doing it, shown under the instruction;
 //               instruction, example, tip and mindset can vary by subject; see tailor.js
 //               visual: { name } names the step's picture, drawn by a scene in src/scenes/ and shown above the step’s text
+
+import { ADAPT } from "./adapt/index.js";
 
 export const METHODS = [
   {
@@ -134,134 +136,6 @@ export const METHODS = [
         minutes: 0,
       },
     ],
-    adapt: [
-      {
-        when: { horizon: ["soon"] },
-        because: "With 2 days or less, a review a long way out would come after your deadline, so the re-tests move to tonight and tomorrow.",
-        summary: "Re-tests move to tonight and tomorrow.",
-        do: [
-          {
-            op: "set",
-            step: "schedule",
-            fields: {
-              title: "Plan tonight’s and tomorrow’s re-tests",
-              instruction: "Skip the long-gap reminders, because your deadline comes first. Set two reminders: one for tonight, a few hours from now or just before bed, and one for tomorrow before your deadline. Each time, close your notes and start with the gaps from today, written or said from memory, then check them against the source. Spend any time left on the next chunk.",
-              mindset: "Short gaps still help. Coming back after a few hours or a night means the material has faded a little and you have to dig it up again, which is the useful part. Don’t swap the re-tests for rereading the night before: it feels easier because it lets you off the digging. Write two or three questions about this chunk now, so tonight’s re-test can start with questions and not with your notes.",
-            },
-          },
-        ],
-      },
-      {
-        when: { horizon: ["week"] },
-        because: "With 3 days to 2 weeks left, a review a week from now could land after your deadline, so the last review is set before it.",
-        summary: "The last review is set before your deadline.",
-        do: [
-          {
-            op: "set",
-            step: "schedule",
-            fields: {
-              instruction: "Put a reminder in your calendar to redo steps 3–5 for this chunk tomorrow, using only the gaps from today. Add a second reminder two or three days after that, but no later than the day before your deadline. Without these, most of what you just learned will fade.",
-            },
-          },
-        ],
-      },
-      {
-        when: { horizon: ["long"] },
-        because: "With more than 2 weeks left, there is room to keep widening the gaps between reviews.",
-        summary: "The gaps between reviews keep widening.",
-        do: [
-          {
-            op: "set",
-            step: "schedule",
-            fields: {
-              instruction: "Put a reminder in your calendar to redo steps 3–5 for this chunk tomorrow, using only the gaps from today. Add a second reminder for about a week later and a third about two weeks after that, then keep widening the gaps until your deadline. Without these, most of what you just learned will fade.",
-            },
-          },
-        ],
-      },
-      {
-        when: { horizon: ["none"] },
-        because: "With no deadline, you can keep widening the gaps for as long as you want to remember the material.",
-        summary: "The gaps between reviews keep widening.",
-        do: [
-          {
-            op: "set",
-            step: "schedule",
-            fields: {
-              instruction: "Put a reminder in your calendar to redo steps 3–5 for this chunk tomorrow, using only the gaps from today. Add a second reminder for about a week later and a third about a month after that, then keep widening the gaps for as long as you want to remember it. Without these, most of what you just learned will fade.",
-            },
-          },
-        ],
-      },
-      {
-        when: { struggle: ["focus"] },
-        because: "You said you drift off, so every timer is cut to 3 minutes: a short block with a clear end is easier to stay in.",
-        summary: "Every timer is cut to 3 minutes.",
-        do: [
-          { op: "capMinutes", max: 3 },
-          { op: "append", step: "choose", text: "Make the chunk smaller than usual so it fits the shorter timers: about half a page, or two or three key ideas." },
-          { op: "append", step: "close", text: "Put your phone in another room or out of reach, not just face down." },
-        ],
-      },
-      {
-        when: { struggle: ["start"] },
-        because: "You said you can’t get started, so the session opens with a 2-minute step that asks almost nothing, and the chunk is smaller.",
-        summary: "Opens with a 2-minute first step and a smaller chunk.",
-        do: [
-          {
-            op: "insert",
-            at: "start",
-            step: {
-              id: "just-open",
-              title: "Open it and write one line",
-              visual: { name: "recall-choose" },
-              instruction: "Set the 2-minute timer. All you have to do is open the material and write its title, and one thing you already know about it, at the top of the blank page. When the timer ends you may stop. If you want to keep going, the next step is ready.",
-              mindset: "The only aim here is to begin. Don’t judge what you write. Starting is the hard part, and a tiny first step takes away the decision of whether to do the whole session.",
-              minutes: 2,
-            },
-          },
-          { op: "append", step: "choose", text: "Make the chunk smaller than you think you need: half a page, or three ideas, is enough to start." },
-        ],
-      },
-      {
-        when: { struggle: ["unsure"] },
-        because: "You said everything looks familiar, so a prediction step comes before you recall, to show how much you actually know.",
-        summary: "A prediction step shows how much you really know.",
-        do: [
-          {
-            op: "insert",
-            after: "close",
-            step: {
-              id: "predict",
-              title: "Predict your score",
-              visual: { name: "recall-close" },
-              instruction: "Before you write anything, put a number on it: how many of the key items in this chunk do you expect to get right? Write that number at the top of the blank page. You will compare it with your real count in the check step.",
-              mindset: "Feeling ready and being able to do it are different things, and a number written down in advance makes the difference visible. If the real count comes in lower, that is not a failure; it is the information this session is for.",
-              minutes: 0,
-            },
-          },
-          { op: "append", step: "check", text: "Compare your count with the prediction you wrote down. A big gap means the material felt more familiar than it was." },
-        ],
-      },
-      {
-        when: { task: ["explain"] },
-        because: "You’ll have to explain it in your own words, so recall means saying it as an explanation, not reciting it.",
-        summary: "Recall becomes an explanation, not a recital.",
-        do: [
-          { op: "append", step: "recall", text: "Because you will have to explain this, say or write it as if you were teaching a friend, in your own words, including why each part is true. A list of terms is not enough." },
-          { op: "append", step: "check", text: "As you check, mark the places where you had the words but not the reason." },
-        ],
-      },
-      {
-        when: { task: ["apply"] },
-        because: "You’ll have to solve new problems, so recall includes using the material, not only remembering it.",
-        summary: "Recall includes solving a problem you haven’t seen.",
-        do: [
-          { op: "append", step: "recall", text: "Because you will have to use this on new problems, don’t stop at writing it down: make up or find one problem you haven’t seen and solve it from memory." },
-          { op: "append", step: "check", text: "Check your solution as well as your notes: a right fact used the wrong way is a gap too." },
-        ],
-      },
-    ],
     fit: {
       material: ["facts", "concepts", "reading"],
       struggle: ["forget", "unsure"],
@@ -300,6 +174,7 @@ export const METHODS = [
     },
     session: [
       {
+        id: "gather",
         title: "Gather what to memorise",
         visual: { name: "sr-gather" },
         instruction: "Spaced repetition is for things you have to remember outright: terms, definitions, formulas, dates, vocabulary. Pick 10–15 items from your notes. If something needs understanding, not memorising (like why a proof works), save it for a method like Feynman. You’ll need index cards, or an app like Anki.",
@@ -316,6 +191,7 @@ export const METHODS = [
         minutes: 0,
       },
       {
+        id: "cards",
         title: "Make one card per fact",
         visual: { name: "sr-card" },
         instruction: "Write one question on the front of each card and the answer on the back. One fact per card, and make the front a question you must recall, not something you can recognise. Keep answers short, a line at most.",
@@ -332,6 +208,7 @@ export const METHODS = [
         minutes: 7,
       },
       {
+        id: "first-pass",
         title: "Go through the pile once",
         visual: { name: "sr-sort" },
         instruction: "Take each card, say the answer out loud before flipping, then check. Make two piles: got it, and missed it. Be honest. “Sort of” goes in missed.",
@@ -339,6 +216,7 @@ export const METHODS = [
         minutes: 5,
       },
       {
+        id: "dates",
         title: "Set the review dates",
         visual: { name: "sr-boxes" },
         instruction: "Use three boxes, or the scheduling in your app. Box 1 is reviewed daily, Box 2 every 3 days, Box 3 weekly. Every new card starts in Box 1: cards you missed today stay there and come back tomorrow, and cards you got right move up to Box 2. From then on, a right answer moves a card up one box and a miss drops it back to Box 1. Write the next review date on each pile.",
@@ -347,6 +225,7 @@ export const METHODS = [
         minutes: 3,
       },
       {
+        id: "calendar",
         title: "Put it on your calendar",
         visual: { name: "sr-daily" },
         instruction: "Add a daily 5–10 minute reminder labelled “review cards”. Short and regular beats long and rare. Each day, review whatever is due, and add new cards slowly, about 10 a day.",
@@ -393,6 +272,7 @@ export const METHODS = [
     },
     session: [
       {
+        id: "pick",
         title: "Pick a topic that has structure",
         visual: { name: "dc-shape" },
         instruction: "Dual coding works best on material with a shape: a process, a sequence, parts of a whole, a comparison, or cause and effect. Choose one such topic, about one page of material. If your material is plain facts with no shape, use Spaced Repetition instead. Have blank paper and a pen ready.",
@@ -409,6 +289,7 @@ export const METHODS = [
         minutes: 0,
       },
       {
+        id: "read",
         title: "Read it in words only",
         visual: { name: "dc-read" },
         instruction: "Read or listen to the material once, in words. Don’t draw yet. As you go, note the key items (the steps, parts, or things being compared) and how they connect.",
@@ -416,6 +297,7 @@ export const METHODS = [
         minutes: 5,
       },
       {
+        id: "redraw",
         title: "Redraw it from memory",
         visual: { name: "dc-redraw" },
         instruction: "Close the source and draw the topic from memory. Choose the picture to match the shape: a flowchart or cycle for a process, a timeline for a sequence, a labelled diagram for parts, a table for a comparison, a concept map (circles and arrows) for ideas. It doesn’t have to be pretty. Boxes and arrows are fine.",
@@ -424,6 +306,7 @@ export const METHODS = [
         minutes: 8,
       },
       {
+        id: "label",
         title: "Label it in your own words",
         visual: { name: "dc-label" },
         instruction: "Label every part of your drawing in your own words, not the source’s. On each arrow, write what it means: “leads to”, “causes”, “is made of”. If you can’t label something, mark it with a question mark.",
@@ -431,6 +314,7 @@ export const METHODS = [
         minutes: 4,
       },
       {
+        id: "compare",
         title: "Compare and fix",
         visual: { name: "dc-compare" },
         instruction: "Open the source and compare. With a different-coloured pen, correct anything missing or wrong, and fill in the question marks.",
@@ -438,6 +322,7 @@ export const METHODS = [
         minutes: 4,
       },
       {
+        id: "explain",
         title: "Explain your picture",
         visual: { name: "dc-explain" },
         instruction: "Using only your sketch, explain the topic out loud from start to finish. Where the picture fails you, you have a gap to review next. Done when your sketch alone is enough to explain the whole topic. Keep it for review.",
@@ -485,6 +370,7 @@ export const METHODS = [
     },
     session: [
       {
+        id: "name",
         title: "Name one concept",
         visual: { name: "fy-name" },
         instruction: "Write the name of a single concept at the top of a blank page. Pick something small enough to explain in a few minutes. Not “Chapter 4” but one idea inside it. Decide who you’re explaining it to: a friend in a different major, or a smart 12-year-old.",
@@ -501,6 +387,7 @@ export const METHODS = [
         minutes: 1,
       },
       {
+        id: "explain",
         title: "Explain it simply",
         visual: { name: "fy-explain" },
         instruction: "Write your explanation below the title in plain words, as if to your listener. No jargon; if you must use a technical term, explain it. Say it out loud as you write, or record a voice memo. Include an example or analogy if you can.",
@@ -509,6 +396,7 @@ export const METHODS = [
         minutes: 8,
       },
       {
+        id: "gaps",
         title: "Find the gaps",
         visual: { name: "fy-gaps" },
         instruction: "Read your explanation back. Circle every place you stalled, guessed, hand-waved, or used a technical term without explaining it. These circles are the whole point: they’re what you don’t yet understand.",
@@ -516,6 +404,7 @@ export const METHODS = [
         minutes: 3,
       },
       {
+        id: "source",
         title: "Go back to the source",
         visual: { name: "fy-source" },
         instruction: "Look up only the circled spots in your notes, textbook, or lectures. Read until you understand each one, then write the answer in your own words, not copied. If you still don’t get one, make a note to ask someone.",
@@ -523,6 +412,7 @@ export const METHODS = [
         minutes: 8,
       },
       {
+        id: "simplify",
         title: "Simplify and re-explain",
         visual: { name: "fy-simplify" },
         instruction: "Write the explanation again from scratch, using what you just learned. Make it shorter and simpler, and add an analogy if you don’t have one. Done when you can explain it smoothly with no circles. If new circles appear, repeat steps 4–5 for them.",
@@ -568,6 +458,7 @@ export const METHODS = [
     },
     session: [
       {
+        id: "pick",
         title: "Pick facts that have a reason",
         visual: { name: "ei-roots" },
         instruction: "This method works on facts that have a “why”, such as causes, rules, and mechanisms. If a fact is arbitrary (a vocabulary word, a date), skip it and use Spaced Repetition. Choose 5 facts or claims from your notes that have a reason behind them. Write each on its own line, leaving space below.",
@@ -584,6 +475,7 @@ export const METHODS = [
         minutes: 0,
       },
       {
+        id: "ask-why",
         title: "Ask “why is that true?”",
         visual: { name: "ei-ask" },
         instruction: "Take the first fact. Under it, write the question: “Why is this true?” or “Why would this be the case?” Don’t look at your notes yet.",
@@ -591,6 +483,7 @@ export const METHODS = [
         minutes: 1,
       },
       {
+        id: "answer",
         title: "Answer from what you already know",
         visual: { name: "ei-know" },
         instruction: "Answer in your own words using what you already know, not the text. A guess is fine; connecting ideas together is the point. Aim for a sentence or two that has a “because” in it. If you really have no idea, write what you do know about the topic.",
@@ -599,6 +492,7 @@ export const METHODS = [
         minutes: 3,
       },
       {
+        id: "check",
         title: "Check the source",
         visual: { name: "ei-check" },
         instruction: "Look up the explanation in your notes or textbook. Compare it to your answer: mark what you got right, and fix what was wrong or too vague. Add anything the source explains that you missed.",
@@ -606,6 +500,7 @@ export const METHODS = [
         minutes: 2,
       },
       {
+        id: "repeat",
         title: "Repeat for the other facts",
         visual: { name: "ei-repeat" },
         instruction: "Do the same for the remaining facts: ask why, answer from memory, then check. Give each about 2 minutes, and move on after that even if you’re unsure.",
@@ -613,6 +508,7 @@ export const METHODS = [
         minutes: 9,
       },
       {
+        id: "weak-spot",
         title: "Pick the weak spot",
         visual: { name: "ei-weak" },
         instruction: "Circle the fact you explained worst. Tomorrow, start there. If several were weak, the whole topic needs a method for understanding, such as Feynman or Self-Explanation.",
@@ -660,6 +556,7 @@ export const METHODS = [
     },
     session: [
       {
+        id: "gather",
         title: "Gather your material",
         visual: { name: "se-material" },
         instruction: "Self-explanation means talking through why each piece of something works, not just reading it. Pick one thing to practise on, about a page or less, and choose the case that matches what you have. A worked solution (a solved problem with the steps shown): you’ll explain each step. A problem with no solution to read: you’ll solve it yourself in the next step, then explain your own moves. An essay, article, or textbook passage: you’ll explain each paragraph or claim. Have a pen and scratch paper ready.",
@@ -676,6 +573,7 @@ export const METHODS = [
         minutes: 0,
       },
       {
+        id: "chunks",
         title: "Break it into chunks",
         visual: { name: "se-chunks" },
         instruction: "A chunk is one small piece you can explain on its own. Worked solution: each line or move is a chunk; if it isn’t numbered, mark where each new move starts. No solution: solve the problem now on scratch paper, writing each move on its own line; those lines are your chunks. Essay or passage: each paragraph is a chunk, or each separate claim if paragraphs are long. Aim for 4 to 10 chunks, and cover or fold everything except the first chunk.",
@@ -691,6 +589,7 @@ export const METHODS = [
         minutes: 5,
       },
       {
+        id: "explain",
         title: "Explain each chunk out loud",
         visual: { name: "se-explain" },
         instruction: "For each chunk, say out loud or write one or two sentences covering: what it says or does, why it’s true or allowed, and how it connects to the chunk before it (for the first chunk, how it sets up what follows). Problem step: what changed, why that move is allowed, and how it moves you toward the answer. Essay: what the claim is, what supports it, and how it leads to the next paragraph. Then uncover the next chunk and repeat. Put a star by any chunk where you can’t answer all three.",
@@ -707,6 +606,7 @@ export const METHODS = [
         minutes: 10,
       },
       {
+        id: "starred",
         title: "Work out the starred chunks",
         visual: { name: "se-starred" },
         instruction: "Each star is something you only thought you understood. Find the rule, definition, or background behind it in your notes, textbook, or lecture slides. Then explain that chunk again in your own words until you can say all three parts.",
@@ -715,6 +615,7 @@ export const METHODS = [
         minutes: 5,
       },
       {
+        id: "redo",
         title: "Redo it without the source",
         visual: { name: "se-redo" },
         instruction: "Hide the material. Problem: solve it again from scratch, narrating each move and why. Essay or passage: explain the argument from start to finish in your own words, out loud, chunk by chunk, without looking. If you get stuck, note exactly where, peek at only that chunk, and keep going.",
@@ -723,6 +624,7 @@ export const METHODS = [
         minutes: 5,
       },
       {
+        id: "twin",
         title: "Try something similar",
         visual: { name: "se-twin" },
         instruction: "Find one new problem or passage like the first, with different numbers, details, or topic, and explain it the same way. If you can explain every chunk, you’ve got it. If not, note which kind of chunk tripped you and start tomorrow’s session there.",
@@ -770,6 +672,7 @@ export const METHODS = [
     },
     session: [
       {
+        id: "choose",
         title: "Choose a chapter",
         visual: { name: "sq-choose" },
         instruction: "Pick one chapter or section of dense reading, about 5–8 pages at most. For a longer chapter, do it in parts. Have a blank sheet of paper ready for your questions and answers.",
@@ -786,6 +689,7 @@ export const METHODS = [
         minutes: 0,
       },
       {
+        id: "survey",
         title: "Survey",
         visual: { name: "sq-survey" },
         instruction: "Skim the headings, captions, bold terms, any summary or learning goals, and the end-of-chapter questions. Don’t read paragraphs yet; build a map in your head. For something without headings, such as a research paper, read the abstract, the first sentence of each paragraph, and the conclusion.",
@@ -793,6 +697,7 @@ export const METHODS = [
         minutes: 3,
       },
       {
+        id: "question",
         title: "Question",
         visual: { name: "sq-question" },
         instruction: "Turn each heading into a question on your paper, leaving space under it for your answer. Make it a question you’d like answered, starting with what, why, or how.",
@@ -808,6 +713,7 @@ export const METHODS = [
         minutes: 4,
       },
       {
+        id: "read",
         title: "Read one section",
         visual: { name: "sq-read" },
         instruction: "Read the first section looking only for the answer to its question. Don’t take notes yet, and don’t highlight. When you reach the end of the section, stop.",
@@ -816,6 +722,7 @@ export const METHODS = [
         minutes: 7,
       },
       {
+        id: "recite",
         title: "Recite",
         visual: { name: "sq-recite" },
         instruction: "Close the book and answer the question in your own words, out loud first, then jot a short answer in the space under the question. If you can’t, reread just that section. This step is the most important: it’s active recall built into your reading.",
@@ -823,6 +730,7 @@ export const METHODS = [
         minutes: 3,
       },
       {
+        id: "repeat",
         title: "Repeat for the other sections",
         visual: { name: "sq-repeat" },
         instruction: "Go through the remaining sections: read, then recite, one at a time. Stop when your time is up and note where you stopped, so you can pick up tomorrow.",
@@ -830,6 +738,7 @@ export const METHODS = [
         minutes: 18,
       },
       {
+        id: "review",
         title: "Review",
         visual: { name: "sq-review" },
         instruction: "Cover your answers and look only at your questions. Answer all of them again from memory. Mark any you missed and revisit those tomorrow. Done when you can answer every question without the text.",
@@ -875,6 +784,7 @@ export const METHODS = [
     },
     session: [
       {
+        id: "choose",
         title: "Choose 2–3 topics that get confused",
         visual: { name: "il-venn" },
         instruction: "Pick two or three related topics or problem types, ideally ones you tend to mix up. Then collect 3–4 practice items for each, from your homework, textbook, or old exams, and make sure you have the answers or solutions to check against. If you only have one chapter of material, mix different problem types from within it.",
@@ -891,6 +801,7 @@ export const METHODS = [
         minutes: 0,
       },
       {
+        id: "shuffle",
         title: "Shuffle them together",
         visual: { name: "il-shuffle" },
         instruction: "Put all the items into one pile and shuffle, or write them in a list in random order. Never put more than two of the same type in a row. Don’t sort them by type, even though it’s tempting.",
@@ -898,6 +809,7 @@ export const METHODS = [
         minutes: 3,
       },
       {
+        id: "work",
         title: "Work the mixed set",
         visual: { name: "il-signpost" },
         instruction: "Go through the items in the shuffled order. For each one, first decide which type it is and why, then solve it. It will feel harder and slower than blocked practice. That is working. Don’t go back and group them.",
@@ -906,6 +818,7 @@ export const METHODS = [
         minutes: 20,
       },
       {
+        id: "check",
         title: "Check your answers",
         visual: { name: "il-diagnose" },
         instruction: "Mark each item against your answers or solutions. For each miss, note whether you picked the wrong type or the right type and made a mistake solving it. These are different problems with different fixes.",
@@ -913,6 +826,7 @@ export const METHODS = [
         minutes: 5,
       },
       {
+        id: "review",
         title: "Review the confusions",
         visual: { name: "il-clue" },
         instruction: "Write one line for each pair of topics you mixed up: how you tell them apart. Use that list as tomorrow’s warm-up. Done when you can say, for each pair, the clue that tells you which is which.",
@@ -952,6 +866,7 @@ export const METHODS = [
     },
     session: [
       {
+        id: "set-up",
         title: "Set up one task",
         visual: { name: "pm-task" },
         instruction: "Choose the single thing you’ll work on for 25 minutes. Make it specific and finishable in one round, such as “do problems 1–5” rather than “study”. If the task is big, write the first small piece. Then clear the area: phone in another room or silent and face down, close extra tabs, and fill your water.",
@@ -968,6 +883,7 @@ export const METHODS = [
         minutes: 0,
       },
       {
+        id: "focus",
         title: "Focus",
         visual: { name: "pm-focus" },
         instruction: "Work only on that task. If something else pops into your head, jot it on a scrap of paper and go straight back. Don’t switch tasks, check messages, or stop to look something up. If you finish early, review what you just did.",
@@ -976,6 +892,7 @@ export const METHODS = [
         minutes: 25,
       },
       {
+        id: "break",
         title: "Break",
         visual: { name: "pm-break" },
         instruction: "Stand up and step away from your screen. Stretch, get water, look out a window. Don’t check your phone: scrolling doesn’t rest your attention.",
@@ -983,6 +900,7 @@ export const METHODS = [
         minutes: 5,
       },
       {
+        id: "check-in",
         title: "Check in",
         visual: { name: "pm-checkin" },
         instruction: "What did you get done? Note it, and decide what the next round will be. If there’s more to do, finish this session and press “Study again” to start another round. After four rounds, take a longer break of 15–30 minutes. Done when your task is finished or you’ve done four rounds.",
@@ -1022,6 +940,7 @@ export const METHODS = [
     },
     session: [
       {
+        id: "deadline",
         title: "Find your deadline",
         visual: { name: "dp-deadline" },
         instruction: "Write down the exam or due date and count the days or weeks between now and then. Also note how many study sessions you realistically have per week, and on which days. If you only have a few days, spread what you have rather than cramming into one.",
@@ -1029,6 +948,7 @@ export const METHODS = [
         minutes: 2,
       },
       {
+        id: "list",
         title: "List what you need to know",
         visual: { name: "dp-list" },
         instruction: "Write every topic you must know by the deadline as specific items, not “study chapter 3” but its subtopics. Use your syllabus, lecture notes, or the exam’s coverage list. Mark the ones you find hardest.",
@@ -1045,6 +965,7 @@ export const METHODS = [
         minutes: 7,
       },
       {
+        id: "assign",
         title: "Assign topics to sessions",
         visual: { name: "dp-assign" },
         instruction: "Spread the topics across every remaining week, not just the last one. Aim for several short sessions a week instead of one long one. Put the hardest topics earliest, so you have time to revisit them. Write the topic next to each date.",
@@ -1053,6 +974,7 @@ export const METHODS = [
         minutes: 8,
       },
       {
+        id: "reviews",
         title: "Add review sessions",
         visual: { name: "dp-review" },
         instruction: "Each time you finish a topic, schedule a short revisit to it a few days later, and again about a week after that. Mix older topics into later sessions instead of leaving them behind. Add one session near the end for a full practice test, if possible.",
@@ -1060,6 +982,7 @@ export const METHODS = [
         minutes: 5,
       },
       {
+        id: "calendar",
         title: "Put it on your calendar",
         visual: { name: "dp-calendar" },
         instruction: "Enter each session as an event with its topic and length. Keep sessions to 30–45 minutes, and shorter as the date nears; don’t compress by merging sessions. Done when every session is in your calendar. Then pick a method from this app for the first one.",
@@ -1107,6 +1030,7 @@ export const METHODS = [
     },
     session: [
       {
+        id: "skim",
         title: "Pick a section and skim it",
         visual: { name: "tf-skim" },
         instruction: "Choose one section you haven’t studied yet, about 5–10 pages or one lecture’s notes. Skim the headings, bold terms, figures and any questions at the end. Don’t read it yet.",
@@ -1115,6 +1039,7 @@ export const METHODS = [
         minutes: 3,
       },
       {
+        id: "questions",
         title: "Write 6–10 questions",
         visual: { name: "tf-questions" },
         instruction: "From what you skimmed, write 6–10 specific questions the section should answer: what, which, how many, why. Aim for the facts and terms you could be tested on. Cover every part you care about, because only the questions you write get the boost.",
@@ -1131,6 +1056,7 @@ export const METHODS = [
         minutes: 5,
       },
       {
+        id: "guess",
         title: "Guess every answer",
         visual: { name: "tf-guess" },
         instruction: "Write a guess next to every question, in a few words. Take a real guess even if you have no idea, and don’t look anything up. A wrong guess is fine and still helps. In the research, learners who were asked to guess gained far more than learners who only read the questions.",
@@ -1139,6 +1065,7 @@ export const METHODS = [
         minutes: 4,
       },
       {
+        id: "study",
         title: "Study to find the answers",
         visual: { name: "tf-study" },
         instruction: "Now read or watch the section as you normally would, but hunt for your answers. When you find one, tick the question and write the real answer beside your guess. Keep going until you’ve covered the whole section, not just the answers.",
@@ -1147,6 +1074,7 @@ export const METHODS = [
         minutes: 15,
       },
       {
+        id: "check",
         title: "Check your guesses",
         visual: { name: "tf-check" },
         instruction: "Go back through your list. Mark each guess right or wrong, and for every wrong one, say the correct answer out loud. Note which questions the section never answered.",
@@ -1154,6 +1082,7 @@ export const METHODS = [
         minutes: 3,
       },
       {
+        id: "gaps",
         title: "Cover the gaps",
         visual: { name: "tf-cover" },
         instruction: "Your questions only boost what they ask about. Skim the section for important ideas you wrote no question for, and add questions for them. Then plan to test yourself on the whole section tomorrow without your notes (that’s Active Recall, which beat testing before studying in one experiment). Done when every important idea has a question.",
@@ -1200,6 +1129,7 @@ export const METHODS = [
     },
     session: [
       {
+        id: "collect",
         title: "Collect solved examples",
         visual: { name: "we-collect" },
         instruction: "Pick one type of problem you’re learning. Gather 4–6 problems of that type that come with full, correct solutions: worked examples from the textbook, solved problems from lecture, or an answer key that shows the steps. Set two aside as practice problems and hide their solutions.",
@@ -1216,6 +1146,7 @@ export const METHODS = [
         minutes: 3,
       },
       {
+        id: "study",
         title: "Study one solved example",
         visual: { name: "we-study" },
         instruction: "Read one solution through once, then go back and follow each step, making sure you can see how it follows from the one before. Don’t try to solve it from scratch yet. Studying a correct solution is the point.",
@@ -1224,6 +1155,7 @@ export const METHODS = [
         minutes: 7,
       },
       {
+        id: "twin",
         title: "Solve a twin problem",
         visual: { name: "we-twin" },
         instruction: "Straight away, solve a problem of the same type with different numbers or details. Keep the solved example in view and look back at it whenever you’re stuck. Write out your full working.",
@@ -1232,6 +1164,7 @@ export const METHODS = [
         minutes: 8,
       },
       {
+        id: "check",
         title: "Check and fix",
         visual: { name: "we-fix" },
         instruction: "Compare your solution with the answer. Find the first step where yours goes wrong and say what happened. Then redo from that step.",
@@ -1239,6 +1172,7 @@ export const METHODS = [
         minutes: 3,
       },
       {
+        id: "fade",
         title: "Fade the help",
         visual: { name: "we-fade" },
         instruction: "Take a new solved example and cover the last step or two. Finish it yourself, then check. On the next one, cover more, down to only the first step. Finish with one of your practice problems and no help at all.",
@@ -1247,6 +1181,7 @@ export const METHODS = [
         minutes: 9,
       },
       {
+        id: "next",
         title: "Plan the next session",
         visual: { name: "we-next" },
         instruction: "Done when you can solve a new problem of this type with no example in view. Once you can, stop using examples for this type and move to mixed practice (Interleaving). If you can’t yet, repeat from step 2 with a different example.",
@@ -1294,6 +1229,7 @@ export const METHODS = [
     },
     session: [
       {
+        id: "pick",
         title: "Pick a problem you can’t solve yet",
         visual: { name: "pf-pick" },
         instruction: "Choose a problem on an idea you haven’t been taught yet, such as the first problem of the next chapter or problem set. It should allow more than one approach. Don’t read the explanation yet.",
@@ -1310,6 +1246,7 @@ export const METHODS = [
         minutes: 3,
       },
       {
+        id: "attempt",
         title: "Attempt it in more than one way",
         visual: { name: "pf-attempt" },
         instruction: "Work on it with what you already know. Come up with at least two different approaches, even if you suspect they’re wrong, and write each one down. Getting stuck is expected. The aim is to explore, not to be right.",
@@ -1318,6 +1255,7 @@ export const METHODS = [
         minutes: 12,
       },
       {
+        id: "note",
         title: "Note what each attempt missed",
         visual: { name: "pf-missed" },
         instruction: "For each attempt, write what it got wrong or couldn’t handle, and what you wish you knew. These notes are the questions the lesson will answer.",
@@ -1325,6 +1263,7 @@ export const METHODS = [
         minutes: 3,
       },
       {
+        id: "learn",
         title: "Learn the idea properly",
         visual: { name: "pf-learn" },
         instruction: "Now read the explanation or watch the lesson. Look for the answers to the gaps you wrote down, and mark the places where the proper method does something your attempts didn’t.",
@@ -1332,6 +1271,7 @@ export const METHODS = [
         minutes: 12,
       },
       {
+        id: "compare",
         title: "Compare with your attempts",
         visual: { name: "pf-compare" },
         instruction: "Go back to each attempt and say why it failed, or how it differs from the proper method. In the research, teaching that built on students’ own attempts did better than teaching that ignored them.",
@@ -1339,6 +1279,7 @@ export const METHODS = [
         minutes: 5,
       },
       {
+        id: "practise",
         title: "Practise the method",
         visual: { name: "pf-practise" },
         instruction: "Use the proper method to redo the original problem, then solve two more like it. Trying first did not improve procedural skill in the research, so this practice has to be on purpose. Done when you can say what the method is for, not only how to run it.",
@@ -1353,4 +1294,4 @@ export const METHODS = [
       task: ["apply"],
     },
   },
-];
+].map((method) => ({ ...method, adapt: ADAPT[method.id] }));

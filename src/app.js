@@ -152,12 +152,12 @@ function renderQuestion() {
 
   show(
     ...(resumable ? [renderResumeBanner(resumable)] : []),
-    el("section", { className: "question" }, [
+    el("section", { className: "question", attrs: { "data-kind": question.id } }, [
       el("p", { className: "progress", text: `Question ${stepIndex + 1} of ${ALL_QUESTIONS.length}` }),
       el("div", { className: "progress-bar" }, [
         el("span", { attrs: { style: `width:${((stepIndex + 1) / ALL_QUESTIONS.length) * 100}%` } }),
       ]),
-      el("h2", { text: question.prompt }),
+      el("div", { className: "question-head" }, [renderIcon(question.id), el("h2", { text: question.prompt })]),
       el("div", { className: "options", attrs: { role: "group", "aria-label": question.prompt } }, options),
       ...(errorMessage ? [el("p", { className: "error", text: errorMessage, attrs: { role: "alert" } })] : []),
       el("div", { className: "nav-row" }, [back, next]),
@@ -373,7 +373,10 @@ function renderDone() {
   const ending = describeEnding(entry);
   show(
     el("section", { className: "done" }, [
-      el("p", { className: "badge", text: ending.badge }),
+      el("div", { className: "done-head" }, [
+        el("span", { className: "done-icon" }, [renderIcon("done")]),
+        el("p", { className: "badge", text: ending.badge }),
+      ]),
       el("h2", { text: ending.heading }),
       el("p", { text: `That took about ${entry.minutes} minute${entry.minutes === 1 ? "" : "s"}.` }),
       el("p", {
@@ -406,7 +409,10 @@ function renderFilterSelect(group) {
     libraryFilters = { ...libraryFilters, [group.id]: select.value };
     render();
   });
-  return el("div", { className: "filter-field" }, [el("label", { text: group.prompt, attrs: { for: id } }), select]);
+  return el("div", { className: "filter-field", attrs: { "data-kind": group.id } }, [
+    el("label", { attrs: { for: id } }, [renderIcon(group.id), group.prompt]),
+    select,
+  ]);
 }
 
 function renderSubjectPicker() {
@@ -417,15 +423,15 @@ function renderSubjectPicker() {
   select.addEventListener("change", () => {
     answers.subject = select.value;
   });
-  return el("div", { className: "filter-field" }, [
-    el("label", { text: "Subject for guided sessions", attrs: { for: "library-subject" } }),
+  return el("div", { className: "filter-field", attrs: { "data-kind": "subject" } }, [
+    el("label", { attrs: { for: "library-subject" } }, [renderIcon("subject"), "Subject for guided sessions"]),
     select,
   ]);
 }
 
 function renderLibraryCard(method) {
   const fit = describeFit(method);
-  return el("article", { className: "library-card" }, [
+  return el("article", { className: "library-card", attrs: { "data-rating": evidenceFor(method.id)?.rating ?? "Unrated" } }, [
     el("div", { className: "library-card-head" }, [
       el("h3", { text: method.name }),
       el("span", { className: "duration", text: `~${method.minutes} min` }),
@@ -578,7 +584,7 @@ const TABS = [
   { id: "coach", label: "Coach me" },
   { id: "library", label: "Method library" },
   { id: "history", label: "History" },
-];
+]; // each tab's colour is set by its id in styles.css
 
 function switchView(next) {
   view = next;
@@ -598,7 +604,7 @@ function renderTabs() {
     const node = el("button", {
       className: "tab",
       text: tab.label,
-      attrs: { type: "button", ...(view === tab.id ? { "aria-current": "page" } : {}) },
+      attrs: { type: "button", "data-kind": tab.id, ...(view === tab.id ? { "aria-current": "page" } : {}) },
     });
     node.addEventListener("click", () => switchView(tab.id));
     return node;

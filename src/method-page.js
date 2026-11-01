@@ -69,12 +69,14 @@ export function renderMethodPage({ method, page, onBack, onStart }) {
 
   return el("article", { className: "method-page" }, [
     button("← Back", { onClick: onBack }),
-    el("p", { className: "badge", text: "Method deep dive" }),
-    el("h2", { text: method.name }),
-    el("p", { className: "method-tagline", text: method.tagline }),
-    ...(renderEvidenceTag(method.id) ? [renderEvidenceTag(method.id)] : []),
-    el("p", { className: "page-lede", text: method.def }),
-    el("div", { className: "card-action" }, [button("Start guided session", { primary: true, onClick: onStart })]),
+    el("div", { className: "page-hero" }, [
+      el("p", { className: "badge", text: "Method deep dive" }),
+      el("h2", { text: method.name }),
+      el("p", { className: "method-tagline", text: method.tagline }),
+      ...(renderEvidenceTag(method.id) ? [renderEvidenceTag(method.id)] : []),
+      el("p", { className: "page-lede", text: method.def }),
+      el("div", { className: "card-action" }, [button("Start guided session", { primary: true, onClick: onStart })]),
+    ]),
     el("nav", { className: "chips", attrs: { "aria-label": "Sections on this page" } }, jumps),
     ...sections.map((item) => item.node),
   ]);

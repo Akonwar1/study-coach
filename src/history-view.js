@@ -1,4 +1,5 @@
 import { button, el } from "./dom.js";
+import { renderIcon } from "./icons.js";
 import { byMethod, bySubject, dayKey, formatMinutes, groupByDay, isFinished, minutesPerDay, monthCells, subjectLabel, summarize } from "./history.js";
 
 const CHART_DAYS = 14;
@@ -7,8 +8,12 @@ const WEEKDAY_HEADINGS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
 const entryKey = (entry) => `${entry.startedAt}-${entry.completedAt}`;
 
-function stat(value, label) {
-  return el("div", { className: "stat" }, [el("p", { className: "stat-value", text: value }), el("p", { className: "stat-label", text: label })]);
+/** One tile of totals; `kind` picks its icon and colour. */
+function stat(kind, value, label) {
+  return el("div", { className: "stat", attrs: { "data-kind": kind } }, [
+    renderIcon(kind),
+    el("div", {}, [el("p", { className: "stat-value", text: value }), el("p", { className: "stat-label", text: label })]),
+  ]);
 }
 
 function renderGoal({ goalMinutes, weekMinutes, goalError, onSetGoal, onClearGoal }) {
@@ -198,10 +203,10 @@ export function renderHistoryScreen({ entries, now, goalMinutes, goalError, pend
     el("h2", { text: "Study history" }),
     renderGoal({ goalMinutes, weekMinutes: totals.weekMinutes, goalError, ...handlers }),
     el("div", { className: "stats" }, [
-      stat(formatMinutes(totals.totalMinutes), "total study time"),
-      stat(String(totals.sessions), totals.sessions === 1 ? "session logged" : "sessions logged"),
-      stat(formatMinutes(totals.weekMinutes), `this week · ${totals.weekSessions} session${totals.weekSessions === 1 ? "" : "s"}`),
-      stat(`${totals.streak} day${totals.streak === 1 ? "" : "s"}`, "current streak"),
+      stat("time", formatMinutes(totals.totalMinutes), "total study time"),
+      stat("sessions", String(totals.sessions), totals.sessions === 1 ? "session logged" : "sessions logged"),
+      stat("week", formatMinutes(totals.weekMinutes), `this week · ${totals.weekSessions} session${totals.weekSessions === 1 ? "" : "s"}`),
+      stat("streak", `${totals.streak} day${totals.streak === 1 ? "" : "s"}`, "current streak"),
     ]),
     renderChart(entries, now, { selectedKey: selected, onPickDay: handlers.onPickDay }),
     el("div", { className: "breakdowns" }, [renderBreakdown("Methods you use most", byMethod(entries)), renderBreakdown("Time by subject", bySubject(entries))]),

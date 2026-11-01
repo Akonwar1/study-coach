@@ -3,6 +3,8 @@
 // fit.material: kinds of material the method suits
 // fit.struggle: problems the method helps with
 // fit.horizon:  time-until-deadline buckets where the method works well
+// fit.subject:  optional; subject ids (from SUBJECT_QUESTION) a method was built for. Leave it out for a general method
+// fit.task:     what the student will have to do with the material (recall, explain, apply); omitted when it does not matter
 // tags:         short labels for the library: what the method helps with, and how it works
 // why:          { intuition, science }: shown in the session's "About this method" panel;
 //               intuition says in plain words what the method does for you, science names the research
@@ -110,6 +112,7 @@ export const METHODS = [
       material: ["facts", "concepts", "reading"],
       struggle: ["forget", "unsure"],
       horizon: ["soon", "week", "long", "none"],
+      task: ["recall"],
     },
   },
   {
@@ -191,6 +194,7 @@ export const METHODS = [
       material: ["facts"],
       struggle: ["forget"],
       horizon: ["week", "long", "none"],
+      task: ["recall"],
     },
   },
   {
@@ -270,6 +274,7 @@ export const METHODS = [
       material: ["diagrams"],
       struggle: ["forget", "confused"],
       horizon: ["soon", "week", "long", "none"],
+      task: ["explain"],
     },
   },
   {
@@ -342,6 +347,7 @@ export const METHODS = [
       material: ["concepts", "diagrams"],
       struggle: ["confused", "unsure"],
       horizon: ["soon", "week", "long", "none"],
+      task: ["explain"],
     },
   },
   {
@@ -421,6 +427,7 @@ export const METHODS = [
       material: ["facts"],
       struggle: ["confused"],
       horizon: ["soon", "week", "long", "none"],
+      task: ["explain"],
     },
   },
   {
@@ -518,6 +525,7 @@ export const METHODS = [
       material: ["problems"],
       struggle: ["confused", "unsure"],
       horizon: ["soon", "week", "long", "none"],
+      task: ["explain", "apply"],
     },
   },
   {
@@ -613,6 +621,7 @@ export const METHODS = [
       material: ["reading"],
       struggle: ["confused", "start"],
       horizon: ["soon", "week", "long", "none"],
+      task: ["explain"],
     },
   },
   {
@@ -685,6 +694,7 @@ export const METHODS = [
       material: ["problems"],
       struggle: ["unsure"],
       horizon: ["week", "long", "none"],
+      task: ["apply"],
     },
   },
   {
@@ -906,6 +916,7 @@ export const METHODS = [
       material: ["facts", "reading"],
       struggle: ["unsure"],
       horizon: ["soon", "week", "long", "none"],
+      task: ["recall"],
     },
   },
   {
@@ -988,6 +999,7 @@ export const METHODS = [
       material: ["problems"],
       struggle: ["confused"],
       horizon: ["soon", "week", "long", "none"],
+      task: ["apply"],
     },
   },
   {
@@ -1069,6 +1081,7 @@ export const METHODS = [
       material: ["problems"],
       struggle: ["confused"],
       horizon: ["long", "none"],
+      task: ["apply"],
     },
   },
 ];

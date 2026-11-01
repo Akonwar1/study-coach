@@ -1,8 +1,12 @@
 import { METHODS } from "./methods.js";
-import { QUESTIONS } from "./questions.js";
+import { QUESTIONS, SUBJECT_QUESTION } from "./questions.js";
 
 const MATERIAL_WEIGHT = 3;
 const STRUGGLE_WEIGHT = 6; // the student's stated problem outweighs the kind of material
+const TASK_WEIGHT = 3; // what you will be asked to do shifts close calls, but never outweighs your stated problem
+const HIGH_UTILITY = 3; // Dunlosky et al.'s “high utility” methods; what we lead with when nothing specific is wrong
+const SUBJECT_WEIGHT = 4; // a method built for your subject should win a close call against a general one
+const SUBJECT_MISMATCH_PENALTY = 4; // and a method built for another subject should not
 const HORIZON_WEIGHT = 2;
 const HORIZON_MISMATCH_PENALTY = 4;
 const UNMET_REQUIREMENT_PENALTY = 5;
@@ -10,7 +14,16 @@ const UNMET_REQUIREMENT_PENALTY = 5;
 const REASONS = {
   material: (answers) => `It suits ${labelFor("material", answers.material).toLowerCase()}.`,
   struggle: (answers) => `It directly helps with “${labelFor("struggle", answers.struggle)}”.`,
+  wellSupported: () => "It is one of the best-supported methods, so it helps even when nothing specific is going wrong.",
+  subject: (answers) => `It was built for ${SUBJECT_QUESTION.options.find((o) => o.id === answers.subject).label.toLowerCase()}.`,
+  task: (answers) => `It prepares you to ${TASK_PHRASES[answers.task]}.`,
   horizon: (answers) => `It works with your timeline (${labelFor("horizon", answers.horizon).toLowerCase()}).`,
+};
+
+const TASK_PHRASES = {
+  recall: "remember it exactly",
+  explain: "explain it in your own words",
+  apply: "solve new problems with it",
 };
 
 function labelFor(questionId, optionId) {
@@ -22,6 +35,7 @@ function labelFor(questionId, optionId) {
 export function validateAnswers(answers) {
   for (const question of QUESTIONS) {
     const value = answers?.[question.id];
+    if (!value && question.optional) continue;
     if (!value) return `Please answer: ${question.prompt}`;
     if (!question.options.some((o) => o.id === value)) return `Unknown answer for: ${question.prompt}`;
   }
@@ -40,6 +54,19 @@ function scoreMethod(method, answers) {
   if (helpsStruggle) {
     score += STRUGGLE_WEIGHT;
     reasons.push(REASONS.struggle(answers));
+  }
+  if (method.fit.subject && answers.subject) {
+    if (method.fit.subject.includes(answers.subject)) {
+      score += SUBJECT_WEIGHT;
+      reasons.push(REASONS.subject(answers));
+    } else {
+      score -= SUBJECT_MISMATCH_PENALTY;
+    }
+  }
+  if (answers.struggle === "none" && method.utility >= HIGH_UTILITY) reasons.push(REASONS.wellSupported());
+  if (method.fit.task?.includes(answers.task)) {
+    score += TASK_WEIGHT;
+    reasons.push(REASONS.task(answers));
   }
   if (method.fit.horizon.includes(answers.horizon)) {
     score += HORIZON_WEIGHT;
@@ -61,13 +88,15 @@ function specificity(method) {
  * Picks the best-fitting study methods for the answers.
  * Returns up to `count` results as { method, score, reasons }, best first.
  * Throws if the answers are incomplete.
+ * A method that lists `fit.subject` is favoured for those subjects and held back for the others; the subject
+ * answer is optional here, and methods that list no subject ignore it.
  */
-export function recommend(answers, count = 2) {
+export function recommend(answers, count = 2, methods = METHODS) {
   const error = validateAnswers(answers);
   if (error) throw new Error(error);
 
   // Ties go to the more specific method (fewer situations it claims to fit), then to higher utility.
-  return METHODS.map((method) => scoreMethod(method, answers))
+  return methods.map((method) => scoreMethod(method, answers))
     .sort((a, b) => b.score - a.score || specificity(b.method) - specificity(a.method) || b.method.utility - a.method.utility)
     .slice(0, count);
 }

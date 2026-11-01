@@ -7,7 +7,7 @@ const FILTER_QUESTION_IDS = ["material", "struggle", "horizon"];
 /** The filter groups shown in the library, taken from the coach's own questions. */
 export const FILTER_GROUPS = FILTER_QUESTION_IDS.map((id) => {
   const question = QUESTIONS.find((q) => q.id === id);
-  return { id, prompt: question.prompt, options: question.options };
+  return { id, prompt: question.prompt, options: question.options.filter((option) => !option.neutral) };
 });
 
 export const NO_FILTERS = { material: "", struggle: "", horizon: "" };

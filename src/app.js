@@ -114,7 +114,7 @@ function renderQuestion() {
     choice.addEventListener("click", () => {
       answers[question.id] = option.id;
       errorMessage = "";
-      render();
+      refresh(); // stay where you are: the Next button is just below the options
     });
     return choice;
   });

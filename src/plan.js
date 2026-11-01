@@ -32,8 +32,9 @@ export function plannedMinutes(steps) {
   return steps.reduce((total, step) => total + step.minutes, 0);
 }
 
-function matches(when, situation) {
-  return Object.entries(when).every(([question, answers]) => answers.includes(situation[question]));
+/** Whether a rule applies to a situation: every question it lists is answered with one of the answers it lists. */
+export function ruleApplies(rule, situation) {
+  return Object.entries(rule.when).every(([question, answers]) => answers.includes(situation[question]));
 }
 
 function mark(step, kind, because) {
@@ -96,7 +97,7 @@ function build(method, situation) {
   const steps = method.session.map((step, index) => ({ ...resolveStep(step, subject), id: step.id ?? `step-${index + 1}` }));
   const changes = [];
   for (const rule of method.adapt ?? []) {
-    if (!matches(rule.when, situation)) continue;
+    if (!ruleApplies(rule, situation)) continue;
     const touched = applyRule(rule, steps, subject, problems);
     changes.push({ kind: Object.keys(rule.when)[0], because: rule.because, summary: rule.summary, steps: steps.filter((step) => touched.has(step.id)).map((step) => step.id) });
   }

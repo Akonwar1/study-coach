@@ -48,3 +48,25 @@ export function ruleCoverage(method) {
     return { question, covered, missing: ids.filter((id) => !covered.includes(id)) };
   });
 }
+
+/** A rule as the quiz words it, for headings and for matching a reviewer's verdict to the rule: “How long until the exam or deadline? Today to 2 days”. */
+export const ruleLabel = (rule) => rule.when.map((condition) => `${condition.prompt} ${condition.answers.join(" or ")}`).join(" · ");
+
+const VERDICTS = ["keep", "rewrite", "cut"];
+
+/**
+ * A reviewer's verdicts written out in plain words to paste into a message: counts, then the rules to rewrite and cut with
+ * their notes. `review` is { [ruleLabel]: { verdict: "keep" | "rewrite" | "cut", note } }.
+ */
+export function summarizeReview(methodName, rules, review) {
+  const entries = rules.map((rule) => ({ label: ruleLabel(rule), ...review[ruleLabel(rule)] }));
+  const count = (verdict) => entries.filter((entry) => entry.verdict === verdict).length;
+  const unseen = entries.filter((entry) => !VERDICTS.includes(entry.verdict)).length;
+  const lines = [`Review of ${methodName}’s rules`, `Keep: ${count("keep")} · Rewrite: ${count("rewrite")} · Cut: ${count("cut")} · Not looked at yet: ${unseen}`];
+  for (const verdict of ["rewrite", "cut"]) {
+    const chosen = entries.filter((entry) => entry.verdict === verdict);
+    if (chosen.length === 0) continue;
+    lines.push("", verdict.toUpperCase(), ...chosen.map((entry) => (entry.note ? `- ${entry.label}: “${entry.note}”` : `- ${entry.label}`)));
+  }
+  return lines.join("\n");
+}

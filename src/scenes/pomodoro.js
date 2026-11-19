@@ -1,6 +1,6 @@
 // Pomodoro Technique: one wide picture per step. See scene-kit.js for the shapes.
 
-import { animated, arrow, card, cross, gauge, label, person, phone, pill, sheet, svg, tick, traveller } from "../scene-kit.js";
+import { animated, arrow, card, cross, gauge, label, person, pill, sheet, svg, tick, traveller } from "../scene-kit.js";
 
 // Step 1: one small task, and a clear desk
 

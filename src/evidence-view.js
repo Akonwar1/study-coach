@@ -1,6 +1,7 @@
 // Draws the "strength of evidence" ratings: a ranked panel for the library and a per-question breakdown for a method page.
 
 import { button, el } from "./dom.js";
+import { renderIcon } from "./icons.js";
 import { CRITERIA, DUNLOSKY_CODES, MAX_SCORE, RATING_RULES, evidenceFor, rankByEvidence } from "./evidence-strength.js";
 
 function ratingPill(rating) {
@@ -46,9 +47,12 @@ export function renderEvidencePanel({ methods, onOpen, hasPage }) {
       ...(hasPage(id) ? [button("See the score for each question", { onClick: () => onOpen(id) })] : []),
     ]);
   });
-  return el("details", { className: "evidence-panel" }, [
-    el("summary", { text: "How strong is the evidence for each method?" }),
+  // A quiet line under the library's tag key (the other "how to read the cards" line); it opens to the full
+  // explanation. Amber is the evidence colour used elsewhere.
+  return el("details", { className: "evidence-panel", attrs: { "data-kind": "history" } }, [
+    el("summary", {}, [renderIcon("evidence"), el("span", { className: "evidence-panel-title", text: "How the research ratings work" })]),
     el("div", { className: "evidence-panel-body" }, [
+      el("p", { className: "evidence-panel-sub", text: `What Strong, Moderate and Thin mean, the six questions behind them, and the score for all ${rows.length} methods.` }),
       el("p", { text: "Each method is scored on six questions, 0 to 2 points each, from the studies cited on its page. The rating is about evidence that the method helps you learn, not about how large its effect was." }),
       renderRubric(),
       el("ul", { className: "rating-rules" }, RATING_RULES.map((rule) =>
@@ -92,7 +96,7 @@ export function renderEvidenceBreakdown(methodId) {
       ...evidence.cautions.map((caution) => el("li", { text: caution.text })),
       ...(evidence.variation ? [el("li", { text: `Results vary a lot between studies: I² = ${evidence.variation.percent}% for ${evidence.variation.technique} (Donoghue & Hattie, 2021). The average hides big swings.` })] : []),
     ]),
-    el("p", { className: "barchart-source", text: `Outside check: Dunlosky et al. (2013) rated this technique ${evidence.dunlosky.toLowerCase()}.${evidence.dunloskyGrid ? ` ${describeGrid(evidence.dunloskyGrid)}` : ""} How the scores work is explained under “How strong is the evidence for each method?” in the Method library.` }),
+    el("p", { className: "barchart-source", text: `Outside check: Dunlosky et al. (2013) rated this technique ${evidence.dunlosky.toLowerCase()}.${evidence.dunloskyGrid ? ` ${describeGrid(evidence.dunloskyGrid)}` : ""} How the scores work is explained under “How the research ratings work” in the Method library.` }),
   ]);
 }
 

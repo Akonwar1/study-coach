@@ -1,6 +1,6 @@
 // Self-Explanation: one wide picture per step. See scene-kit.js for the shapes.
 
-import { animated, arrow, bubble, card, drawn, label, person, pill, sheet, star, svg, tick, traveller } from "../scene-kit.js";
+import { animated, arrow, bubble, card, drawn, label, person, pill, star, svg, tick, traveller } from "../scene-kit.js";
 
 // Step 1: which kind of material you have
 
@@ -27,7 +27,6 @@ function materialScene() {
 // Step 2: cutting into chunks and covering the rest
 
 function chunksScene() {
-  const bounds = [26, 50, 74, 98];
   return [
     svg("rect", { class: "sheet", x: 10, y: 8, width: 104, height: 144, rx: 3 }),
     ...Array.from({ length: 10 }, (_, row) => svg("rect", { class: "bar ink", x: 20, y: 18 + row * 13.5, width: 70 + (row % 3) * 8, height: 3.5, rx: 1.75 })),

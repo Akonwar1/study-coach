@@ -12,6 +12,7 @@ import { METHODS } from "./methods.js";
 import { makePlan, personalizableQuestions } from "./plan.js";
 import { renderPersonalizer } from "./personalize-view.js";
 import { renderPlanPreview } from "./plan-view.js";
+import { createPracticeScreen } from "./practice-view.js";
 import { ALL_QUESTIONS, SUBJECT_QUESTION } from "./questions.js";
 import { recommend, validateAnswers } from "./recommend.js";
 import { isComplete, isResumable, nextStep, pauseTimer, startSession, upgradeSession } from "./session.js";
@@ -23,7 +24,7 @@ import {
 const main = document.getElementById("main");
 const methodById = (id) => METHODS.find((m) => m.id === id);
 
-const VIEWS = ["coach", "library", "history"];
+const VIEWS = ["coach", "library", "history", "practice"];
 const METHOD_ROUTE = "#method/";
 
 /** The method whose page the address asks for (#method/<id>), or null. */
@@ -501,7 +502,6 @@ function renderLibrary() {
   show(
     el("section", { className: "library" }, [
       el("h2", { text: "Method library" }),
-      renderEvidencePanel({ methods: METHODS, hasPage: hasMethodPage, onOpen: openMethodPage }),
       el("div", { className: "library-filters" }, [...FILTER_GROUPS.map(renderFilterSelect), renderSubjectPicker()]),
       el("div", { className: "library-status" }, [
         el("p", { className: "library-count", text: `Showing ${matches.length} of ${METHODS.length} methods`, attrs: { role: "status" } }),
@@ -511,9 +511,19 @@ function renderLibrary() {
         el("span", { className: "tag helps", text: "Filled" }), " tags: what it helps with. ",
         el("span", { className: "tag how", text: "Outlined" }), " tags: how it works.",
       ]),
+      renderEvidencePanel({ methods: METHODS, hasPage: hasMethodPage, onOpen: openMethodPage }),
       cards,
     ]),
   );
+}
+
+// ---------- practice tab ----------
+
+let practiceScreen = null; // built once and kept, so what the student typed survives switching tabs
+
+function renderPracticeTab() {
+  practiceScreen ??= createPracticeScreen({ initialSubject: answers.subject });
+  show(practiceScreen);
 }
 
 // ---------- history tab ----------
@@ -615,6 +625,7 @@ const TABS = [
   { id: "coach", label: "Coach me" },
   { id: "library", label: "Method library" },
   { id: "history", label: "History" },
+  { id: "practice", label: "Practice" },
 ]; // each tab's colour is set by its id in styles.css
 
 function switchView(next) {
@@ -652,6 +663,7 @@ function render() {
   else if (methodPageId) renderMethodPageScreen();
   else if (view === "library") renderLibrary();
   else if (view === "history") renderHistoryTab();
+  else if (view === "practice") renderPracticeTab();
   else if (stepIndex >= ALL_QUESTIONS.length) renderResults();
   else renderQuestion();
 }

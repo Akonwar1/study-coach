@@ -160,7 +160,6 @@ export function personalizableQuestions(method) {
   return QUESTION_IDS.filter((id) => id !== "subject" && used.has(id));
 }
 
-const KNOWN_OPERATIONS = ["set", "append", "insert", "drop", "capMinutes"];
 const MIN_REASON_LENGTH = 20;
 const MIN_SUMMARY_LENGTH = 10;
 const MAX_SUMMARY_WORDS = 12;

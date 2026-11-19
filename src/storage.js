@@ -75,3 +75,25 @@ export function saveWeeklyGoal(minutes) {
   }
   return write(GOAL_KEY, minutes);
 }
+
+const PRACTICE_KEY = "studyCoach.practice";
+
+/** The Practice tab's form, current set and answers so far, or null. Checked by the Practice screen before use. */
+export function loadPracticeState() {
+  return read(PRACTICE_KEY, null);
+}
+
+export function savePracticeState(state) {
+  return write(PRACTICE_KEY, state);
+}
+
+const BANK_KEY = "studyCoach.questionBank";
+
+/** Every practice question shown, with its results (src/question-bank.js), or null. Cleaned by cleanBank before use. */
+export function loadQuestionBank() {
+  return read(BANK_KEY, null);
+}
+
+export function saveQuestionBank(bank) {
+  return write(BANK_KEY, bank);
+}

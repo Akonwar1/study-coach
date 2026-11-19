@@ -1,6 +1,6 @@
 // Distributed Practice Scheduling: one wide picture per step. See scene-kit.js for the shapes.
 
-import { animated, arrow, card, drawn, label, star, svg, tick, tip } from "../scene-kit.js";
+import { animated, card, drawn, label, star, svg, tick, tip } from "../scene-kit.js";
 
 // Step 1: the days between now and the deadline
 

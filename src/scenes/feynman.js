@@ -1,6 +1,6 @@
 // Feynman Technique: one wide picture per step. See scene-kit.js for the shapes.
 
-import { animated, arrow, bubble, card, cross, label, person, pill, place, sheet, svg, tick, traveller } from "../scene-kit.js";
+import { animated, arrow, bubble, card, label, person, pill, place, sheet, svg, tick, traveller } from "../scene-kit.js";
 
 // Step 1: zooming in on one idea, for one listener
 

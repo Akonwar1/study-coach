@@ -71,8 +71,8 @@ function studyScene() {
     svg("rect", { class: "sheet", x: 128, y: 8, width: 184, height: 154, rx: 3 }),
     ...Array.from({ length: 11 }, (_, row) => svg("rect", { class: "bar ink", x: 140, y: 20 + row * 13, width: 150 - (row % 3) * 22, height: 3.5, rx: 1.75, opacity: 0.45 })),
     ...traveller(marker, "M0 4 L0 144 L0 4", 7),
-    ...flags.map(([x, y, number], index) => animated(flag(x, y + 14), "pop", 0.8 + index * 0.6)),
-    ...flags.map(([x, y, number], index) => animated(tick(66, 28 + index * 38 + 0, 8), "pop", 0.9 + index * 0.6)),
+    ...flags.map(([x, y], index) => animated(flag(x, y + 14), "pop", 0.8 + index * 0.6)),
+    ...flags.map((_, index) => animated(tick(66, 28 + index * 38 + 0, 8), "pop", 0.9 + index * 0.6)),
     label("Flag where each answer is.", 66, 164, { size: "small" }),
   ];
 }

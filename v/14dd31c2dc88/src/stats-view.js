@@ -3,7 +3,11 @@
 // question type and by level, broader categories that open to their ideas (with "Group my ideas" for ideas from before
 // categories, "Rename category" and "Move to" for the student's own names), a sortable and searchable table of ideas,
 // and a table of topics. A topic's name opens a page of its own (2026-11-19, the student: clicking it should "clearly be
-// changing the page"): a back button, the topic's header, the time range, and only that topic's numbers.
+// changing the page"). Since step 3 of the visual refresh (2026-11-19) a topic page is a progress report in a folder:
+// a trail in place of the tab's heading, a coloured header with a filling ring, its numbers, whether it is rising
+// lately and a line of % right week by week; strongest and needs work; "Work on next" with Practise this topic, which
+// fills in the Practise form; then the same breakdown as the main page. The student asked that it give "a full
+// understanding" of what it shows, so every part says what it counts.
 // Numbers come from src/practice-stats.js; this file only draws them. Asked for by the student (2026-11-15): stats on
 // "proficiency and ability during practice in quantifiable and real data ... easy, reliable, and intuitive".
 // Sample answers (src/sample-practice.js) are a testing tool for the student only (2026-11-19): a Testing tools box at
@@ -11,8 +15,10 @@
 // Whenever sample answers are in, a notice at the top says so, so they are never taken for real ones.
 import { button, el } from "./dom.js";
 import { renderIcon } from "./icons.js";
-import { categoryKeyOf, filterOptions, IDEA_SORTS, practiceStats, searchIdeas, sortIdeas } from "./practice-stats.js";
+import { PRACTICE_LIMITS } from "./practice.js";
+import { categoryKeyOf, filterOptions, IDEA_SORTS, practiceStats, progressOverTime, searchIdeas, sortIdeas, strongestAndWeakest, workOnNext } from "./practice-stats.js";
 import { CATEGORY_NAME_LIMIT, moveIdea, renameCategory, topicCategories, whenLabel } from "./question-bank.js";
+import { playEntrance } from "./motion.js";
 import { addSampleData, countSampleAnswers, removeSampleData } from "./sample-practice.js";
 
 /**
@@ -75,9 +81,11 @@ function accuracyTable(className, firstHeading, rows) {
  * Builds the view. `getBank()` gives the current question bank; `filters` is the saved filter object, changed in
  * place; `onChange()` is called after a filter changes, to save it; `groupIdeas(topic)` sorts a topic's ungrouped ideas
  * into categories (one AI request) and resolves to {} or { message }; `onBankChange()` saves the bank after this view
- * changed it in place (sample data added or removed). Returns { element, draw }.
+ * changed it in place (sample data added or removed); `onTopicPage(open)` is told whether a topic page is showing, so
+ * the tab can hide its own heading behind the trail; `onPractise(about, focus)` opens the Practise form filled in with
+ * { course, topic, subject } and `focus`. Returns { element, draw }.
  */
-export function createStatsView({ getBank, filters, onChange, groupIdeas, onBankChange }) {
+export function createStatsView({ getBank, filters, onChange, groupIdeas, onBankChange, onTopicPage = () => {}, onPractise = () => {} }) {
   const element = el("section", { className: "pstats", attrs: { "aria-label": "Your stats" } });
   let search = "";
   let showAllIdeas = false;
@@ -324,15 +332,19 @@ export function createStatsView({ getBank, filters, onChange, groupIdeas, onBank
     ]);
   }
 
+  // The Move to menu's "New category…" value. Category names are always trimmed, so one starting with a space can never
+  // be a category's name (a category called "new" once clashed with a plain "new").
+  const NEW_CATEGORY = " new category";
+
   /** An idea's Move to menu: the topic's other categories, then a new one. */
   function moveMenu(category, idea, others, index) {
     const menuNode = el("select", { className: "pstats-move", attrs: { "aria-label": `Move ${idea.concept} to another category`, id: `pstats-move-${index}` } }, [
       el("option", { text: "Move to…", attrs: { value: "" } }),
       ...others.map((name) => el("option", { text: name, attrs: { value: name } })),
-      el("option", { text: "New category…", attrs: { value: "new" } }),
+      el("option", { text: "New category…", attrs: { value: NEW_CATEGORY } }),
     ]);
     menuNode.addEventListener("change", () => {
-      if (menuNode.value === "new") {
+      if (menuNode.value === NEW_CATEGORY) {
         movingNew = { key: category.key, idea: idea.concept };
         moveError = "";
         draw();
@@ -441,47 +453,77 @@ export function createStatsView({ getBank, filters, onChange, groupIdeas, onBank
     ]);
   }
 
-  // The topic page's heading, to focus once it is drawn; where the main page was scrolled to when a topic was opened.
+  // The topic page's heading, to focus once it is drawn.
   let topicHeading = null;
-  let mainScroll = null;
 
-  /**
-   * Opens the topic page for `key`. It swaps in at once and starts at the top of the screen, as the app's other screens
-   * do, with no smooth scroll (the student found that "irritating", 2026-11-19); the cursor goes to its heading.
-   */
-  function openTopic(key) {
-    mainScroll = window.scrollY;
+  // A topic page is a step in the browser's history, as method pages are, so the browser's Back and Forward close and
+  // reopen it. The step holds { statsTopic: key }; the main page's step remembers where it was scrolled to (statsScroll).
+  const historyTopic = () => window.history.state?.statsTopic ?? "";
+
+  /** Shows the topic page for `key` at once, at the top of the screen, as the app's other screens are; the cursor goes to its heading. */
+  function showTopic(key) {
     filters.page = key;
     onChange();
     draw();
     window.scrollTo({ top: 0 });
     topicHeading?.focus({ preventScroll: true });
+    playEntrance(element);
   }
 
-  /** Back to the main page, as it was and where it was scrolled to, with the cursor on the topic just left. */
-  function closeTopic() {
+  /** Shows the main page again, scrolled to `scroll` (or, if unknown, to the topic just left), with the cursor on that topic. */
+  function showMain(scroll) {
     const leaving = filters.page;
     filters.page = "";
     onChange();
     draw();
     const link = [...element.querySelectorAll(".pstats-topic-link")].find((node) => node.dataset.topic === leaving);
-    if (mainScroll !== null) window.scrollTo({ top: mainScroll });
-    else link?.scrollIntoView({ block: "center" }); // opened before a reload: no position kept, so go to the topic
-    mainScroll = null;
+    if (typeof scroll === "number") window.scrollTo({ top: scroll });
+    else link?.scrollIntoView({ block: "center" });
     link?.focus({ preventScroll: true });
+    playEntrance(element);
   }
 
-  /** Tiles, accuracy by type and level, categories and ideas for `numbers`; the topics table too on the main page. */
-  function statsBody(numbers, withTopics) {
+  /**
+   * Opens the topic page for `key` from a topic's name: with no smooth scroll (the student found that "irritating",
+   * 2026-11-19), and as a new step in the browser's history.
+   */
+  function openTopic(key) {
+    window.history.replaceState({ ...window.history.state, statsScroll: window.scrollY }, "");
+    window.history.pushState({ statsTopic: key }, "");
+    showTopic(key);
+  }
+
+  /** The page's own back button: a step back in the browser's history if the page is one, so the two never disagree. */
+  function closeTopic() {
+    if (historyTopic() === filters.page) window.history.back(); // the popstate listener below shows the main page
+    else showMain(null); // opened in an earlier visit and kept through a reload, with no step of its own
+  }
+
+  window.addEventListener("popstate", (event) => {
+    if (window.location.hash !== "#practice") return; // only while the Practice tab is on screen
+    const wanted = event.state?.statsTopic ?? "";
+    if (wanted === filters.page) return;
+    if (wanted) showTopic(wanted);
+    else showMain(event.state?.statsScroll);
+  });
+
+  /** Accuracy by type and level, categories and ideas for `numbers`: the breakdown both pages share. */
+  function breakdown(numbers) {
     return [
-      drawTiles(numbers.totals),
       el("div", { className: "pstats-pair" }, [
-        el("section", { className: "pstats-section", attrs: { "data-kind": "struggle" } }, [el("h4", { text: "By question type" }), accuracyTable("pstats-kinds", "Question type", numbers.byKind)]),
-        el("section", { className: "pstats-section", attrs: { "data-kind": "level" } }, [el("h4", { text: "By level" }), accuracyTable("pstats-levels", "Level", numbers.byLevel)]),
+        el("section", { className: "pstats-section", attrs: { "data-kind": "struggle" } }, [
+          el("h4", { text: "By question type" }),
+          el("p", { className: "pstats-section-note", text: "% right on each kind of question. Only written answers can be close." }),
+          accuracyTable("pstats-kinds", "Question type", numbers.byKind),
+        ]),
+        el("section", { className: "pstats-section", attrs: { "data-kind": "level" } }, [
+          el("h4", { text: "By level" }),
+          el("p", { className: "pstats-section-note", text: "% right at each level the questions were asked at." }),
+          accuracyTable("pstats-levels", "Level", numbers.byLevel),
+        ]),
       ]),
       categoriesSection(numbers.categories, numbers.topics),
       ideasSection(numbers.ideas),
-      ...(withTopics ? [topicsSection(numbers.topics)] : []),
     ];
   }
 
@@ -491,26 +533,195 @@ export function createStatsView({ getBank, filters, onChange, groupIdeas, onBank
     return node;
   };
 
-  /** The page of one topic (`topic` from the all-time numbers): back button, header, time range and its own numbers. */
+  /** The topic page's ring: % right as a filling circle, coloured by how it is going, read out in words. */
+  function ring({ percentRight, right, answered }) {
+    const svg = (tag, attrs) => {
+      const node = document.createElementNS("http://www.w3.org/2000/svg", tag);
+      for (const [name, value] of Object.entries(attrs)) node.setAttribute(name, value);
+      return node;
+    };
+    const band = percentRight === null ? "none" : percentRight >= 70 ? "good" : percentRight >= 40 ? "middle" : "low";
+    const node = svg("svg", {
+      class: `pstats-ring ${band}`, viewBox: "0 0 42 42", role: "img",
+      "aria-label": percentRight === null ? "No answers in this time range" : `${percentRight}% right: ${right} of ${answered} answers`,
+    });
+    node.append(svg("circle", { class: "pstats-ring-track", cx: "21", cy: "21", r: "16" }));
+    if (percentRight !== null) node.append(svg("circle", { class: "pstats-ring-value", cx: "21", cy: "21", r: "16", pathLength: "100", "stroke-dasharray": `${percentRight} 100` }));
+    const label = svg("text", { x: "21", y: "21" });
+    label.textContent = percentText(percentRight);
+    node.append(label);
+    return node;
+  }
+
+  /** "this week", "last week" or "3 weeks ago" for the week `back` weeks before this one. */
+  const weekName = (back) => (back === 0 ? "this week" : back === 1 ? "last week" : `${back} weeks ago`);
+
+  /**
+   * % right week by week as a line (over every answer on the topic, whatever the time range), with each week's % above
+   * its dot and the whole of it read out for screen readers; until two weeks have answers, a line saying so instead.
+   */
+  function weeksChart(weeks) {
+    const answeredWeeks = weeks.filter((week) => week.answered > 0);
+    const title = el("p", { className: "pstats-weeks-title", text: "Your % right, week by week" });
+    if (answeredWeeks.length < 2) {
+      const only = answeredWeeks[0];
+      return el("div", { className: "pstats-weeks" }, [title, el("p", { className: "pstats-weeks-empty", text: `The line starts once you’ve answered in two different weeks.${only ? ` So far: ${only.percentRight}% right ${weekName(weeks.length - 1 - weeks.indexOf(only))}.` : ""}` })]);
+    }
+    const [width, height, top, side, bottom] = [360, 108, 18, 16, 24];
+    const x = (i) => side + (i * (width - 2 * side)) / (weeks.length - 1);
+    const y = (percent) => top + ((100 - percent) / 100) * (height - top - bottom);
+    // A week with no answers breaks the line, so nothing is drawn where nothing happened.
+    let line = "";
+    weeks.forEach((week, i) => {
+      if (week.percentRight === null) return;
+      line += `${line && weeks[i - 1]?.percentRight !== null ? "L" : "M"}${x(i).toFixed(1)} ${y(week.percentRight).toFixed(1)} `;
+    });
+    const spoken = weeks.map((week, i) => `${weekName(weeks.length - 1 - i)} ${week.percentRight === null ? "no answers" : `${week.percentRight}% (${week.answered} ${week.answered === 1 ? "answer" : "answers"})`}`);
+    const chart = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    chart.setAttribute("viewBox", `0 0 ${width} ${height}`);
+    chart.setAttribute("role", "img");
+    chart.setAttribute("aria-label", `Your % right by week: ${spoken.join(", ")}.`);
+    const grid = [0, 50, 100].map((percent) => `<line class="pstats-weeks-grid" x1="${side}" x2="${width - side}" y1="${y(percent)}" y2="${y(percent)}"/>`).join("");
+    const dots = weeks.map((week, i) => (week.percentRight === null ? "" : `<circle class="pstats-weeks-dot" cx="${x(i)}" cy="${y(week.percentRight)}" r="3"/><text class="pstats-weeks-value" x="${x(i)}" y="${y(week.percentRight) - 6}">${week.percentRight}%</text>`)).join("");
+    // Each week's number of answers along the bottom, so a 100% from one answer is not taken for a strong week.
+    const counts = weeks.map((week, i) => `<text class="pstats-weeks-count" x="${x(i)}" y="${height - 5}">${week.answered}</text>`).join("");
+    chart.innerHTML = `${grid}<path class="pstats-weeks-line" pathLength="1" d="${line.trim()}"/>${dots}${counts}`; // only numbers go in, never typed text
+    return el("div", { className: "pstats-weeks" }, [
+      title,
+      el("p", { className: "pstats-weeks-key", text: "Each dot is a week’s % right; the small number under it is how many answers that week had." }),
+      chart,
+      el("div", { className: "pstats-weeks-ends", attrs: { "aria-hidden": "true" } }, [el("span", { text: weekName(weeks.length - 1) }), el("span", { text: "This week" })]),
+    ]);
+  }
+
+  /** Whether the topic is rising lately, from the last 7 days against the 7 before, as a chip in the header. */
+  function trendChip({ direction, recent, before }) {
+    const words = {
+      up: ["↗", "Rising lately", `${recent.percentRight}% right in the last 7 days, up from ${before.percentRight}% the 7 before`],
+      down: ["↘", "Falling lately", `${recent.percentRight}% right in the last 7 days, down from ${before.percentRight}% the 7 before`],
+      steady: ["→", "Steady lately", `${recent.percentRight}% right in the last 7 days, ${before.percentRight}% the 7 before`],
+      few: ["·", "Not enough answers yet to compare weeks", "it needs 3 answers in the last 7 days and 3 in the 7 before"],
+    }[direction];
+    return el("p", { className: `pstats-trend ${direction}` }, [
+      el("span", { className: "pstats-trend-head" }, [el("span", { className: "pstats-trend-arrow", text: words[0], attrs: { "aria-hidden": "true" } }), el("strong", { text: words[1] })]),
+      el("span", { className: "pstats-trend-detail", text: ` ${words[2]}` }),
+    ]);
+  }
+
+  /** The topic page's coloured header, like a folder with its tab: name, ring, numbers, trend and the weekly line. */
+  function hero(topic, numbers, progress) {
+    const { totals } = numbers;
+    const typed = topic.typed && topic.typed.toLowerCase() !== topic.topic.toLowerCase() ? topic.typed : "";
+    topicHeading = el("h3", { text: topic.topic, attrs: { tabindex: "-1" } });
+    const number = (value, label) => el("div", { className: "pstats-hero-num" }, [el("p", { className: "pstats-hero-value", text: String(value) }), el("p", { className: "pstats-hero-label", text: label })]);
+    const range = filters.days ? `Last ${filters.days} days` : `All time${totals.firstAt ? `, since ${dateText(totals.firstAt)}` : ""}`;
+    return el("header", { className: "pstats-hero pstats-topic-head", attrs: { "data-kind": "material" } }, [
+      el("span", { className: "pstats-hero-tab", text: "Topic" }),
+      el("span", { className: "pstats-hero-cards", attrs: { "aria-hidden": "true" } }, [el("span", { className: "pstats-hero-card one" }), el("span", { className: "pstats-hero-card two" })]),
+      topicHeading,
+      el("p", { className: "pstats-hero-sub", text: [topic.course || "No class given", typed && `you typed “${typed}”`].filter(Boolean).join(" · ") }),
+      el("div", { className: "pstats-hero-row" }, [
+        ring(totals),
+        el("div", { className: "pstats-hero-figures" }, [
+          el("p", { className: "pstats-hero-range" }, [el("strong", { text: range }), totals.answered ? ` · ${totals.right} right, ${totals.close} close, ${totals.missed} missed` : " · nothing answered"]),
+          el("div", { className: "pstats-hero-nums" }, [
+            number(totals.answered, "Answered"),
+            number(totals.questions, "Questions"),
+            number(totals.toReview, "Waiting for review"),
+            number(totals.days, "Days practised"),
+          ]),
+        ]),
+      ]),
+      trendChip(progress.trend),
+      weeksChart(progress.weeks),
+    ]);
+  }
+
+  /** Strongest and needs work side by side, or what it takes to show them. */
+  function areasSection(numbers) {
+    const pick = strongestAndWeakest(numbers);
+    const what = pick?.kind === "category" ? "categories" : "ideas";
+    const badge = (icon) => {
+      const node = renderIcon(icon);
+      node.classList.add("pstats-area-icon");
+      return node;
+    };
+    const card = (className, icon, title, area) => el("div", { className }, [
+      badge(icon),
+      el("div", {}, [
+        el("p", { className: "pstats-area-title", text: title }),
+        el("p", { className: "pstats-area-name", text: area.name }),
+        el("p", { className: "pstats-area-figure", text: `${area.percentRight}% · ${area.right} of ${area.answered} right` }),
+      ]),
+    ]);
+    return el("section", { className: "pstats-section pstats-areas", attrs: { "data-kind": "done" } }, [
+      el("h4", { text: "Strongest and needs work" }),
+      el("p", { className: "pstats-section-note", text: pick
+        ? `Your best and weakest ${what} on this topic by % right, counting only ${what} answered at least twice so one lucky answer is not a strength.`
+        : "Your best and weakest areas on this topic, by % right." }),
+      ...(!pick ? [el("p", { className: "pstats-areas-empty", text: "These show once at least two ideas on this topic have each been answered twice." })]
+        : pick.even ? [el("p", { className: "pstats-areas-empty", text: `Your ${what} are even here: each is at ${pick.best.percentRight}% right.` })]
+          : [el("div", { className: "pstats-duo" }, [card("pstats-best", "done", "Strongest", pick.best), card("pstats-worst", "horizon", "Needs work", pick.worst)])]),
+    ]);
+  }
+
+  /** Work on next: the weakest ideas, what waits for review, and Practise this topic. */
+  function nextSection(topic, numbers) {
+    const ideas = workOnNext(numbers.ideas);
+    const { toReview } = numbers.totals;
+    const marks = (idea) => el("span", { className: "pstats-marks", attrs: { role: "img", "aria-label": `Latest answers, newest first: ${idea.last.map((outcome) => OUTCOME_WORDS[outcome]).join(", ")}` } },
+      idea.last.map((outcome) => el("span", { className: `pstats-mark ${outcome}`, text: MARKS[outcome] })));
+    const practise = button("Practise this topic", { primary: true, onClick: () => startPractice(topic, ideas) });
+    return el("section", { className: "pstats-section pstats-next", attrs: { "data-kind": "horizon" } }, [
+      el("h4", { text: "Work on next" }),
+      el("p", { className: "pstats-section-note", text: "The ideas that most need practice: your latest answer was close or missed, or you get under 70% right. Latest answers run newest first: ✓ right, ~ close, ✗ missed." }),
+      ideas.length === 0
+        ? el("p", { className: "pstats-next-empty", text: "Nothing needs work right now: your latest answer on every idea was right, and each is at 70% or more." })
+        : el("ul", { className: "pstats-next-list" }, ideas.map((idea) => el("li", {}, [
+          el("span", { className: "pstats-next-name" }, [idea.concept, el("span", { className: "pstats-course", text: ` · ${idea.category}` })]),
+          el("span", { className: "pstats-next-figure", text: `${idea.right} of ${idea.answered} right` }),
+          marks(idea),
+        ]))),
+      el("p", { className: "pstats-next-review", text: toReview === 0 ? "No questions on this topic are waiting for review." : `${toReview} ${toReview === 1 ? "question is" : "questions are"} waiting for review: your last answer was close or missed.` }),
+      el("div", { className: "pstats-next-actions" }, [
+        practise,
+        el("p", { text: `Opens the Practise form filled in for this topic${ideas.length ? ", focused on these ideas" : ""}; notes pasted for another topic are cleared. Nothing is sent to the AI until you ask for the questions there.` }),
+      ]),
+    ]);
+  }
+
+  /** Leaves the topic page for the Practise form, filled in for `topic` and focused on `ideas`; no AI request. */
+  function startPractice(topic, ideas) {
+    const entry = getBank().topics[topic.key];
+    const names = ideas.map((idea) => idea.concept);
+    const list = names.length > 1 ? `${names.slice(0, -1).join(", ")} and ${names.at(-1)}` : names[0];
+    const focus = list ? `Focus on the ideas I find hardest: ${list}.`.slice(0, PRACTICE_LIMITS.focus) : "";
+    // The form goes in front, so the topic page's step in the browser's history no longer stands for a page; Back then
+    // goes to whatever came before rather than reopening the topic behind the form.
+    window.history.replaceState({ ...window.history.state, statsTopic: "" }, "");
+    filters.page = "";
+    onChange();
+    draw(); // the main page waits behind the form, for when Your stats is opened again
+    onPractise({ course: entry.course, topic: entry.topic, subject: entry.subject }, focus);
+  }
+
+  /** The page of one topic (`topic` from the all-time numbers): a trail, the time range, the header and its own numbers. */
   function topicPage(bank, topic, top) {
     const numbers = practiceStats(bank, { ...DEFAULT_STATS_FILTERS, course: topic.course, topic: topic.key, days: filters.days });
-    topicHeading = el("h3", { text: topic.topic, attrs: { tabindex: "-1" } });
-    const typed = topic.typed && topic.typed.toLowerCase() !== topic.topic.toLowerCase() ? topic.typed : "";
+    const progress = progressOverTime(bank, { course: topic.course, topic: topic.key });
     return el("div", { className: "pstats-topic-page" }, [
-      backButton(),
-      el("header", { className: "pstats-topic-head", attrs: { "data-kind": "material" } }, [
-        renderIcon("material"),
-        el("div", {}, [
-          el("p", { className: "pstats-topic-kicker", text: "Topic" }),
-          topicHeading,
-          el("p", { className: "pstats-topic-sub", text: [topic.course || "No class given", typed && `You typed “${typed}”`].filter(Boolean).join(" · ") }),
-        ]),
+      // The trail stands in for the Practice tab's heading and switch, so the page reads as Your stats › this topic.
+      el("nav", { className: "pstats-trail", attrs: { "aria-label": "Where you are" } }, [
+        backButton(),
+        el("span", { className: "pstats-trail-sep", text: "›", attrs: { "aria-hidden": "true" } }),
+        el("span", { className: "pstats-trail-here", text: topic.topic, attrs: { "aria-current": "page" } }),
       ]),
       ...top,
       timeRow(),
+      hero(topic, numbers, progress),
       ...(numbers.totals.answered === 0
         ? [el("div", { className: "pstats-none" }, [el("p", { text: "Nothing answered on this topic in this time range." }), button("All time", { onClick: () => change({ days: null }) })])]
-        : statsBody(numbers, false)),
+        : [el("div", { className: "pstats-pair pstats-report" }, [areasSection(numbers), nextSection(topic, numbers)]), ...breakdown(numbers)]),
     ]);
   }
 
@@ -524,6 +735,7 @@ export function createStatsView({ getBank, filters, onChange, groupIdeas, onBank
       el("p", { className: "pstats-intro", text: "Every practice answer you’ve given in this browser, counted as it happened. Use the filters to look at one class, subject area, topic or stretch of time." }),
     ];
     if (all.totals.answered === 0) {
+      onTopicPage(false);
       element.replaceChildren(...heading, el("p", { className: "pstats-empty", text: "No answers yet. Answer practice questions under Practise, and every answer is counted here: by class, topic, question type, level and idea." }), ...(devTools ? [devBox()] : []));
       return;
     }
@@ -535,6 +747,7 @@ export function createStatsView({ getBank, filters, onChange, groupIdeas, onBank
       filters.page = "";
       onChange();
     }
+    onTopicPage(Boolean(pageTopic));
     if (pageTopic) {
       element.replaceChildren(topicPage(bank, pageTopic, top));
       focusAfterDraw?.focus();
@@ -546,7 +759,7 @@ export function createStatsView({ getBank, filters, onChange, groupIdeas, onBank
     const numbers = practiceStats(bank, filters);
     const body = numbers.totals.answered === 0
       ? [el("div", { className: "pstats-none" }, [el("p", { text: "No answers match these filters." }), clearButton()])]
-      : statsBody(numbers, true);
+      : [drawTiles(numbers.totals), ...breakdown(numbers), topicsSection(numbers.topics)];
     element.replaceChildren(...heading, ...top, drawFilters(bank), showing(bank), ...body);
     focusAfterDraw?.focus();
     focusAfterDraw = null;

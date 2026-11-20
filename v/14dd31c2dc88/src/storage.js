@@ -97,3 +97,15 @@ export function loadQuestionBank() {
 export function saveQuestionBank(bank) {
   return write(BANK_KEY, bank);
 }
+
+// Light or dark (src/theme.js). index.html reads this key too, before the page is drawn, so keep the two in step.
+const THEME_KEY = "studyCoach.theme";
+
+/** "light" if light mode was chosen, else "dark", the app's default whatever the computer prefers. */
+export function loadTheme() {
+  return read(THEME_KEY, "dark") === "light" ? "light" : "dark";
+}
+
+export function saveTheme(theme) {
+  return write(THEME_KEY, theme === "light" ? "light" : "dark");
+}

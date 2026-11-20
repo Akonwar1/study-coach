@@ -33,6 +33,7 @@ import {
   addQuestions, categoryFor, cleanBank, recordResult, setIdeaCategories, setTopicLabel, topicCategories, topicKey, topicStanding, ungroupedIdeas,
 } from "./question-bank.js";
 import { SUBJECT_QUESTION } from "./questions.js";
+import { playEntrance } from "./motion.js";
 import { cleanStatsFilters, createStatsView } from "./stats-view.js";
 import { loadPracticeState, loadQuestionBank, savePracticeState, saveQuestionBank } from "./storage.js";
 
@@ -855,26 +856,70 @@ export function createPracticeScreen({ initialSubject } = {}) {
   const stats = createStatsView({
     getBank: () => state.bank, filters: state.statsFilters, onChange: save, groupIdeas,
     onBankChange: () => { saveQuestionBank(state.bank); drawStanding(); drawSet(); },
+    onTopicPage: (open) => showHeading(!open),
+    onPractise: practiseTopic,
   });
 
   // The two views of this tab: practising, and the stats as a whole.
+  const heading = el("h2", { text: "Practice questions" });
+  const intro = el("p", { className: "practice-intro", text: "Say what you’re studying and get practice questions to answer: for a class, a topic, or your own study guide." });
   const viewSwitch = el("div", { className: "practice-views", attrs: { role: "group", "aria-label": "Practice view" } });
   const practiseArea = el("div", { className: "practice-practise" }, [adjustBar, form, status, errorBox, standingPanel, setArea]);
 
+  /** Shows or hides the tab's heading, intro and view switch: a topic page has its own trail in their place. */
+  function showHeading(shown) {
+    [heading, intro, viewSwitch].forEach((node) => { node.hidden = !shown; });
+  }
+
+  /**
+   * Practise this topic, from a topic page: the Practise view with the form open and filled in with `about` (the
+   * topic as it was typed, so new answers join it) and `focus`. Nothing is sent until Make questions is pressed.
+   */
+  function practiseTopic(about, focus) {
+    // Notes pasted for another topic would steer the questions away from this one, so they go; this topic's stay.
+    if (topicKey(about) !== topicKey(state.form)) {
+      state.form.material = "";
+      material.value = "";
+      showCharCount();
+    }
+    Object.assign(state.form, about, { focus });
+    state.formOpen = true;
+    state.view = "practise";
+    save();
+    for (const key of ["course", "subject", "topic"]) form.querySelector(`#practice-${key}`).value = state.form[key];
+    syncForm();
+    adjustFocus.value = focus;
+    drawStatus();
+    drawStanding();
+    drawView();
+    window.scrollTo({ top: 0 });
+    // With a set open, the form is the bar's settings and the bar's Start a new set makes the questions.
+    const go = state.set ? [...adjustBar.querySelectorAll("button")].find((node) => node.textContent === "Start a new set") : makeButton;
+    go?.focus({ preventScroll: true });
+  }
+
   function drawView() {
     viewSwitch.replaceChildren(...VIEWS.map(({ id, label }) => {
-      const node = button(label, { onClick: () => { state.view = id; save(); drawView(); } });
+      const node = button(label, {
+        onClick: () => {
+          state.view = id;
+          save();
+          drawView();
+          if (id === "stats") playEntrance(stats.element); // opening Your stats plays its entrance, once
+        },
+      });
       node.setAttribute("aria-pressed", String(state.view === id));
       return node;
     }));
     practiseArea.hidden = state.view !== "practise";
     stats.element.hidden = state.view !== "stats";
-    if (state.view === "stats") stats.draw();
+    if (state.view === "stats") stats.draw(); // which also says whether a topic page is showing
+    else showHeading(true);
   }
 
   const screen = el("section", { className: "practice", attrs: { "data-kind": "practice" } }, [
-    el("h2", { text: "Practice questions" }),
-    el("p", { className: "practice-intro", text: "Say what you’re studying and get practice questions to answer: for a class, a topic, or your own study guide." }),
+    heading,
+    intro,
     viewSwitch,
     practiseArea,
     stats.element,

@@ -4,4 +4,4 @@ Answer a few quick questions and get the study method that fits, then be walked 
 
 Try it: https://akonwar1.github.io/study-coach/
 
-This repository is only the published copy of the app. The project's source, tests and planning notes live in a CS 124 course repository.
+This repository is only the published copy of the app. The project's source, tests and planning notes live in a CS 124 course repository. Each published version is in `v/`, named by its commit.

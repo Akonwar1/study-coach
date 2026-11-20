@@ -166,3 +166,62 @@ export function filterOptions(bank, filters) {
     categories: [...categories.values()].sort((a, b) => Number(b.grouped) - Number(a.grouped) || a.label.localeCompare(b.label) || a.topic.localeCompare(b.topic)),
   };
 }
+
+// ---------- a topic's own page: how it is going over time ----------
+
+const WEEK = 7 * DAY;
+// The most weeks the line on a topic page goes back, and the fewest answers in each of two weeks for a trend.
+const MAX_WEEKS = 8;
+const TREND_ANSWERS = 3;
+// How many points % right must move between the two weeks to count as rising or falling, not steady.
+const TREND_POINTS = 5;
+
+/**
+ * % right week by week for the answers fitting `about` ({ course, subject, topic, category }; the time range is not
+ * used), and whether it is rising lately:
+ *   weeks  one row per 7 days ({ from, answered, right, percentRight }), oldest first, from the week of the first answer
+ *          to this one and at most MAX_WEEKS; a week with no answers has percentRight null, so nothing is made up
+ *   trend  { recent, before, change, direction }: the last 7 days against the 7 before; direction is "up", "down",
+ *          "steady", or "few" when either week has under TREND_ANSWERS answers (change is then null)
+ */
+export function progressOverTime(bank, about, now = Date.now()) {
+  const rows = answerRows(bank).filter((row) => fits(row, about));
+  const end = startOfDay(now) + DAY; // the end of today: weeks are counted back from here
+  const weekOf = (row) => Math.floor((end - 1 - row.at) / WEEK); // 0 for the last 7 days, 1 for the 7 before, ...
+  const span = rows.length === 0 ? 0 : Math.min(MAX_WEEKS, Math.max(...rows.map(weekOf)) + 1);
+  const weeks = Array.from({ length: span }, (_, i) => {
+    const back = span - 1 - i;
+    return { from: end - (back + 1) * WEEK, ...countsOf(rows.filter((row) => weekOf(row) === back)) };
+  });
+  const recent = countsOf(rows.filter((row) => weekOf(row) === 0));
+  const before = countsOf(rows.filter((row) => weekOf(row) === 1));
+  const enough = recent.answered >= TREND_ANSWERS && before.answered >= TREND_ANSWERS;
+  const change = enough ? recent.percentRight - before.percentRight : null;
+  const direction = !enough ? "few" : change >= TREND_POINTS ? "up" : change <= -TREND_POINTS ? "down" : "steady";
+  return { weeks: weeks.map(({ from, answered, right, percentRight }) => ({ from, answered, right, percentRight })), trend: { recent, before, change, direction } };
+}
+
+/**
+ * A topic's strongest and weakest areas from its `numbers` (practiceStats for that topic): its categories, or its ideas
+ * when fewer than two categories were answered at least twice (one lucky answer is not a strength). Each is
+ * { name, answered, right, percentRight }; `even` is true when both have the same % right. Null when not even two
+ * ideas have been answered twice.
+ */
+export function strongestAndWeakest(numbers) {
+  const asArea = (row, name) => ({ name, answered: row.answered, right: row.right, percentRight: row.percentRight });
+  const categories = numbers.categories.filter((row) => row.grouped && row.answered >= 2).map((row) => asArea(row, row.name));
+  const ideas = numbers.ideas.filter((row) => row.answered >= 2).map((row) => asArea(row, row.concept));
+  const [kind, areas] = categories.length >= 2 ? ["category", categories] : ["idea", ideas];
+  if (areas.length < 2) return null;
+  const sorted = [...areas].sort((a, b) => b.percentRight - a.percentRight || b.answered - a.answered || a.name.localeCompare(b.name));
+  const worst = [...areas].sort((a, b) => a.percentRight - b.percentRight || b.answered - a.answered || a.name.localeCompare(b.name))[0];
+  return { kind, best: sorted[0], worst, even: sorted[0].percentRight === worst.percentRight };
+}
+
+// Ideas under this % right are worth more practice even when the latest answer was right.
+const WORK_ON_UNDER = 70;
+
+/** Up to three ideas to practise next, weakest first: those whose latest answer was not right, or under WORK_ON_UNDER%. */
+export function workOnNext(ideas) {
+  return sortIdeas(ideas.filter((idea) => idea.last[0] !== "right" || idea.percentRight < WORK_ON_UNDER), "lowest").slice(0, 3);
+}

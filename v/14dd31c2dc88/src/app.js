@@ -6,6 +6,10 @@ import { METHOD_PAGES, hasMethodPage } from "./method-pages.js";
 import { renderEvidenceBadge, renderEvidencePanel, renderEvidenceTag } from "./evidence-view.js";
 import { evidenceFor } from "./evidence-strength.js";
 import { renderIcon } from "./icons.js";
+import { drawMastheadScene } from "./masthead-art.js";
+import { playEntrance } from "./motion.js";
+import { startSky } from "./sky.js";
+import { setUpThemeSwitch } from "./theme.js";
 import { describeAnswers, describeSituation, explainRecommendation } from "./explain.js";
 import { FILTER_GROUPS, NO_FILTERS, describeFit, filterMethods, hasActiveFilters } from "./library.js";
 import { METHODS } from "./methods.js";
@@ -54,7 +58,10 @@ let keepScroll = false; // set by changes made in place (delete, goal, calendar)
 
 function show(...nodes) {
   main.replaceChildren(...nodes);
-  if (!keepScroll) window.scrollTo({ top: 0 });
+  if (!keepScroll) {
+    window.scrollTo({ top: 0 });
+    playEntrance(main); // a new screen: its numbers count up and its bars grow in, once
+  }
   keepScroll = false;
 }
 
@@ -657,6 +664,7 @@ function renderTabs() {
 function render() {
   stopTicking(); // only the session screen runs a clock, and it restarts its own
   renderTabs();
+  drawMastheadScene(document.querySelector(".masthead-scene"), view); // a method page or session keeps its tab's scene
   document.querySelector(".app").classList.toggle("wide", view === "library" && !activeSession && !finishedEntry && !methodPageId);
   if (activeSession) renderSessionScreen();
   else if (finishedEntry) renderDone();
@@ -668,4 +676,6 @@ function render() {
   else renderQuestion();
 }
 
+setUpThemeSwitch(document.querySelector(".theme-switch"));
+startSky(document.querySelector(".sky"));
 render();

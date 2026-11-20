@@ -171,17 +171,68 @@ export function categoryFor(entry, question, known = ideaCategories(entry)) {
   return known.get(squash(question.concept)) || tidy(question.category);
 }
 
-/** Every category used on the topic `about` describes, in the wording first seen, oldest first. */
-export function topicCategories(bank, about) {
-  const entry = bank.topics[topicKey(about)];
-  if (!entry) return [];
+/** The categories used in `entry`, keyed by name in lower case, each in the wording first seen, oldest first. */
+function categoryNames(entry, known = ideaCategories(entry)) {
   const found = new Map();
-  const known = ideaCategories(entry);
   for (const kept of entry.questions) {
     const name = categoryFor(entry, kept.question, known);
     if (name && !found.has(squash(name))) found.set(squash(name), name);
   }
-  return [...found.values()];
+  return found;
+}
+
+/** Every category used on the topic `about` describes, in the wording first seen, oldest first. */
+export function topicCategories(bank, about) {
+  const entry = bank.topics[topicKey(about)];
+  return entry ? [...categoryNames(entry).values()] : [];
+}
+
+// The student's own category names (step B, 2026-11-15: "AI names, you can change"). Their names are kept as an idea's
+// grouping, which wins over the category the AI wrote on any question, so later AI questions on the idea follow them.
+export const CATEGORY_NAME_LIMIT = 60;
+const UNGROUPED_NAME = "Not grouped yet"; // the row for ideas with no category (practice-stats.js UNGROUPED)
+
+/** A category name the student typed, tidied, as { name }, or { error } saying what to change. */
+export function cleanCategoryName(name) {
+  const cleaned = tidy(name);
+  if (!cleaned) return { error: "Give the category a name." };
+  if (cleaned.length > CATEGORY_NAME_LIMIT) return { error: `Keep the name to ${CATEGORY_NAME_LIMIT} characters or fewer.` };
+  if (squash(cleaned) === squash(UNGROUPED_NAME)) return { error: `“${UNGROUPED_NAME}” is kept for ideas with no category. Choose another name.` };
+  return { name: cleaned };
+}
+
+/**
+ * Renames the category `from` on the topic `about` describes to `to`, for every idea in it, answered or not. If the
+ * topic already has a category called `to` (whatever its capitals), the two merge under that one's wording. Returns
+ * { from, name, merged }, or { error } with nothing changed.
+ */
+export function renameCategory(bank, about, from, to) {
+  const cleaned = cleanCategoryName(to);
+  const entry = bank.topics[topicKey(about)];
+  if (cleaned.error || !entry) return { error: cleaned.error ?? "That topic is not in your question bank." };
+  const known = ideaCategories(entry);
+  const names = categoryNames(entry, known);
+  const old = squash(from);
+  const existing = names.get(squash(cleaned.name));
+  const merged = Boolean(existing) && squash(cleaned.name) !== old;
+  const name = merged ? existing : cleaned.name;
+  const ideas = new Map(entry.questions.filter((kept) => squash(categoryFor(entry, kept.question, known)) === old)
+    .map((kept) => [squash(kept.question.concept), kept.question.concept]));
+  setIdeaCategories(bank, about, [...ideas.values()].map((idea) => ({ idea, category: name })));
+  return { from: names.get(old) ?? tidy(from), name, merged };
+}
+
+/**
+ * Files the idea `idea` on the topic `about` describes, and every question on it, under the category `to`: an existing
+ * one (whatever its capitals; its wording is kept) or a new one. Returns { name, created }, or { error } with nothing changed.
+ */
+export function moveIdea(bank, about, idea, to) {
+  const cleaned = cleanCategoryName(to);
+  const entry = bank.topics[topicKey(about)];
+  if (cleaned.error || !entry) return { error: cleaned.error ?? "That topic is not in your question bank." };
+  const existing = categoryNames(entry).get(squash(cleaned.name));
+  setIdeaCategories(bank, about, [{ idea, category: existing ?? cleaned.name }]);
+  return { name: existing ?? cleaned.name, created: !existing };
 }
 
 /** The ideas on the topic `about` describes that have no category yet, in the order first seen. */

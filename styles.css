@@ -1089,6 +1089,19 @@ details summary { cursor: pointer; font-weight: 600; min-height: 32px; font-size
 .pstats-showing { margin: 12px 0; color: var(--ink); overflow-wrap: anywhere; }
 .pstats-none { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; padding: 14px; background: var(--surface-2); border: 1px dashed var(--line); border-radius: 6px; }
 .pstats-none p { margin: 0; }
+/* Sample data: a dashed amber notice while made-up answers are included (so they are never taken for real ones), and the
+   student's testing tools (?dev on this computer only) in graphite, plainly apart from the app's own coloured sections. */
+.pstats-sample { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; margin: 0 0 14px; padding: 10px 14px; background: var(--hue-soft); border: 1px dashed var(--hue); border-left: 4px solid var(--hue); border-radius: 4px; }
+.pstats-sample .why-icon { flex: none; width: 32px; height: 32px; background: var(--surface); }
+.pstats-sample p { flex: 1 1 240px; margin: 0; font-size: 14px; color: var(--ink); }
+.pstats-sample strong { color: var(--hue-ink); }
+.pstats-dev { margin: 0 0 14px; padding: 10px 14px; background: var(--surface-2); border: 1px dashed var(--hue); border-radius: 4px; }
+.pstats-dev-title { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; margin: 0 0 8px; font-weight: 600; color: var(--hue-ink); }
+.pstats-dev-title .why-icon { flex: none; width: 28px; height: 28px; background: var(--hue-soft); }
+.pstats-dev-title span:last-child { font-size: 13px; font-weight: 400; color: var(--ink-soft); }
+.pstats-dev-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.pstats-dev-status { min-height: 1.4em; margin: 8px 0 0; font-size: 14px; color: var(--ink); }
+.pstats-sample .btn, .pstats-dev .btn { min-height: 36px; padding: 4px 12px; font-size: 14px; }
 
 .pstats-tiles { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin-bottom: 16px; }
 .pstats-tile { display: flex; align-items: flex-start; gap: 10px; padding: 12px; background: var(--hue-soft); border: 1px solid var(--hue); border-radius: 10px; }
@@ -1132,6 +1145,20 @@ details summary { cursor: pointer; font-weight: 600; min-height: 32px; font-size
 .pstats-mark.missed { color: var(--graphite-ink); }
 .pstats-topic-link.btn { min-width: 7em; min-height: 36px; padding: 4px 10px; font-size: 15px; font-weight: 700; text-align: left; color: var(--hue-ink); border-left: 4px solid var(--hue); }
 .pstats-topic-link.btn:hover { background: var(--hue-soft); }
+/* A topic's name opens its own page, so it ends in an arrow, like a link to somewhere. A no-break space glues the arrow
+   to the last word, so it never wraps onto a line of its own. */
+.pstats-topic-link.btn::after { content: "\00a0›"; font-weight: 700; }
+/* A topic's own page (2026-11-19): a back button, then a header in the Topics table's hue, then only its numbers. It
+   swaps in at once at the top, with no animation, as the app's other screens do. */
+.pstats-topic-page > .pstats-back { min-height: 40px; margin-bottom: 14px; padding: 6px 14px; font-weight: 600; }
+.pstats-topic-head { display: flex; align-items: flex-start; gap: 12px; margin: 0 0 14px; padding: 14px 16px; background: var(--surface-2); border: 1px solid var(--line); border-top: 4px solid var(--hue); border-radius: 4px; box-shadow: var(--shadow-card); }
+.pstats-topic-head .why-icon { flex: none; width: 40px; height: 40px; background: var(--hue-soft); }
+.pstats-topic-head h3 { margin: 0; color: var(--hue-ink); overflow-wrap: break-word; }
+.pstats-topic-head h3:focus { outline: none; }
+.pstats-topic-head h3:focus-visible { outline: 2px solid var(--hue); outline-offset: 2px; }
+.pstats-topic-kicker { margin: 0 0 2px; font-size: 13px; font-weight: 600; color: var(--ink-soft); }
+.pstats-topic-sub { margin: 4px 0 0; font-size: 14px; color: var(--ink-soft); overflow-wrap: break-word; }
+.pstats-topic-page > .pstats-time-row { margin-bottom: 16px; }
 @media (max-width: 720px) {
   .pstats-idea-tools { grid-template-columns: 1fr; }
   /* Type and level tables hold short numbers, so they stay tables, a little tighter; the bar's numbers are beside it. */
@@ -1148,6 +1175,9 @@ details summary { cursor: pointer; font-weight: 600; min-height: 32px; font-size
   .pstats-stack td { display: flex; flex-direction: column; gap: 1px; }
   .pstats-stack td::before { content: attr(data-label); font-family: var(--font-body); font-size: 12px; font-weight: 600; color: var(--ink-soft); }
   .pstats-stack .pstats-topic-cell { grid-column: 1 / -1; min-width: 0; }
+  .pstats-stack .pstats-move-cell { grid-column: 1 / -1; min-width: 0; }
+  .pstats-stack .pstats-move-cell::before { display: none; } /* the menu's own "Move to…" says it */
+  .pstats-stack select.pstats-move { max-width: none; width: 100%; }
 }
 
 /* ---------- broader categories ---------- */
@@ -1175,6 +1205,20 @@ details summary { cursor: pointer; font-weight: 600; min-height: 32px; font-size
 .pstats-group-ask .btn { min-height: 36px; padding: 4px 12px; font-size: 14px; }
 .pstats-group-ask p { margin: 0; font-size: 13px; color: var(--ink-soft); }
 .pstats-group-ask .error { flex-basis: 100%; }
+/* Changing categories (step B): a quiet Move to menu per idea, Rename under the ideas, a name box in place, and a line
+   under the heading saying what the last change did. Quieter than the numbers, in the section's own hue. */
+.pstats-category-status { min-height: 1.4em; margin: 4px 0 0; font-size: 14px; font-weight: 600; color: var(--hue-ink); }
+.pstats-category-status:empty { min-height: 0; }
+select.pstats-move { max-width: 150px; min-height: 32px; padding: 2px 6px; font: 400 13px var(--font-body); color: var(--ink-soft); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; }
+select.pstats-move:hover, select.pstats-move:focus { color: var(--ink); border-color: var(--hue); }
+.pstats-category-tools { margin: 0 12px 10px; }
+.pstats-category-tools .btn, .pstats-name-form .btn { min-height: 36px; padding: 4px 12px; font-size: 14px; }
+.pstats-name-form { margin: 0 12px 12px; padding: 10px 12px; background: var(--hue-soft); border: 1px dashed var(--hue); border-radius: 4px; }
+.pstats-name-form label { display: block; margin-bottom: 6px; font-size: 14px; font-weight: 600; color: var(--hue-ink); }
+.pstats-name-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.pstats-name-row input { flex: 1 1 200px; min-height: 36px; padding: 4px 10px; font: inherit; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; }
+.pstats-name-row input:focus { outline: 2px solid var(--hue); outline-offset: 1px; }
+.pstats-name-form .error { margin: 6px 0 0; }
 @media (max-width: 720px) {
   .pstats-category-head { display: none; }
   .pstats-category > summary { grid-template-columns: repeat(4, minmax(0, 1fr)); }

@@ -852,7 +852,10 @@ export function createPracticeScreen({ initialSubject } = {}) {
   }
 
   // Your stats: every answer as plain numbers, apart from any one set.
-  const stats = createStatsView({ getBank: () => state.bank, filters: state.statsFilters, onChange: save, groupIdeas });
+  const stats = createStatsView({
+    getBank: () => state.bank, filters: state.statsFilters, onChange: save, groupIdeas,
+    onBankChange: () => { saveQuestionBank(state.bank); drawStanding(); drawSet(); },
+  });
 
   // The two views of this tab: practising, and the stats as a whole.
   const viewSwitch = el("div", { className: "practice-views", attrs: { role: "group", "aria-label": "Practice view" } });

@@ -1,6 +1,6 @@
 // Sample practice history, for trying Your stats with weeks of answers before there are real ones (the student asked
 // for "already built up mock data that I can then add to by answering questions right or wrong", 2026-11-15).
-// Loaded from sample-data.html, never by the app on its own; the snapshots use it too. Every sample answer's attempt
+// Added and removed from Your stats by the student's testing tools (shown only at ?dev on this computer) and used by the snapshots. Every sample answer's attempt
 // starts with "sample:", so removeSampleData takes out exactly these and leaves real answers alone. The answers are
 // made up (a fixed pseudo-random sequence, so every load is the same), and so are the outcomes; the questions are real
 // questions on each topic, with no answers or explanations, so they are never shown as questions to answer.
@@ -106,4 +106,9 @@ export function removeSampleData(bank) {
     if (entry.questions.length === 0) delete bank.topics[key];
   }
   return bank;
+}
+
+/** How many sample answers `bank` holds, so Your stats can say the sample is included and what a press changed. */
+export function countSampleAnswers(bank) {
+  return Object.values(bank.topics).reduce((sum, entry) => sum + entry.questions.reduce((count, kept) => count + kept.results.filter((result) => result.attempt?.startsWith(SAMPLE)).length, 0), 0);
 }

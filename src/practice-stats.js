@@ -17,7 +17,8 @@ const percentOf = (part, whole) => (whole === 0 ? null : Math.round((100 * part)
 const isLevel = (id) => PRACTICE_DIFFICULTIES.some((level) => level.id === id);
 export const UNGROUPED = "Not grouped yet";
 /** A category's key: its topic and its name, since two topics can use the same name. Ungrouped ideas have the name "". */
-const categoryKey = (row) => `${row.topicKey}\n${squash(row.category)}`;
+export const categoryKeyOf = (topic, name) => `${topic}\n${squash(name)}`;
+const categoryKey = (row) => categoryKeyOf(row.topicKey, row.category);
 
 /** Every answer in the bank as one flat row, with what it was about. */
 function answerRows(bank) {
